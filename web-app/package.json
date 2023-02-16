@@ -1,0 +1,19 @@
+{
+  "name": "faculty-access-control-system-phase1",
+  "version": "1.0.0",
+  "description": "Web application for the faculty access control system with student attendance",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lakminagamage/faculty-access-control-phase01.git"
+  },
+  "author": "Sankha Bimsara Ambeypitiya",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/lakminagamage/faculty-access-control-phase01/issues"
+  },
+  "homepage": "https://github.com/lakminagamage/faculty-access-control-phase01#readme"
+}
