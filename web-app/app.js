@@ -1,29 +1,30 @@
-//Load dependencies
+// LOAD DEPENDENCIES
 const express = require('express');
 
-//dotenv load environment variables in .env file as process.env.<property_name>
+// DOTENV LOAD ENVIRONMENT VARIABLES IN .ENV FILE AS PROCESS.ENV.<PROPERTY_NAME>
 require('dotenv').config();
 
-//Create express app
+// CREATE EXPRESS APP
 const app = express();
 
-//Runtime Port - load from .env file or use 5000
+// RUNTIME PORT - LOAD FROM .ENV FILE OR USE 5000
 const port = process.env.PORT || 5000;
 
 /*
-*   Parsing middlewares
-*   express.urlencoded : Recognizing incoming request object as strings/arrays
-*   express.json : Recognizing incoming request object as json object
-*   express.static('<static_file_location') : Load images/CSS/JS files most commonly which are stored in 'public' folder. Use <folder_name> instead of 'public' if needed
+*   PARSING MIDDLEWARES
+*   EXPRESS.URLENCODED : RECOGNIZING INCOMING REQUEST OBJECT AS STRINGS/ARRAYS
+*   EXPRESS.JSON : RECOGNIZING INCOMING REQUEST OBJECT AS JSON OBJECT
+*   EXPRESS.STATIC('<STATIC_FILE_LOCATION') : LOAD IMAGES/CSS/JS FILES MOST COMMONLY WHICH ARE STORED IN 'PUBLIC' FOLDER. USE <FOLDER_NAME> INSTEAD OF 'PUBLIC' IF NEEDED
 */
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 
 
-// Load routes
+
+// LOAD ROUTES
 
 
 
-// Start the application
+// START THE APPLICATION
 app.listen(port, () => console.log('Listening on port ' + port));
