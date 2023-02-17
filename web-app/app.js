@@ -1,5 +1,6 @@
 // LOAD DEPENDENCIES
 const express = require('express');
+const jwt = require('jsonwebtoken');
 
 // DOTENV LOAD ENVIRONMENT VARIABLES IN .ENV FILE AS PROCESS.ENV.<PROPERTY_NAME>
 require('dotenv').config();
@@ -20,11 +21,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 
-
-
 // LOAD ROUTES
 
-
+const uni_details_routes = require('./server/routes/uni_details');
+app.use('/uni/',uni_details_routes);
 
 // START THE APPLICATION
 app.listen(port, () => console.log('Listening on port ' + port));
