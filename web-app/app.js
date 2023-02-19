@@ -30,9 +30,11 @@ app.set('view engine', 'pug');
 
 const uni_details_routes = require('./server/routes/uni_details');
 app.use('/uni/', uni_details_routes);
-app.get('/', (req, res) => {
+
+// UNCOMENT FOLLOWING BLOCK TO CHANGE LOADING SCREEN TO REQUIRED VIEW : CHANGE 'sample_view' TO REQUIRED VIEW
+/*app.get('/', (req, res) => {
   res.render('sample_view', { title: 'Hey', message: 'Hello there!' });
-});
+});*/
 
 // START THE APPLICATION
 app.listen(port, () => console.log('Listening on port ' + port));
