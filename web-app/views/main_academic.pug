@@ -1,0 +1,180 @@
+doctype html
+
+head
+  meta(charset='utf-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
+  link(rel='apple-touch-icon' sizes='76x76' href='../static/assets/img/apple-icon.png')
+  link(rel='icon' type='image/png' href='../static/assets/img/logos/university/uom.png')
+  script(src='../static/assets/js/core/popper.min.js')
+  script(src='../static/assets/js/core/bootstrap.min.js')
+  script(src='../static/assets/js/plugins/perfect-scrollbar.min.js')
+  script(src='../static/assets/js/plugins/smooth-scrollbar.min.js')
+  // Github buttons
+  script(async='' defer='' src='https://buttons.github.io/buttons.js')
+  script(src='../static/assets/js/plugins/chartjs.min.js')
+  title
+    | Academic - Faculty Access Control System
+  // Fonts and icons
+  link(href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet')
+  // Nucleo Icons
+  link(href='../static/assets/css/nucleo-icons.css' rel='stylesheet')
+  link(href='../static/assets/css/nucleo-svg.css' rel='stylesheet')
+  // Font Awesome Icons
+  script(src='https://kit.fontawesome.com/42d5adcbca.js' crossorigin='anonymous')
+  link(href='../static/assets/css/nucleo-svg.css' rel='stylesheet')
+  // CSS Files
+  link#pagestyle(href='../static/assets/css/argon-dashboard.css?v=2.0.4' rel='stylesheet')
+  link#pagestyle(href='../static/assets/css/navbar-custom.css' rel='stylesheet')
+
+
+body.g-sidenav-show.bg-gray-100
+  .min-height-300.bg-primary.position-absolute.w-100
+  aside#sidenav-main.sidenav.bg-white.navbar.navbar-vertical.navbar-expand-xs.border-0.border-radius-xl.my-3.fixed-start.ms-4
+    .sidenav-header
+      i#iconSidenav.fas.fa-times.p-3.cursor-pointer.text-secondary.opacity-5.position-absolute.end-0.top-0.d-none.d-xl-none(aria-hidden='true')
+      a.navbar-brand.m-0(href=' https://demos.creative-tim.com/argon-dashboard/pages/dashboard.html ' target='_blank')
+        img.navbar-brand-img.h-100(src='../static/assets/img/logos/university/uom.png' alt='main_logo')
+        span.ms-1.font-weight-bold University of Moratuwa
+    hr.horizontal.dark.mt-0
+    #sidenav-collapse-main.collapse.navbar-collapse.w-auto
+      ul.navbar-nav
+        li.user-title
+          a.nav-link.active(href='../pages/dashboard.html')
+            .icon.icon-shape.icon-sm.border-radius-md.text-center.me-2.mt-0.d-flex.align-items-center.justify-content-center
+              i.ni.ni-single-02.text-white.text-xlg.opacity-10
+            span.nav-link-text.ms-1.text-white Priyanga Dilini Thalagala 
+              br
+              span.nav-link-text.text-light Lecturer
+        li.nav-item
+          a.nav-link.active(href='../pages/dashboard.html')
+            .icon.icon-shape.icon-sm.border-radius-md.text-center.me-2.d-flex.align-items-center.justify-content-center
+              i.ni.ni-tv-2.text-primary.text-sm.opacity-10
+            span.nav-link-text.ms-1 Overview
+        li.nav-item
+          a.nav-link(href='../pages/tables.html')
+            .icon.icon-shape.icon-sm.border-radius-md.text-center.me-2.d-flex.align-items-center.justify-content-center
+              i.ni.ni-chart-bar-32.text-warning.text-sm.opacity-10
+            span.nav-link-text.ms-1 Detailed Reports
+        li.nav-item
+          a.nav-link(href='../pages/billing.html')
+            .icon.icon-shape.icon-sm.border-radius-md.text-center.me-2.d-flex.align-items-center.justify-content-center
+              i.ni.ni-single-02.text-success.text-sm.opacity-10
+            span.nav-link-text.ms-1 Student Reports
+  main.main-content.position-relative.border-radius-lg
+    // Navbar
+    nav#navbarBlur.navbar.navbar-main.navbar-expand-lg.px-0.mx-4.shadow-none.border-radius-xl(data-scroll='false')
+      .container-fluid.py-1.px-3
+        nav(aria-label='breadcrumb')
+          ol.breadcrumb.bg-transparent.mb-0.pb-0.pt-1.px-0.me-sm-6.me-5
+            li.breadcrumb-item.text-sm
+              a.opacity-5.text-white(href='javascript:;') Pages
+            li.breadcrumb-item.text-sm.text-white.active(aria-current='page') Overview
+          h6.font-weight-bolder.text-white.mb-0 Overview
+        #navbar.collapse.navbar-collapse.mt-sm-0.mt-2.me-md-0.me-sm-4
+          .ms-md-auto.pe-md-3.d-flex.align-items-center
+          ul.navbar-nav.justify-content-end
+            li.nav-item.d-flex.align-items-center.me-3
+              a.nav-link.text-white.font-weight-bold.px-0(href='javascript:;')
+                i.fa.fa-user.me-sm-1
+                span.d-sm-inline.d-none Profile
+            li.nav-item.px-3.d-flex.align-items-center.me-3
+              a.nav-link.text-white.p-0(href='javascript:;')
+                i.fa.fa-cog.fixed-plugin-button-nav.cursor-pointer.me-sm-1
+                span.d-sm-inline.d-none Settings
+            li.nav-item.d-flex.align-items-center.me-3
+              a.nav-link.text-white.font-weight-bold.px-0(href='javascript:;')
+                i.fa.fa-sign-out.me-sm-1
+                span.d-sm-inline.d-none Sign Out
+            li.nav-item.d-xl-none.ps-3.d-flex.align-items-center.me-3
+              a#iconNavbarSidenav.nav-link.text-white.p-0(href='javascript:;')
+                .sidenav-toggler-inner
+                  i.sidenav-toggler-line.bg-white
+                  i.sidenav-toggler-line.bg-white
+                  i.sidenav-toggler-line.bg-white
+
+
+    block content
+
+
+    // Footer Start
+    footer.footer.pt-3
+      .container-fluid
+        .row.align-items-center.justify-content-lg-between
+          .col-lg-6.mb-lg-0.mb-4
+            .copyright.text-center.text-sm.text-muted.text-lg-start
+              | &copy;
+              script.
+                document.write(new Date().getFullYear())
+              | ,
+              |               made with 
+              i.fa.fa-heart
+              |  by
+              a.font-weight-bold(href='https://www.creative-tim.com' target='_blank')
+                | University of Moratuw -
+                | IT Faculty
+          .col-lg-6
+            ul.nav.nav-footer.justify-content-center.justify-content-lg-end
+              li.nav-item
+                a.nav-link.text-muted(href='https://uom.lk/itfac' target='_blank') IT Faculty
+              li.nav-item
+                a.nav-link.text-muted(href='https://uom.lk' target='_blank') UOM
+    // Footer End
+  .fixed-plugin
+    a.fixed-plugin-button.text-dark.position-fixed.px-3.py-2
+      i.fa.fa-cog.py-2  
+    .card.shadow-lg
+      .card-header.pb-0.pt-3
+        .float-start
+          h5.mt-3.mb-0 Argon Configurator
+          p See our dashboard options.
+        .float-end.mt-4
+          button.btn.btn-link.text-dark.p-0.fixed-plugin-close-button
+            i.fa.fa-close
+        // End Toggle Button
+      hr.horizontal.dark.my-1
+      .card-body.pt-sm-3.pt-0.overflow-auto
+        // Sidebar Backgrounds
+        div
+          h6.mb-0 Sidebar Colors
+        a.switch-trigger.background-color(href='javascript:void(0)')
+          .badge-colors.my-2.text-start
+            span.badge.filter.bg-gradient-primary.active(data-color='primary' onclick='sidebarColor(this)')
+            span.badge.filter.bg-gradient-dark(data-color='dark' onclick='sidebarColor(this)')
+            span.badge.filter.bg-gradient-info(data-color='info' onclick='sidebarColor(this)')
+            span.badge.filter.bg-gradient-success(data-color='success' onclick='sidebarColor(this)')
+            span.badge.filter.bg-gradient-warning(data-color='warning' onclick='sidebarColor(this)')
+            span.badge.filter.bg-gradient-danger(data-color='danger' onclick='sidebarColor(this)')
+        // Sidenav Type
+        .mt-3
+          h6.mb-0 Sidenav Type
+          p.text-sm Choose between 2 different sidenav types.
+        .d-flex
+          button.btn.bg-gradient-primary.w-100.px-3.mb-2.active.me-2(data-class='bg-white' onclick='sidebarType(this)') White
+          button.btn.bg-gradient-primary.w-100.px-3.mb-2(data-class='bg-default' onclick='sidebarType(this)') Dark
+        p.text-sm.d-xl-none.d-block.mt-2 You can change the sidenav type just on desktop view.
+        // Navbar Fixed
+        .d-flex.my-3
+          h6.mb-0 Navbar Fixed
+          .form-check.form-switch.ps-0.ms-auto.my-auto
+            input#navbarFixed.form-check-input.mt-1.ms-auto(type='checkbox' onclick='navbarFixed(this)')
+        hr.horizontal.dark.my-sm-4
+        .mt-2.mb-5.d-flex
+          h6.mb-0 Light / Dark
+          .form-check.form-switch.ps-0.ms-auto.my-auto
+            input#dark-version.form-check-input.mt-1.ms-auto(type='checkbox' onclick='darkMode(this)')
+        a.btn.bg-gradient-dark.w-100(href='https://www.creative-tim.com/product/argon-dashboard')
+          | Free
+          | Download
+        a.btn.btn-outline-dark.w-100(href='https://www.creative-tim.com/learning-lab/bootstrap/license/argon-dashboard') View documentation
+        .w-100.text-center
+          a.github-button(href='https://github.com/creativetimofficial/argon-dashboard' data-icon='octicon-star' data-size='large' data-show-count='true' aria-label='Star creativetimofficial/argon-dashboard on GitHub') Star
+          h6.mt-3 Thank you for sharing!
+          a.btn.btn-dark.mb-0.me-2(href='https://twitter.com/intent/tweet?text=Check%20Argon%20Dashboard%20made%20by%20%40CreativeTim%20%23webdesign%20%23dashboard%20%23bootstrap5&url=https%3A%2F%2Fwww.creative-tim.com%2Fproduct%2Fargon-dashboard' target='_blank')
+            i.fab.fa-twitter.me-1(aria-hidden='true')
+            |  Tweet
+          a.btn.btn-dark.mb-0.me-2(href='https://www.facebook.com/sharer/sharer.php?u=https://www.creative-tim.com/product/argon-dashboard' target='_blank')
+            i.fab.fa-facebook-square.me-1(aria-hidden='true')
+            |  Share
+
+// Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc
+script(src='../static/assets/js/argon-dashboard.min.js?v=2.0.4')

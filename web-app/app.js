@@ -1,6 +1,7 @@
 // LOAD DEPENDENCIES
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const pug = require('pug');
 
 // DOTENV LOAD ENVIRONMENT VARIABLES IN .ENV FILE AS PROCESS.ENV.<PROPERTY_NAME>
 require('dotenv').config();
@@ -19,12 +20,19 @@ const port = process.env.PORT || 5000;
 */
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static('public'));
+app.use('/static',express.static('public'));
+
+// SETTING UP TEMPLATE ENGINE - PUG
+app.set('views', './views');
+app.set('view engine', 'pug');
 
 // LOAD ROUTES
 
 const uni_details_routes = require('./server/routes/uni_details');
-app.use('/uni/',uni_details_routes);
+app.use('/uni/', uni_details_routes);
+app.get('/', (req, res) => {
+  res.render('sample_view', { title: 'Hey', message: 'Hello there!' });
+});
 
 // START THE APPLICATION
 app.listen(port, () => console.log('Listening on port ' + port));
