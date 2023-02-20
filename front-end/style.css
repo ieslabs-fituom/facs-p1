@@ -5,6 +5,7 @@
 }
 body {
   line-height: 1;
+
   margin: 10px;
   font-family: "Inter", sans-serif;
 }
@@ -60,4 +61,5 @@ p a {
 }
 .header-second-div-component ul li:first-child {
   margin-bottom: 25px;
+
 }
