@@ -28,13 +28,13 @@ app.set('view engine', 'pug');
 
 // LOAD ROUTES
 
-const uni_details_routes = require('./server/routes/uni_details');
-app.use('/uni/', uni_details_routes);
+const academic_route = require('./server/routes/academic_route');
+app.use('/ac/', academic_route);
 
 // UNCOMENT FOLLOWING BLOCK TO CHANGE LOADING SCREEN TO REQUIRED VIEW : CHANGE 'sample_view' TO REQUIRED VIEW
-app.get('/', (req, res) => {
+/*app.get('/', (req, res) => {
   res.render('sample_view_2', { title: 'Hey', message: [1,2,3,4,5,6,7,8,9] });
-});
+});*/
 
 // START THE APPLICATION
 app.listen(port, () => console.log('Listening on port ' + port));
