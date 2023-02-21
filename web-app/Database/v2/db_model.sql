@@ -267,7 +267,7 @@ CREATE TABLE IF NOT EXISTS `faculty_access_schema`.`student_groups` (
 DROP TABLE IF EXISTS `faculty_access_schema`.`groups_for_students` ;
 
 CREATE TABLE IF NOT EXISTS `faculty_access_schema`.`groups_for_students` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `Student` INT NOT NULL,
   `Group` INT NOT NULL,
   `create_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
