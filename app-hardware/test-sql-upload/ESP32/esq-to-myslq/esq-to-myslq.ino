@@ -5,6 +5,8 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <Wire.h>
+#include "RTClib.h"
+
 
 
 
@@ -15,15 +17,17 @@
 
 //VARIABLES AND CONSTANTS DEFINITION HERE
 unsigned long uid = 0;
-const char* ssid     = "Among_Us";
-const char* password = "lakmina2055176";
+const char* ssid     = "Dialog 4G 578";
+const char* password = "467EF9d1";
 const char* serverName = "http://192.168.8.142:80/post-esp-data.php";
 String apiKeyValue = "testapikey";
+String time_string;
 
 
 //PIN DEFINITIONS
 MFRC522 mfrc522(RC522_SS_PIN, RC522_RST_PIN);
 Rdm6300 rdm6300;
+RTC_DS1307 rtc;
 
 
 
@@ -36,6 +40,7 @@ void setup() {
   mfrc522.PCD_Init();
   delay(4); //added this delay cus mc is slower than we expected. It takes some time to start the initiation
   rdm6300.begin(RDM6300_RX_PIN);
+  rtc.begin();
 
   //wifi
   WiFi.begin(ssid, password);
@@ -86,6 +91,9 @@ void loop() {
   
 
   if(uid != 0){
+      DateTime time = rtc.now();
+      time_string = time.timestamp(DateTime::TIMESTAMP_FULL);
+      Serial.print(time_string);
       Serial.println(uid);
       if(WiFi.status()== WL_CONNECTED){
       WiFiClient client;
@@ -93,7 +101,7 @@ void loop() {
       http.begin(client, serverName);
       http.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
-      String httpRequestData = "api_key=" + apiKeyValue + "&id=" + uid + "&name=" + uid;
+      String httpRequestData = "api_key=" + apiKeyValue + "&id=" + uid + "&name=" + time_string;
       Serial.print("httpRequestData: ");
       Serial.println(httpRequestData);
       
