@@ -57,7 +57,8 @@ exports.view = async (req, res) => {
 
     // REMOVING DUPLICATE MODULES AND BATCHES FROM STUDENT_GROUP LIST
     groups_of_employee.forEach(element => {
-        ava_in_array,ava_in_array_2 = false;
+        ava_in_array = false;
+        ava_in_array_2 = false;
         modules.forEach(element2 => {
             if(element2 == element.Module){
                 ava_in_array = true;
