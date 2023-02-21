@@ -76,23 +76,22 @@ block content
                                     .d-flex.flex-column
                                         h6.mb-1.text-dark.text-sm Module
                                         select.form-select.text-xs.me-8.pe-5.ms-0.mt-1
-                                            option(value='1') Fundamentals of Databases
-                                            option(value='1') Elements of Probability and StatisticsElements of Probability and Statistics
-                                            option(value='1') Fundamentals of Databases
+                                            each val in modules
+                                                option(value='#{val.id}') #{val.Code} - #{val.Name}
                             li.list-group-item.border-0.d-flex.justify-content-between.ps-0.border-radius-lg
                                 .d-flex.align-items-center
                                     .d-flex.flex-column
                                         h6.mb-1.text-dark.text-sm Batch
                                         select.form-select.text-xs.me-8.pe-5.ms-0.mt-1
-                                            option(value='1') Batch 20
-                                            option(value='1') Batch 21
+                                            each val in batches
+                                                option(value='#{val.id}') Batch #{val.Batch}
                             li.list-group-item.border-0.d-flex.justify-content-between.ps-0.border-radius-lg
                                 .d-flex.align-items-center
                                     .d-flex.flex-column
                                         h6.mb-1.text-dark.text-sm Group
                                         select.form-select.text-xs.me-8.pe-5.ms-0.mt-1
-                                            option(value='1') mod5-grp1
-                                            option(value='1') mod5-grp2
+                                            each val in groups
+                                                option(value='#{val.id}') #{val.Name}
                             li.list-group-item.border-0.d-flex.justify-content-between.ps-0.border-radius-lg
                                 .d-flex.align-items-center
                                     .d-flex.flex-column
