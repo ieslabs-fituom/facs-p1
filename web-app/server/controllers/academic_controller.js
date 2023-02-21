@@ -12,7 +12,8 @@ let conn = mysql.createConnection({
 
 exports.view = async (req, res) => {
     console.log('Starting controller...');
-    var employee_details, designations;
+    var employee_details, designations, groups_of_employee, modules = [], batches = [];
+    var ava_in_array, ava_in_array_2;
 
     // RETRIEVING ID AND THE DESIGNATION OF THE EMPLOYEE
     try{
@@ -38,10 +39,65 @@ exports.view = async (req, res) => {
         }
     })
 
+    // RETREIVING GROUPS OF EMPLOYEE
+    try{
+        groups_of_employee = await commonFunctions.getGroupsofEmployee(conn,process.env.CURRENT_ID);
+        console.log(groups_of_employee);
+    }catch(e){
+        console.log('Error : ' + e);
+    }
+
+    // RETRIEVING DETAILS OF LOADED GROUPS
+    try{
+        groups_of_employee = await commonFunctions.getStudenGroupDetails(conn,groups_of_employee);
+        console.log(groups_of_employee);
+    }catch(e){
+        console.log('Error : ' + e);
+    }
+
+    // REMOVING DUPLICATE MODULES AND BATCHES FROM STUDENT_GROUP LIST
+    groups_of_employee.forEach(element => {
+        ava_in_array,ava_in_array_2 = false;
+        modules.forEach(element2 => {
+            if(element2 == element.Module){
+                ava_in_array = true;
+                return;
+            }
+        })
+        batches.forEach(element3 => {
+            if(element3 == element.Batch){
+                ava_in_array_2 = true;
+                return;
+            }
+        })
+        if(!ava_in_array){
+            modules.push(element.Module);
+        }
+        if(!ava_in_array_2){
+            batches.push(element.Batch);
+        }
+    })
+
+    // LOADING DETAILS OF THE MODULE
+    try{
+        modules = await commonFunctions.getModuleDetails(conn,modules);
+        console.log(modules);
+    }catch(e){
+        console.log('Error : ' + e);
+    }
+
+    // LOADING DETAILS OF BATCHES
+    try{
+        batches = await commonFunctions.getBatchDetails(conn,batches);
+        console.log(batches);
+    }catch(e){
+        console.log('Error : ' + e);
+    }
+
     console.log('finishing...');
 
     // RENDERING THE VIEW
-    res.render('sample_view_2', { title: 'title', employee: employee_details });
+    res.render('sample_view_2', { title: 'title', employee: employee_details, modules: modules, batches: batches, groups: groups_of_employee });
 }
 
 exports.get_dept = (req, res) => {

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3308
--- Generation Time: Feb 21, 2023 at 06:05 PM
+-- Generation Time: Feb 21, 2023 at 06:29 PM
 -- Server version: 8.0.27
 -- PHP Version: 7.4.26
 
@@ -187,14 +187,14 @@ CREATE TABLE IF NOT EXISTS `employees_of_groups` (
   `update_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `employeegroup_employee_foreign_idx` (`Employee`),
-  KEY `employeegroup_group_foreign_idx` (`Group`)
+  KEY `employeegroup_group_foreign_idx` (`Emp_group`)
 ) ENGINE=MyISAM AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `employees_of_groups`
 --
 
-INSERT INTO `employees_of_groups` (`id`, `Employee`, `Group`, `create_time`, `update_time`) VALUES
+INSERT INTO `employees_of_groups` (`id`, `Employee`, `Emp_group`, `create_time`, `update_time`) VALUES
 (1, 16, 1, '2023-02-21 17:54:56', NULL),
 (2, 16, 2, '2023-02-21 17:54:56', NULL),
 (3, 13, 3, '2023-02-21 17:56:19', NULL),
@@ -249,11 +249,11 @@ DROP TABLE IF EXISTS `groups_for_students`;
 CREATE TABLE IF NOT EXISTS `groups_for_students` (
   `id` int NOT NULL AUTO_INCREMENT,
   `Student` int NOT NULL,
-  `Group` int NOT NULL,
+  `Stu_group` int NOT NULL,
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `groupStudent_group_foreign_idx` (`Group`),
+  KEY `groupStudent_group_foreign_idx` (`Stu_group`),
   KEY `groupStudent_student_foreign_idx` (`Student`)
 ) ENGINE=MyISAM AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
 
@@ -261,7 +261,7 @@ CREATE TABLE IF NOT EXISTS `groups_for_students` (
 -- Dumping data for table `groups_for_students`
 --
 
-INSERT INTO `groups_for_students` (`id`, `Student`, `Group`, `create_time`, `update_time`) VALUES
+INSERT INTO `groups_for_students` (`id`, `Student`, `Stu_group`, `create_time`, `update_time`) VALUES
 (1, 1, 1, '2023-02-21 17:34:33', NULL),
 (2, 3, 1, '2023-02-21 17:34:33', NULL),
 (3, 4, 1, '2023-02-21 17:34:33', NULL),
@@ -377,7 +377,7 @@ CREATE TABLE IF NOT EXISTS `password_resets` (
 DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE IF NOT EXISTS `sessions` (
   `id` int NOT NULL,
-  `Group` int NOT NULL,
+  `Ses_group` int NOT NULL,
   `Start_time` timestamp NOT NULL,
   `Duration` double NOT NULL,
   `Method` tinyint NOT NULL,
@@ -385,7 +385,7 @@ CREATE TABLE IF NOT EXISTS `sessions` (
   `update_time` timestamp NULL DEFAULT NULL,
   `Type` int NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `session_group_foreign_idx` (`Group`)
+  KEY `session_group_foreign_idx` (`Ses_group`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -488,14 +488,14 @@ INSERT INTO `student_groups` (`id`, `Name`, `Module`, `Batch`, `create_time`, `u
 DROP TABLE IF EXISTS `timetable`;
 CREATE TABLE IF NOT EXISTS `timetable` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `group` int NOT NULL,
+  `T_group` int NOT NULL,
   `Day` int UNSIGNED NOT NULL,
   `Start_time` timestamp NOT NULL,
   `End_time` timestamp NULL DEFAULT NULL,
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `timetable_groups_foreign_idx` (`group`)
+  KEY `timetable_groups_foreign_idx` (`T_group`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
 
 --
