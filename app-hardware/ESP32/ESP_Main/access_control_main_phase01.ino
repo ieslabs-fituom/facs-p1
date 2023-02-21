@@ -1,3 +1,12 @@
+// Faculty of Information Technology - Batch 21
+
+//To anyone reading this code. Please read these instructions carefully.
+//If you are to change the codes please make sure to put all technical comments in UPPRCASE.
+
+
+
+
+
 //LIBRARY ADDITION HERE
 #include <SPI.h>
 #include <rdm6300.h>
@@ -6,6 +15,7 @@
 #include <HTTPClient.h>
 #include <Wire.h>
 #include "RTClib.h"
+
 
 
 
@@ -91,6 +101,7 @@ void loop() {
   
 
   if(uid != 0){
+      //CREATING A DATETIME OBJECT TO RTC
       DateTime time = rtc.now();
       time_string = time.timestamp(DateTime::TIMESTAMP_FULL);
       Serial.print(time_string);
