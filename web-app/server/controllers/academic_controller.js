@@ -59,6 +59,8 @@ exports.view = async (req, res) => {
     groups_of_employee.forEach(element => {
         ava_in_array = false;
         ava_in_array_2 = false;
+        let str = element.Name.split('-')[1];
+        element.Name = 'Group ' + str.substring(3,str.length);
         modules.forEach(element2 => {
             if(element2 == element.Module){
                 ava_in_array = true;
