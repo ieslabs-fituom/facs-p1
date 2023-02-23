@@ -75,31 +75,31 @@ block content
                                 .d-flex.align-items-center
                                     .d-flex.flex-column
                                         h6.mb-1.text-dark.text-sm Module
-                                        select.form-select.text-xs.me-8.pe-5.ms-0.mt-1
+                                        select#modules_select.form-select.text-xs.me-8.pe-5.ms-0.mt-1(onchange = "onModuleSelect()")
                                             each val in modules
-                                                option(value='#{val.id}') #{val.Code} - #{val.Name}
+                                                option(value=val.id) #{val.Code} - #{val.Name}
                             li.list-group-item.border-0.d-flex.justify-content-between.ps-0.border-radius-lg
                                 .d-flex.align-items-center
                                     .d-flex.flex-column
                                         h6.mb-1.text-dark.text-sm Batch
-                                        select.form-select.text-xs.me-8.pe-5.ms-0.mt-1
+                                        select#batch_select.form-select.text-xs.me-8.pe-5.ms-0.mt-1(onchange = "onBatchSelect()")
                                             each val in batches
-                                                option(value='#{val.id}') Batch #{val.Batch}
+                                                //option(value='#{val.id}') Batch #{val.Batch}
                             li.list-group-item.border-0.d-flex.justify-content-between.ps-0.border-radius-lg
                                 .d-flex.align-items-center
                                     .d-flex.flex-column
                                         h6.mb-1.text-dark.text-sm Group
-                                        select.form-select.text-xs.me-8.pe-5.ms-0.mt-1
+                                        select#group_select.form-select.text-xs.me-8.pe-5.ms-0.mt-1
                                             each val in groups
-                                                option(value='#{val.id}') #{val.Name}
+                                                //option(value='#{val.id}') #{val.Name}
                             li.list-group-item.border-0.d-flex.justify-content-between.ps-0.border-radius-lg
                                 .d-flex.align-items-center
                                     .d-flex.flex-column
                                         h6.mb-1.text-dark.text-sm Degree
                                         select.form-select.text-xs.me-8.pe-5.ms-0.mt-1
-                                            option(value='1') Information Technology
-                                            option(value='1') Information Technology And Management
-                                            option(value='1') Artificial Intelligence
+                                            //option(value='1') Information Technology
+                                            //option(value='1') Information Technology And Management
+                                            //option(value='1') Artificial Intelligence
                         .card-header.pb-0.mb-0
                             .d-flex.align-items-center
                                 button.btn.btn-primary.btn-sm.ms-auto Apply Filters
@@ -222,7 +222,16 @@ block content
                                         h6.text-sm.mb-0 90%
 
     script.
-        console.log('you are awesome')
+        // Loading the chart
+        var modules,batches,groups;
+        $(document).ready(function() {
+            modules = JSON.parse(JSON.stringify(!{JSON.stringify(modules)}));
+            batches = JSON.parse(JSON.stringify(!{JSON.stringify(batches)}));
+            groups = JSON.parse(JSON.stringify(!{JSON.stringify(groups)}));
+            console.log(modules);
+            onModuleSelect();
+        });
+
         var ctx1 = document.getElementById("chart-line").getContext("2d");
         var gradientStroke1 = ctx1.createLinearGradient(0, 230, 0, 50);
         gradientStroke1.addColorStop(1, 'rgba(94, 114, 228, 0.3)');
@@ -232,7 +241,6 @@ block content
         for(let i=1;i<=12;i++){
             arr.push((i^5));
         }
-        console.log(arr);
         new Chart(ctx1, {
             type: "line",
             data: {
@@ -330,6 +338,66 @@ block content
                 },
             },
         });
+
+        // Modules select change event
+        function onModuleSelect(){
+            var module_select_view = document.getElementById("modules_select");
+            var batch_select_view = document.getElementById("batch_select");
+            clearSelectOptions(batch_select_view);
+            let selected_module = module_select_view.value;
+            console.log(selected_module);
+
+            let matching_batches = [];
+            let ava_in_array;
+            for(let obj in groups){
+                if(groups[obj].Module == selected_module){
+                    ava_in_array =false;
+                    for(let batch in matching_batches){
+                        if(matching_batches[batch] == groups[obj].Batch){
+                            ava_in_array = true;
+                            break;
+                        }
+                    }
+                    if(ava_in_array==false){
+                        matching_batches.push(groups[obj].Batch);
+                    }
+                }
+            }
+
+            console.log('batches : ' + matching_batches);
+
+            let batch_name;
+            for(let batch in matching_batches){
+                batch_name = batches.filter((batches) => {
+                    return batches.id == matching_batches[batch];
+                });
+                batch_select_view.add(new Option('Batch ' + batch_name[0].Batch,batch_name[0].id),undefined);
+                console.log(batch_name);
+            }
+
+            onBatchSelect();
+        }
+
+        function onBatchSelect(){
+            var module_select_view = document.getElementById("modules_select");
+            var batch_select_view = document.getElementById("batch_select");
+            var group_select_view = document.getElementById("group_select");
+
+            let selected_module = module_select_view.value;
+            let selected_batch = batch_select_view.value;
+
+            clearSelectOptions(group_select_view);
+            for(let grp in groups){ 
+                if(groups[grp].Batch == selected_batch && groups[grp].Module == selected_module){
+                    group_select_view.add(new Option(groups[grp].id,groups[grp].id),undefined);
+                }
+            }
+        }
+
+        function clearSelectOptions(element){
+            element.innerHTML = "";
+        }
+
     script.
         var win = navigator.platform.indexOf('Win') > -1;
         if (win && document.querySelector('#sidenav-scrollbar')) {
