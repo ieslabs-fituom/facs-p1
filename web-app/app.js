@@ -29,7 +29,9 @@ app.set('view engine', 'pug');
 // LOAD ROUTES
 
 const academic_route = require('./server/routes/academic_route');
+const nonacademic_route = require('./server/routes/nonacademic_route');
 app.use('/ac/', academic_route);
+app.use('/nac/', nonacademic_route);
 
 // UNCOMENT FOLLOWING BLOCK TO CHANGE LOADING SCREEN TO REQUIRED VIEW : CHANGE 'sample_view' TO REQUIRED VIEW
 /*app.get('/', (req, res) => {

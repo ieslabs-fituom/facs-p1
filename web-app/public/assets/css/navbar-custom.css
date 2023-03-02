@@ -3,3 +3,30 @@
     border-radius: 10px;
     background-color: #5e72e4;
 }
+
+.limited-rows-table{
+    height: 500px;
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+}
+
+.limited-rows-tbody{
+    flex: 1 1 auto;
+    display: block;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.limited-rows-tr{
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+}
+
+.limited-rows-table-lg{
+    max-height: 1500px;
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+}

@@ -1,0 +1,136 @@
+extends main_nonacademic
+
+block content
+    .container-fluid.py-4
+        .row
+            .col-xl-3.col-sm-6.mb-xl-0.mb-4
+                .card
+                    .card-body.p-3
+                        .row
+                            .col-8
+                                .numbers
+                                    p.text-sm.mb-0.text-uppercase.font-weight-bold Academic Year
+                                    h5.font-weight-bolder
+                                    | 2022/2023
+                                    p.mb-0
+                                    span.text-success.text-sm.font-weight-bolder 
+                                    br
+                            .col-4.text-end
+                                .icon.icon-shape.bg-gradient-primary.shadow-primary.text-center.rounded-circle
+                                    i.ni.ni-calendar-grid-58.text-lg.opacity-10(aria-hidden='true')
+            .col-xl-3.col-sm-6.mb-xl-0.mb-4
+                .card
+                    .card-body.p-3
+                        .row
+                            .col-8
+                                .numbers
+                                    p.text-sm.mb-0.text-uppercase.font-weight-bold Ongoing
+                                    h5.font-weight-bolder
+                                    | Semester 2
+                                    p.mb-0
+                                    span.text-success.text-sm.font-weight-bolder 2022/01/01 - 2023/06/01
+                            .col-4.text-end
+                                .icon.icon-shape.bg-gradient-success.shadow-success.text-center.rounded-circle
+                                    i.ni.ni-time-alarm.text-lg.opacity-10(aria-hidden='true')
+            .col-xl-3.col-sm-6.mb-xl-0.mb-4
+                .card
+                    .card-body.p-3
+                        .row
+                            .col-8
+                                .numbers
+                                    p.text-sm.mb-0.text-uppercase.font-weight-bold Enrolled Students
+                                    h5.font-weight-bolder
+                                    | 456 Students
+                                    p.mb-0
+                                    span.text-success.text-sm.font-weight-bolder
+                                    br
+                            .col-4.text-end
+                                .icon.icon-shape.bg-gradient-danger.shadow-danger.text-center.rounded-circle
+                                    i.ni.ni-single-02.text-lg.opacity-10(aria-hidden='true')
+            .col-xl-3.col-sm-6
+                .card
+                    .card-body.p-3
+                        .row
+                            .col-8
+                                .numbers
+                                    p.text-sm.mb-0.text-uppercase.font-weight-bold Sessions Done
+                                    h5.font-weight-bolder
+                                    | 45 Sessions
+                                    br
+                                    br
+                            .col-4.text-end
+                                .icon.icon-shape.bg-gradient-warning.shadow-warning.text-center.rounded-circle
+                                    i.ni.ni-check-bold.text-lg.opacity-10(aria-hidden='true')
+
+        .row.mt-4
+            .col-lg-0.mb-lg-0.mb-4
+                .card
+                    .card-header.pb-0.p-3
+                        .d-flex.justify-content-between
+                        h6.mb-2 Registered Modules
+                    .table-responsive
+                        //Class limited-rows-table - used to specify the max height and make scrollbars visible
+                        table.table.align-items-center.limited-rows-table
+                            tbody.limited-rows-tbody
+                                each mod in modules 
+                                    tr.limited-rows-tr(value=mod.id)
+                                        td.w-30
+                                            .d-flex.px-2.py-1.align-items-center
+                                                div
+                                                    img(src='../static/assets/img/icons/books.png' alt='Icon')
+                                                .ms-4
+                                                    p.text-xs.font-weight-bold.mb-0 Module Code:
+                                                    h6.text-sm.mb-0 #{mod.Code}
+                                        td
+                                            .text-center
+                                            p.text-xs.font-weight-bold.mb-0 Name:
+                                            h6.text-sm.mb-0 #{mod.Name}
+                                        each dept in departments 
+                                            if(dept.id==mod.Department)
+                                                td
+                                                    .text-center
+                                                    p.text-xs.font-weight-bold.mb-0 Department:
+                                                    h6.text-sm.mb-0 #{dept.Name}
+
+        .row.mt-4 
+            .col-lg-4.col-sm-0
+                .card
+                    .card-header.mx-4.p-3.text-center
+                        .icon.icon-shape.icon-lg.bg-gradient-primary.shadow.text-center.border-radius-lg
+                            i.ni.ni-time-alarm.text-lg.opacity-10(aria-hidden='true')
+                    .card-body.pt-0.p-3.text-center
+                        h6.text-center.mb-0 Time Table
+                        span.text-xs View / Update Semester Timetable
+                        hr.horizontal.dark.my-3
+                        button.btn.btn-primary.btn-sm.ms-auto View
+            .col-lg-4.col-sm-0
+                .card
+                    .card-header.mx-4.p-3.text-center
+                        .icon.icon-shape.icon-lg.bg-gradient-success.shadow.text-center.border-radius-lg 
+                            i.ni.ni-folder-17.text-lg.opacity-10(aria-hidden='true')
+                    .card-body.pt-0.p-3.text-center
+                        h6.text-center.mb-0 Sessions
+                        span.text-xs View Past Sessions
+                        hr.horizontal.dark.my-3
+                        button.btn.btn-primary.btn-sm.ms-auto View
+            .col-lg-4.col-sm-0
+                .card
+                    .card-header.mx-4.p-3.text-center
+                        .icon.icon-shape.icon-lg.bg-gradient-warning.shadow.text-center.border-radius-lg
+                            i.ni.ni-single-02.text-lg.opacity-10(aria-hidden='true')
+                    .card-body.pt-0.p-3.text-center
+                        h6.text-center.mb-0 Student Groups
+                        span.text-xs View / Update Student Groups
+                        hr.horizontal.dark.my-3
+                        button.btn.btn-primary.btn-sm.ms-auto View
+                                            
+        
+
+    script.
+        var win = navigator.platform.indexOf('Win') > -1;
+        if (win && document.querySelector('#sidenav-scrollbar')) {
+            var options = {
+                damping: '0.5'
+            }
+            Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+        }
