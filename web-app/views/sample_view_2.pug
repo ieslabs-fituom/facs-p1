@@ -1,4 +1,4 @@
-extends main_academic
+extends main_nonacademic
 
 block content
     .container-fluid.py-4
@@ -222,7 +222,7 @@ block content
                                         h6.text-sm.mb-0 90%
 
     script.
-        // Loading the chart
+
         var modules,batches,groups;
         $(document).ready(function() {
             modules = JSON.parse(JSON.stringify(!{JSON.stringify(modules)}));
@@ -232,6 +232,8 @@ block content
             onModuleSelect();
         });
 
+
+        // Loading the chart
         var ctx1 = document.getElementById("chart-line").getContext("2d");
         var gradientStroke1 = ctx1.createLinearGradient(0, 230, 0, 50);
         gradientStroke1.addColorStop(1, 'rgba(94, 114, 228, 0.3)');
