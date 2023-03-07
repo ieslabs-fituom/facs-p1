@@ -12,7 +12,7 @@ let conn = mysql.createConnection({
 
 exports.view = async (req, res) => {
     console.log('Starting controller...');
-    var employee_details = loadInitialDetails();
+    var employee_details = await loadInitialDetails();
 
     console.log('finishing...');
 
@@ -24,7 +24,7 @@ exports.sem_view = async (req, res) => {
     console.log('Starting controller...');
     var employee_details, modules = [], batches = [], departments = [];
 
-    employee_details = loadInitialDetails();
+    employee_details = await loadInitialDetails();
 
     // RETRIEVING ALL MODULES
     try {
@@ -122,33 +122,24 @@ exports.stu_get_filtered = async (req, res) => {
 
 }
 
-// RETRIEVE A STUDENT BY SEARCHING USING INDEX, NAME OR EMAIL
-exports.stu_get_bykeyword = async (req, res) => {
-    let search_index = req.query.index;
+
+exports.stu_get_profile = async (req, res) => {
+    console.log('Function starting... stu profile');
+
+    let search_index = req.query.searchoption;
     let search_keyword = req.query.keyword;
-    console.log(search_index);
-    let student;
 
-    let sql = 'SELECT id,IndexNo,Name,Email,Degree,Batch FROM students'
+    var employee_details, student, groups, modules, sessions, attendances;
 
-    /*switch (search_index) {
-        case 0:
-            console.log('starting');
-            sql += ' WHERE IndexNo = "' + search_keyword + '"';
-            break;
-        case 1:
-            sql += ' WHERE Name = "' + search_keyword + '"';
-            break;
-        case 2:
-            sql += ' WHERE Email = "' + search_keyword + '"';
-            break;
-    }*/
+    employee_details = await loadInitialDetails();
 
-    if(search_index==0){
+    let sql = 'SELECT id,IndexNo,Name,Email,Degree,Batch FROM students';
+
+    if (search_index == 0) {
         sql += ' WHERE IndexNo = "' + search_keyword + '"';
-    }else if(search_index==1){
+    } else if (search_index == 1) {
         sql += ' WHERE Name = "' + search_keyword + '"';
-    }else if(search_index==2){
+    } else if (search_index == 2) {
         sql += ' WHERE Email = "' + search_keyword + '"';
     }
 
@@ -163,26 +154,87 @@ exports.stu_get_bykeyword = async (req, res) => {
             });
         });
 
-        if(student.length == 0){
-            res.send({ status: '201'});
-        }else{
-            res.send({ status: '200', student: student });
-        }
-        
     } catch (e) {
         console.log(e);
         res.send({ status: '500', student: student });
     }
-}
 
-// RETRIEVE STUDENT PROFILE
-exports.stu_get_profile = async (req, res) => {
-    console.log('Starting controller...');
-    var employee_details, faculties = [], batches = [], degrees = [];
+    if (student.length == 0) {
+        res.send({ status: '201' });
+    } else {
+        // RETRIEVING ALL GROUPS OF THE STUDENT
+        try {
+            groups = await commonFunctions.getGroupsOfAStudent(conn, student[0].id);
+            console.log(groups);
+        } catch (e) {
+            console.log('Error : ' + e);
+        }
 
-    employee_details = await loadInitialDetails();
+        let id_list = [];
 
-    res.render('nonacademic_student_profile', {employee: employee_details});
+        groups.forEach(element => {
+            id_list.push(element.Stu_group);
+        });
+
+        // RETRIEVING ALL GROUPS RELEVANT TO THE STUDENT
+        try {
+            groups = await commonFunctions.getStudenGroupDetails(conn, id_list);
+            console.log(groups);
+        } catch (e) {
+            console.log('Error : ' + e);
+        }
+
+        id_list = [];
+        groups.forEach(element => {
+            id_list.push(element.Module);
+        });
+
+        // RETRIEVING ALL MODULES RELEVANT TO THE STUDENT
+        try {
+            modules = await commonFunctions.getModuleDetails(conn, id_list);
+            console.log(modules);
+        } catch (e) {
+            console.log('Error : ' + e);
+        }
+
+        id_list = [];
+        groups.forEach(element => {
+            id_list.push(element.id);
+        });
+
+        // RETRIEVING ALL SESSIONS RELEVANT TO THE GROUPS
+        try {
+            sessions = await commonFunctions.getSessions(conn, id_list, 1);
+            console.log(sessions);
+        } catch (e) {
+            console.log('Error : ' + e);
+        }
+
+        //RETIEVING ALL ATTENDANCE ROWS OF SELECTED STUDENT RELEVANT TO EACH STUDENT GROUP
+        attendances = [];
+        let row = [];
+        groups.forEach(async element => {
+            try {
+                row = await commonFunctions.getAttendanceRow(conn, student[0].id, element.id);
+                row.push({
+                    group: element.id,
+                });
+                console.log(row);
+                attendances.push(row);
+            } catch (e) {
+                console.log('Error : ' + e);
+            }
+        })
+
+        console.log(attendances);
+
+        res.render('nonacademic_student_profile', { employee: employee_details, student: student });
+
+
+    }
+
+
+
 }
 
 // GET DETAILS OF THE EMPLYEE ( PARAMS : ID OF THE EMPLOYEE, COLUMNS : COLUMNS WHICH ARE NEED TO BE RETRIEVED)
@@ -205,7 +257,7 @@ function getEmployeeDetails(id, columns) {
 }
 
 // GET EMPLOYEE DETAILS, MATCHING DESIGNATIONS
-async function loadInitialDetails(){
+async function loadInitialDetails() {
     var employee_details, designations;
 
     // RETRIEVING ID AND THE DESIGNATION OF THE EMPLOYEE
