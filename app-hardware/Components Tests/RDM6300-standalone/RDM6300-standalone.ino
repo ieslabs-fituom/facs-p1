@@ -1,39 +1,22 @@
-#include <rdm6300.h>
+#include <LiquidCrystal_I2C.h>
 
-#define RDM6300_RX_PIN 5
 
-#define READ_LED_PIN 13
 
-Rdm6300 rdm6300;
+LiquidCrystal_I2C lcd(0x3F,16,2);  // set the LCD address to 0x3F for a 16 chars and 2 line display
 
-void setup()
-
-{
-
-  Serial.begin(9600);
-
-  pinMode(READ_LED_PIN, OUTPUT);
-
-  digitalWrite(READ_LED_PIN, LOW);
-
-  rdm6300.begin(RDM6300_RX_PIN);
-
-  Serial.println("\nPlace RFID tag near the rdm6300...");
-
+void setup() {
+  lcd.init();
+  lcd.clear();         
+  lcd.backlight();      // Make sure backlight is on
+  
+  // Print a message on both lines of the LCD.
+  lcd.setCursor(2,0);   //Set cursor to character 2 on line 0
+  lcd.print("Hello world!");
+  
+  lcd.setCursor(2,1);   //Move cursor to character 2 on line 1
+  lcd.print("LCD Tutorial");
 }
 
-void loop()
-
-{
-
-  /* if non-zero tag_id, update() returns true- a new tag is near! */
-
-  if (rdm6300.)
-
-    Serial.println(rdm6300.get_tag_id(), HEX);
-
-  digitalWrite(READ_LED_PIN, rdm6300.is_tag_near());
-
-  delay(10);
-
+void loop() {
+  
 }

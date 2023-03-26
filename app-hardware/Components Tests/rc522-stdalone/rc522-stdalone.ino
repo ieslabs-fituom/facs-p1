@@ -1,5 +1,5 @@
-#include <SPI.h>
 #include <MFRC522.h>
+#include <SPI.h>
 
 #define RST_PIN        22          // Configurable, see typical pin layout above
 #define SS_PIN          21         // Configurable, see typical pin layout above
@@ -8,8 +8,8 @@ MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 void setup() {
 	Serial.begin(9600);
-	SPI.begin();
 	mfrc522.PCD_Init();
+  SPI.begin();
 	delay(4); //added this delay cus mc is slower than we expected. It takes some time to start the initiation
 }
 
