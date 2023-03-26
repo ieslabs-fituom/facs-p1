@@ -78,13 +78,13 @@ exports.view = function _callee(req, res) {
 
         case 33:
           group_ids = [];
-          groups_of_employee.array.forEach(function (element) {
+          groups_of_employee.forEach(function (element) {
             group_ids.push(element.Emp_group);
           }); // RETRIEVING DETAILS OF LOADED GROUPS
 
           _context.prev = 35;
           _context.next = 38;
-          return regeneratorRuntime.awrap(commonFunctions.getStudenGroupDetails(conn, group_ids));
+          return regeneratorRuntime.awrap(commonFunctions.getStudentGroupDetails(conn, group_ids));
 
         case 38:
           groups_of_employee = _context.sent;

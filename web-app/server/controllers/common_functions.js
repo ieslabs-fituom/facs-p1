@@ -142,7 +142,7 @@ exports.getGroupsofEmployee = (conn, employee_id) => {
 }
 
 // GET DETAILS OF SELECTED STUDENT GROUPS
-exports.getStudenGroupDetails = (conn, StudentGroups) => {
+exports.getStudentGroupDetails = (conn, StudentGroups) => {
     return new Promise((resolve, reject) => {
         let sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE id IN (';
         StudentGroups.forEach(element => {

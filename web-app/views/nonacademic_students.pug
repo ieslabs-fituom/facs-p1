@@ -25,7 +25,7 @@ block content
                                             input#keyword.form-control.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg(type='text' value='' placeholder='Enter search keyword' name='keyword')
                             .row   
                                 .col-lg-0.text-center
-                                    input(type="submit" value="Search").btn.btn-primary.btn-sm.mt-3.ps-7.pe-7
+                                    input(type="submit" value="Search" onclick="onKeywordSearch()").btn.btn-primary.btn-sm.mt-3.ps-7.pe-7
                                     //button.btn.btn-primary.btn-sm.mt-3.ps-7.pe-7(onclick="onKeywordSearch()") Search
                         .row
                             .d-flex.flex-row.mt-3
@@ -225,15 +225,16 @@ block content
             
         }
 
-        /*function onKeywordSearch(){
+        function onKeywordSearch(){
             var index = document.getElementById("searchby").value;
             var keyword = document.getElementById("keyword").value;
 
             console.log(index + " : " + keyword);
+            console.log('searching...');
 
             $.ajax({
                     type: 'GET',
-                    url: '/nac/stu/getkeyword',
+                    url: '/nac/stuprofile',
                     //headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     data: {
                         index: index,
@@ -241,18 +242,18 @@ block content
                     },
                     dataType: 'json',
                     encode: true
-                }).done(function (response) {
-                    console.log(response);
+                }).always(function (response) {
                     if(response.status=='200'){
                         console.log('success');
-                        console.log(response.student);
                     }else if(response.status=='201'){
                         window.alert("No such student available");   
                     }else {
                         console.log('error');
                     }
+                    console.log('triggered');
                 });
-        }*/
+
+        }
 
         function clearSelectOptions(element){
             element.innerHTML = "";
