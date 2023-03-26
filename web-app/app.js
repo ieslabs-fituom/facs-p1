@@ -2,6 +2,8 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const pug = require('pug');
+const mysql = require('mysql2');
+
 
 // DOTENV LOAD ENVIRONMENT VARIABLES IN .ENV FILE AS PROCESS.ENV.<PROPERTY_NAME>
 require('dotenv').config();
@@ -20,7 +22,7 @@ const port = process.env.PORT || 5000;
 */
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use('/static',express.static('public'));
+app.use('/static', express.static('public'));
 
 // SETTING UP TEMPLATE ENGINE - PUG
 app.set('views', './views');

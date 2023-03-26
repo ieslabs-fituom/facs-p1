@@ -151,7 +151,7 @@ exports.getGroupsofEmployee = function (conn, employee_id) {
 }; // GET DETAILS OF SELECTED STUDENT GROUPS
 
 
-exports.getStudenGroupDetails = function (conn, StudentGroups) {
+exports.getStudentGroupDetails = function (conn, StudentGroups) {
   return new Promise(function (resolve, reject) {
     var sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE id IN (';
     StudentGroups.forEach(function (element) {

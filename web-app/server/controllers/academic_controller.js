@@ -48,13 +48,13 @@ exports.view = async (req, res) => {
     }
 
     let group_ids = [];
-    groups_of_employee.array.forEach(element => {
+    groups_of_employee.forEach(element => {
         group_ids.push(element.Emp_group);
     });
 
     // RETRIEVING DETAILS OF LOADED GROUPS
     try{
-        groups_of_employee = await commonFunctions.getStudenGroupDetails(conn,group_ids);
+        groups_of_employee = await commonFunctions.getStudentGroupDetails(conn,group_ids);
         console.log(groups_of_employee);
     }catch(e){
         console.log('Error : ' + e);

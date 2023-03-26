@@ -9,3 +9,5 @@ router.get('/view/',academic_controller.view);
 module.exports = router;
 
 
+
+

@@ -86,6 +86,8 @@ exports.stu_view = async (req, res) => {
 
 // RETRIEVE STUDENTS FILTERED BY FACULTY, BATCH AND DEGREE
 exports.stu_get_filtered = async (req, res) => {
+
+    //res.redirect('/nac/stuprofile');
     let fac = req.query.faculty;
     let batch = req.query.batch;
     let deg = req.query.degree;
@@ -160,7 +162,10 @@ exports.stu_get_profile = async (req, res) => {
     }
 
     if (student.length == 0) {
-        res.send({ status: '201' });
+        //res.send({ status: '201' });
+        console.log('yes');
+        res.status(201).send({res : 'No such students'});
+        return;
     } else {
         // RETRIEVING ALL GROUPS OF THE STUDENT
         try {
@@ -178,7 +183,7 @@ exports.stu_get_profile = async (req, res) => {
 
         // RETRIEVING ALL GROUPS RELEVANT TO THE STUDENT
         try {
-            groups = await commonFunctions.getStudenGroupDetails(conn, id_list);
+            groups = await commonFunctions.getStudentGroupDetails(conn, id_list);
             console.log(groups);
         } catch (e) {
             console.log('Error : ' + e);
@@ -227,10 +232,8 @@ exports.stu_get_profile = async (req, res) => {
         })
 
         console.log(attendances);
-
+        console.log(student);
         res.render('nonacademic_student_profile', { employee: employee_details, student: student });
-
-
     }
 
 

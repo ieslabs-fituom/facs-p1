@@ -187,6 +187,7 @@ exports.stu_get_filtered = function _callee4(req, res) {
     while (1) {
       switch (_context4.prev = _context4.next) {
         case 0:
+          //res.redirect('/nac/stuprofile');
           fac = req.query.faculty;
           batch = req.query.batch;
           deg = req.query.degree;
@@ -292,96 +293,97 @@ exports.stu_get_profile = function _callee6(req, res) {
 
         case 18:
           if (!(student.length == 0)) {
-            _context6.next = 22;
+            _context6.next = 24;
             break;
           }
 
-          res.send({
-            status: '201'
+          //res.send({ status: '201' });
+          console.log('yes');
+          res.status(201).send({
+            res: 'No such students'
           });
-          _context6.next = 73;
-          break;
+          return _context6.abrupt("return");
 
-        case 22:
-          _context6.prev = 22;
-          _context6.next = 25;
+        case 24:
+          _context6.prev = 24;
+          _context6.next = 27;
           return regeneratorRuntime.awrap(commonFunctions.getGroupsOfAStudent(conn, student[0].id));
 
-        case 25:
+        case 27:
           groups = _context6.sent;
           console.log(groups);
-          _context6.next = 32;
+          _context6.next = 34;
           break;
 
-        case 29:
-          _context6.prev = 29;
-          _context6.t1 = _context6["catch"](22);
+        case 31:
+          _context6.prev = 31;
+          _context6.t1 = _context6["catch"](24);
           console.log('Error : ' + _context6.t1);
 
-        case 32:
+        case 34:
           id_list = [];
           groups.forEach(function (element) {
             id_list.push(element.Stu_group);
           }); // RETRIEVING ALL GROUPS RELEVANT TO THE STUDENT
 
-          _context6.prev = 34;
-          _context6.next = 37;
-          return regeneratorRuntime.awrap(commonFunctions.getStudenGroupDetails(conn, id_list));
+          _context6.prev = 36;
+          _context6.next = 39;
+          return regeneratorRuntime.awrap(commonFunctions.getStudentGroupDetails(conn, id_list));
 
-        case 37:
+        case 39:
           groups = _context6.sent;
           console.log(groups);
-          _context6.next = 44;
+          _context6.next = 46;
           break;
 
-        case 41:
-          _context6.prev = 41;
-          _context6.t2 = _context6["catch"](34);
+        case 43:
+          _context6.prev = 43;
+          _context6.t2 = _context6["catch"](36);
           console.log('Error : ' + _context6.t2);
 
-        case 44:
+        case 46:
           id_list = [];
           groups.forEach(function (element) {
             id_list.push(element.Module);
           }); // RETRIEVING ALL MODULES RELEVANT TO THE STUDENT
 
-          _context6.prev = 46;
-          _context6.next = 49;
+          _context6.prev = 48;
+          _context6.next = 51;
           return regeneratorRuntime.awrap(commonFunctions.getModuleDetails(conn, id_list));
 
-        case 49:
+        case 51:
           modules = _context6.sent;
           console.log(modules);
-          _context6.next = 56;
+          _context6.next = 58;
           break;
 
-        case 53:
-          _context6.prev = 53;
-          _context6.t3 = _context6["catch"](46);
+        case 55:
+          _context6.prev = 55;
+          _context6.t3 = _context6["catch"](48);
           console.log('Error : ' + _context6.t3);
 
-        case 56:
+        case 58:
           id_list = [];
           groups.forEach(function (element) {
             id_list.push(element.id);
           }); // RETRIEVING ALL SESSIONS RELEVANT TO THE GROUPS
 
-          _context6.prev = 58;
-          _context6.next = 61;
+          _context6.prev = 60;
+          _context6.next = 63;
           return regeneratorRuntime.awrap(commonFunctions.getSessions(conn, id_list, 1));
 
-        case 61:
+        case 63:
           sessions = _context6.sent;
           console.log(sessions);
-          _context6.next = 68;
+          _context6.next = 70;
           break;
 
-        case 65:
-          _context6.prev = 65;
-          _context6.t4 = _context6["catch"](58);
+        case 67:
+          _context6.prev = 67;
+          _context6.t4 = _context6["catch"](60);
           console.log('Error : ' + _context6.t4);
 
-        case 68:
+        case 70:
           //RETIEVING ALL ATTENDANCE ROWS OF SELECTED STUDENT RELEVANT TO EACH STUDENT GROUP
           attendances = [];
           row = [];
@@ -417,17 +419,18 @@ exports.stu_get_profile = function _callee6(req, res) {
             }, null, null, [[0, 9]]);
           });
           console.log(attendances);
+          console.log(student);
           res.render('nonacademic_student_profile', {
             employee: employee_details,
             student: student
           });
 
-        case 73:
+        case 76:
         case "end":
           return _context6.stop();
       }
     }
-  }, null, null, [[8, 14], [22, 29], [34, 41], [46, 53], [58, 65]]);
+  }, null, null, [[8, 14], [24, 31], [36, 43], [48, 55], [60, 67]]);
 }; // GET DETAILS OF THE EMPLYEE ( PARAMS : ID OF THE EMPLOYEE, COLUMNS : COLUMNS WHICH ARE NEED TO BE RETRIEVED)
 
 

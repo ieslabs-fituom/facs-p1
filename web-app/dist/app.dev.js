@@ -5,7 +5,9 @@ var express = require('express');
 
 var jwt = require('jsonwebtoken');
 
-var pug = require('pug'); // DOTENV LOAD ENVIRONMENT VARIABLES IN .ENV FILE AS PROCESS.ENV.<PROPERTY_NAME>
+var pug = require('pug');
+
+var mysql = require('mysql2'); // DOTENV LOAD ENVIRONMENT VARIABLES IN .ENV FILE AS PROCESS.ENV.<PROPERTY_NAME>
 
 
 require('dotenv').config(); // CREATE EXPRESS APP
