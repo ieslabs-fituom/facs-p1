@@ -34,80 +34,78 @@ block content
                                 i.ni.ni-email-83.me-2
                                 span.text-sm #{student[0].Email}
             .col-md-8
-                .card
-                    .card-header.pb-0.pt-3.bg-transparent
-                        h6.text-capitalize Attendance : Module-wise
-                    .card-body.p-3
-                        .table-responsive
-                            //Class limited-rows-table - used to specify the max height and make scrollbars visible
-                            table#modules_table.table.align-items-center
-                                tbody#modules_table_body
-                                    each module in modules
-                                        tr
-                                            td.w-30
-                                                .d-flex.px-2.py-1.align-items-center
-                                                    div
-                                                        img(src='../static/assets/img/icons/books.png' alt='Icon')
-                                                    .ms-4
-                                                        p.text-xs.font-weight-bold.mb-0 Module:
-                                                        h6.text-sm.mb-0 #{module.Name}
-                                            each group in groups 
-                                                if(group.Module==module.id)
-                                                    td
-                                                        .text-center
-                                                        p.text-xs.font-weight-bold.mb-0 Group:
-                                                        h6.text-sm.mb-0 #{group.Name}
-                                                    
-                                                    each row in attendance 
-                                                        if(row[1].group == group.id)
-                                                            td
-                                                                .text-center
-                                                                p.text-xs.font-weight-bold.mb-0 Attendance:
-                                                                h6.text-sm.mb-0 #{row[2].percentage}%
-                                                            td
-                                                                .text-center
-                                                                p.text-xs.font-weight-bold.mb-0 Sessions:
-                                                                h6.text-sm.mb-0 #{row[2].session_count}
-                .card.mt-3
-                    .card-header.pb-0.pt-3.bg-transparent
-                        h6.text-capitalize Attendance : Module-wise
-                    .card-body.p-3
-                        .d-flex.align-items-center.ms-2
-                            .d-flex.flex-column
-                                h6.mb-1.text-dark.text-sm Select Module
-                                select#module_select.form-select.text-xs.me-8.pe-5.ms-0.mt-1
-                                    each mod in modules
-                                        option(value=mod.id) #{mod.Code} - #{mod.Name}
-                        .table-responsive
-                            //Class limited-rows-table - used to specify the max height and make scrollbars visible
-                            table#modules_table.table.align-items-center.limited-rows-table
-                                tbody#modules_table_body.limited-rows-tbody
-                                    each module in modules
-                                        tr
-                                            td.w-30
-                                                .d-flex.px-2.py-1.align-items-center
-                                                    div
-                                                        img(src='../static/assets/img/icons/books.png' alt='Icon')
-                                                    .ms-4
-                                                        p.text-xs.font-weight-bold.mb-0 Module:
-                                                        h6.text-sm.mb-0 #{module.Name}
-                                            each group in groups 
-                                                if(group.Module==module.id)
-                                                    td
-                                                        .text-center
-                                                        p.text-xs.font-weight-bold.mb-0 Group:
-                                                        h6.text-sm.mb-0 #{group.Name}
-                                                    
-                                                    each row in attendance 
-                                                        if(row[1].group == group.id)
-                                                            td
-                                                                .text-center
-                                                                p.text-xs.font-weight-bold.mb-0 Attendance:
-                                                                h6.text-sm.mb-0 #{row[2].percentage}%
-                                                            td
-                                                                .text-center
-                                                                p.text-xs.font-weight-bold.mb-0 Sessions:
-                                                                h6.text-sm.mb-0 #{row[2].session_count}                                                
+                .row
+                    .card
+                        .card-header.pb-0.pt-3.bg-transparent
+                            h6.text-capitalize Attendance : Module-wise
+                        .card-body.p-3
+                            .table-responsive
+                                //Class limited-rows-table - used to specify the max height and make scrollbars visible
+                                table#modules_table.table.align-items-center
+                                    tbody#modules_table_body
+                                        each module in modules
+                                            tr
+                                                td.w-30
+                                                    .d-flex.px-2.py-1.align-items-center
+                                                        div
+                                                            img(src='../static/assets/img/icons/books.png' alt='Icon')
+                                                        .ms-4
+                                                            p.text-xs.font-weight-bold.mb-0 Module:
+                                                            h6.text-sm.mb-0 #{module.Name}
+                                                each group in groups 
+                                                    if(group.Module==module.id)
+                                                        td
+                                                            .text-center
+                                                            p.text-xs.font-weight-bold.mb-0 Group:
+                                                            h6.text-sm.mb-0 #{group.Name}
+                                                        
+                                                        each row in attendance 
+                                                            if(row[1].group == group.id)
+                                                                td
+                                                                    .text-center
+                                                                    p.text-xs.font-weight-bold.mb-0 Attendance:
+                                                                    h6.text-sm.mb-0 #{row[2].percentage}%
+                                                                td
+                                                                    .text-center
+                                                                    p.text-xs.font-weight-bold.mb-0 Sessions:
+                                                                    h6.text-sm.mb-0 #{row[2].session_count}
+                .row
+                    .card.mt-3
+                        .card-header.pb-0.pt-3.bg-transparent
+                            h6.text-capitalize Attendance : Module-wise
+                            
+                        .card-body.p-3
+                            .table-responsive
+                                //Class limited-rows-table - used to specify the max height and make scrollbars visible
+                                table#modules_table.table.align-items-center
+                                    tbody#modules_table_body
+                                        each module in modules
+                                            tr
+                                                td.w-30
+                                                    .d-flex.px-2.py-1.align-items-center
+                                                        div
+                                                            img(src='../static/assets/img/icons/books.png' alt='Icon')
+                                                        .ms-4
+                                                            p.text-xs.font-weight-bold.mb-0 Module:
+                                                            h6.text-sm.mb-0 #{module.Name}
+                                                each group in groups 
+                                                    if(group.Module==module.id)
+                                                        td
+                                                            .text-center
+                                                            p.text-xs.font-weight-bold.mb-0 Group:
+                                                            h6.text-sm.mb-0 #{group.Name}
+                                                        
+                                                        each row in attendance 
+                                                            if(row[1].group == group.id)
+                                                                td
+                                                                    .text-center
+                                                                    p.text-xs.font-weight-bold.mb-0 Attendance:
+                                                                    h6.text-sm.mb-0 #{row[2].percentage}%
+                                                                td
+                                                                    .text-center
+                                                                    p.text-xs.font-weight-bold.mb-0 Sessions:
+                                                                    h6.text-sm.mb-0 #{row[2].session_count}
+                                                               
         
                                                         
 
