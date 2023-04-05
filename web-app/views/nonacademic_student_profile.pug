@@ -20,24 +20,151 @@ block content
                                 | Faculty of Information Technology
                             .h6.mt-4
                                 i.ni.ni-building.me-2
-                                |BSc. Hons. (IT)
+                                | #{student[0].Degree}
                             div
                                 i.ni.ni-badge.me-2
-                                | Batch 21
+                                | Batch #{student[0].Batch}
                             div.mt-6.align-items-center.text-center
                                 i.ni.ni-compass-04.me-2
-                                span.text-sm Galle Road, Matara, Sri Lanka.
+                                span.text-sm #{student[0].Address}
                             div.mt-2.align-items-center.text-center
                                 i.ni.ni-compass-04.me-2
-                                span.text-sm 0710424155
+                                span.text-sm #{student[0].Telephone}
                             div.mt-2.align-items-center.text-center
                                 i.ni.ni-email-83.me-2
-                                span.text-sm sankha@uom.lk
-
+                                span.text-sm #{student[0].Email}
+            .col-md-8
+                .card
+                    .card-header.pb-0.pt-3.bg-transparent
+                        h6.text-capitalize Attendance : Module-wise
+                    .card-body.p-3
+                        .table-responsive
+                            //Class limited-rows-table - used to specify the max height and make scrollbars visible
+                            table#modules_table.table.align-items-center
+                                tbody#modules_table_body
+                                    each module in modules
+                                        tr
+                                            td.w-30
+                                                .d-flex.px-2.py-1.align-items-center
+                                                    div
+                                                        img(src='../static/assets/img/icons/books.png' alt='Icon')
+                                                    .ms-4
+                                                        p.text-xs.font-weight-bold.mb-0 Module:
+                                                        h6.text-sm.mb-0 #{module.Name}
+                                            each group in groups 
+                                                if(group.Module==module.id)
+                                                    td
+                                                        .text-center
+                                                        p.text-xs.font-weight-bold.mb-0 Group:
+                                                        h6.text-sm.mb-0 #{group.Name}
+                                                    
+                                                    each row in attendance 
+                                                        if(row[1].group == group.id)
+                                                            td
+                                                                .text-center
+                                                                p.text-xs.font-weight-bold.mb-0 Attendance:
+                                                                h6.text-sm.mb-0 #{row[2].percentage}%
+                                                            td
+                                                                .text-center
+                                                                p.text-xs.font-weight-bold.mb-0 Sessions:
+                                                                h6.text-sm.mb-0 #{row[2].session_count}
+                .card.mt-3
+                    .card-header.pb-0.pt-3.bg-transparent
+                        h6.text-capitalize Attendance : Module-wise
+                    .card-body.p-3
+                        .d-flex.align-items-center.ms-2
+                            .d-flex.flex-column
+                                h6.mb-1.text-dark.text-sm Select Module
+                                select#module_select.form-select.text-xs.me-8.pe-5.ms-0.mt-1
+                                    each mod in modules
+                                        option(value=mod.id) #{mod.Code} - #{mod.Name}
+                        .table-responsive
+                            //Class limited-rows-table - used to specify the max height and make scrollbars visible
+                            table#modules_table.table.align-items-center.limited-rows-table
+                                tbody#modules_table_body.limited-rows-tbody
+                                    each module in modules
+                                        tr
+                                            td.w-30
+                                                .d-flex.px-2.py-1.align-items-center
+                                                    div
+                                                        img(src='../static/assets/img/icons/books.png' alt='Icon')
+                                                    .ms-4
+                                                        p.text-xs.font-weight-bold.mb-0 Module:
+                                                        h6.text-sm.mb-0 #{module.Name}
+                                            each group in groups 
+                                                if(group.Module==module.id)
+                                                    td
+                                                        .text-center
+                                                        p.text-xs.font-weight-bold.mb-0 Group:
+                                                        h6.text-sm.mb-0 #{group.Name}
+                                                    
+                                                    each row in attendance 
+                                                        if(row[1].group == group.id)
+                                                            td
+                                                                .text-center
+                                                                p.text-xs.font-weight-bold.mb-0 Attendance:
+                                                                h6.text-sm.mb-0 #{row[2].percentage}%
+                                                            td
+                                                                .text-center
+                                                                p.text-xs.font-weight-bold.mb-0 Sessions:
+                                                                h6.text-sm.mb-0 #{row[2].session_count}                                                
         
                                                         
 
     script.
+        var modules,groups,attendance;
+        $(document).ready(function() {
+            modules = JSON.parse(JSON.stringify(!{JSON.stringify(modules)}));
+            groups = JSON.parse(JSON.stringify(!{JSON.stringify(groups)}));
+            attendance = JSON.parse(JSON.stringify(!{JSON.stringify(attendance)}));
+            
+            onModuleSelectForAttendance();
+        });
+
+        function onModuleSelectForAttendance(){
+            var module_selected = document.getElementById("module_select").value;
+            var modules_table_row = document.getElementById("modules_table_row");
+            var modules_table = document.getElementById("modules_table_body");
+            clearSelectOptions(modules_table);
+
+            if(attendance.length!=0){
+                let row,cell,element_p,element_h6,rowCount;
+                let group; 
+
+                for(grp in groups){
+                    if(groups[grp].Module = module_selected){
+                        group = groups[grp].id;
+                    }
+                }
+                for(row in attendance){
+                    if(attendance[row][1].group == group){
+                        for(key in attendance[row][0]){
+                            rowCount = modules_table.rows.length;
+                            row = modules_table.insertRow(rowCount);
+                            row.classList.add("limited-rows-tr");
+                            cell = row.insertCell(0);
+
+                            element_p = document.createElement("p");
+                            element_p.classList.add("text-xs");
+                            element_p.classList.add("font-weight-bold");
+                            element_p.classList.add("mb-0");
+                            element_p.innerHTML = 'Session :';
+                            cell.appendChild(element_p);
+                            element_h6 = document.createElement("h6");
+                            element_h6.classList.add("text-sm");
+                            element_h6.classList.add("mb-0");
+                            element_h6.innerHTML = students[stu].IndexNo;
+                            cell.appendChild(element_h6);
+                        }
+                    }
+                }
+            }
+        }
+
+        function clearSelectOptions(element){
+            element.innerHTML = "";
+        }
+
         var win = navigator.platform.indexOf('Win') > -1;
         if (win && document.querySelector('#sidenav-scrollbar')) {
             var options = {
