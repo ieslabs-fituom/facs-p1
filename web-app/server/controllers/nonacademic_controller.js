@@ -277,7 +277,7 @@ exports.stu_get_profile = async (req, res) => {
         //console.log(attendances);
         console.log(attendances);
         console.log(student);
-        res.render('nonacademic_student_profile', { employee: employee_details, student: student, modules: modules, groups: groups, attendance: attendances });
+        res.render('nonacademic_student_profile', { employee: employee_details, student: student, modules: modules, groups: groups, attendance: attendances, sessions: sessions});
     }
 
 

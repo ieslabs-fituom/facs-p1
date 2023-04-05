@@ -504,7 +504,8 @@ exports.stu_get_profile = function _callee5(req, res) {
             student: student,
             modules: modules,
             groups: groups,
-            attendance: attendances
+            attendance: attendances,
+            sessions: sessions
           });
 
         case 101:
