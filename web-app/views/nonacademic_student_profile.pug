@@ -37,7 +37,7 @@ block content
                 .row
                     .card
                         .card-header.pb-0.pt-3.bg-transparent
-                            h6.text-capitalize Attendance : Module-wise
+                            h6.text-capitalize Attendance :Session-wise
                         .card-body.p-3
                             .table-responsive
                                 //Class limited-rows-table - used to specify the max height and make scrollbars visible
@@ -73,89 +73,133 @@ block content
                     .card.mt-3
                         .card-header.pb-0.pt-3.bg-transparent
                             h6.text-capitalize Attendance : Module-wise
-                            
+                            h6.mb-1.mt-3.text-dark.text-sm Select Module
+                            select.form-select.text-xs.me-8.pe-5.ms-0.mt-1#module_select(onchange="onModuleSelectForAttendance()")
+                                each module in modules
+                                    option(value=module.id) #{module.Code} - #{module.Name}
                         .card-body.p-3
                             .table-responsive
                                 //Class limited-rows-table - used to specify the max height and make scrollbars visible
-                                table#modules_table.table.align-items-center
-                                    tbody#modules_table_body
-                                        each module in modules
-                                            tr
-                                                td.w-30
-                                                    .d-flex.px-2.py-1.align-items-center
-                                                        div
-                                                            img(src='../static/assets/img/icons/books.png' alt='Icon')
-                                                        .ms-4
-                                                            p.text-xs.font-weight-bold.mb-0 Module:
-                                                            h6.text-sm.mb-0 #{module.Name}
-                                                each group in groups 
-                                                    if(group.Module==module.id)
-                                                        td
-                                                            .text-center
-                                                            p.text-xs.font-weight-bold.mb-0 Group:
-                                                            h6.text-sm.mb-0 #{group.Name}
-                                                        
-                                                        each row in attendance 
-                                                            if(row[1].group == group.id)
-                                                                td
-                                                                    .text-center
-                                                                    p.text-xs.font-weight-bold.mb-0 Attendance:
-                                                                    h6.text-sm.mb-0 #{row[2].percentage}%
-                                                                td
-                                                                    .text-center
-                                                                    p.text-xs.font-weight-bold.mb-0 Sessions:
-                                                                    h6.text-sm.mb-0 #{row[2].session_count}
+                                table#sessions_table.table.align-items-center
+                                    tbody#sessions_table_body
+                                        
                                                                
         
                                                         
 
     script.
-        var modules,groups,attendance;
+        var modules,groups,attendance,sessions;
         $(document).ready(function() {
             modules = JSON.parse(JSON.stringify(!{JSON.stringify(modules)}));
             groups = JSON.parse(JSON.stringify(!{JSON.stringify(groups)}));
             attendance = JSON.parse(JSON.stringify(!{JSON.stringify(attendance)}));
+            sessions = JSON.parse(JSON.stringify(!{JSON.stringify(sessions)}));
             
             onModuleSelectForAttendance();
         });
 
         function onModuleSelectForAttendance(){
             var module_selected = document.getElementById("module_select").value;
-            var modules_table_row = document.getElementById("modules_table_row");
-            var modules_table = document.getElementById("modules_table_body");
-            clearSelectOptions(modules_table);
+            console.log("module = " + module_selected);
+            //var modules_table_row = document.getElementById("modules_table_row");
+            var sessions_table = document.getElementById("sessions_table_body");
+            clearSelectOptions(sessions_table);
 
+            let relevant_group;
             if(attendance.length!=0){
                 let row,cell,element_p,element_h6,rowCount;
                 let group; 
 
                 for(grp in groups){
-                    if(groups[grp].Module = module_selected){
+                    if(groups[grp].Module == module_selected){
                         group = groups[grp].id;
                     }
                 }
-                for(row in attendance){
-                    if(attendance[row][1].group == group){
-                        for(key in attendance[row][0]){
-                            rowCount = modules_table.rows.length;
-                            row = modules_table.insertRow(rowCount);
-                            row.classList.add("limited-rows-tr");
-                            cell = row.insertCell(0);
+                console.log('Group : ' + group);
+                for(att_row in attendance){
+                    if(attendance[att_row][1].group == group){
+                        //console.log(attendance[row][0]);
+                        for(key in attendance[att_row][0]){
+                            
+                            if(key != 'id' && key != 'Student'){  
+                                rowCount = sessions_table.rows.length;
+                                row = sessions_table.insertRow(rowCount);
+                                cell = row.insertCell(0);
 
-                            element_p = document.createElement("p");
-                            element_p.classList.add("text-xs");
-                            element_p.classList.add("font-weight-bold");
-                            element_p.classList.add("mb-0");
-                            element_p.innerHTML = 'Session :';
-                            cell.appendChild(element_p);
-                            element_h6 = document.createElement("h6");
-                            element_h6.classList.add("text-sm");
-                            element_h6.classList.add("mb-0");
-                            element_h6.innerHTML = students[stu].IndexNo;
-                            cell.appendChild(element_h6);
+                                //Session Date & Time
+                                for(session in sessions){
+                                    if(sessions[session].id == key.substring(3,key.length)){
+                                        element_p = document.createElement("p");
+                                        element_p.classList.add("text-xs");
+                                        element_p.classList.add("font-weight-bold");
+                                        element_p.classList.add("mb-0");
+                                        element_p.innerHTML = 'Date :';
+                                        cell.appendChild(element_p);
+                                        element_h6 = document.createElement("h6");
+                                        element_h6.classList.add("text-sm");
+                                        element_h6.classList.add("mb-0");
+                                        
+                                        element_h6.innerHTML = sessions[session].Start_time.substring(0,10);
+                                        cell.appendChild(element_h6);
+
+                                        cell = row.insertCell(1);
+                                        element_p = document.createElement("p");
+                                        element_p.classList.add("text-xs");
+                                        element_p.classList.add("font-weight-bold");
+                                        element_p.classList.add("mb-0");
+                                        element_p.innerHTML = 'Time :';
+                                        cell.appendChild(element_p);
+                                        element_h6 = document.createElement("h6");
+                                        element_h6.classList.add("text-sm");
+                                        element_h6.classList.add("mb-0");
+                                        
+                                        element_h6.innerHTML = sessions[session].Start_time.substring(11,19);
+                                        cell.appendChild(element_h6);
+
+                                        break;
+                                    }
+                                }
+                                
+                                cell = row.insertCell(2);
+                                element_p = document.createElement("p");
+                                element_p.classList.add("text-xs");
+                                element_p.classList.add("font-weight-bold");
+                                element_p.classList.add("mb-0");
+                                
+                                element_h6 = document.createElement("h6");
+                                element_h6.classList.add("text-sm");
+                                element_h6.classList.add("mb-0");
+                                        
+                                if(checkValidTimeStamp(attendance[att_row][0][key])){
+                                   element_p.innerHTML = 'Presence :'; 
+                                   element_h6.innerHTML = attendance[att_row][0][key];
+                                }else if(attendance[att_row][0][key]==0){
+                                   element_p.innerHTML = 'Presence :'; 
+                                   element_h6.innerHTML = 'Absent'; 
+                                }else{
+                                    element_p.innerHTML = 'Medical Form :'; 
+                                    element_h6.innerHTML = attendance[att_row][0][key];
+                                }
+                                cell.appendChild(element_p);
+                                
+                                cell.appendChild(element_h6);
+                                
+                                
+                            }               
                         }
                     }
                 }
+            }
+        }
+
+        function checkValidTimeStamp(timestamp){
+            if(timestamp.length!=19){
+                return false;
+            }
+            if(timestamp.substring(4,5) == '-' && timestamp.substring(7,8) == '-' && timestamp.substring(13,14) == ':' && timestamp.substring(16,17) == ':'){
+                return true;
+            }else{
+                return false;
             }
         }
 
