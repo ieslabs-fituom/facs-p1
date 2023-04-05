@@ -78,7 +78,7 @@ exports.stu_view = async (req, res) => {
         console.log('Error : ' + e);
     }
 
-    console.log('finishing...sssss');
+    console.log('finishing...');
 
     // RENDERING THE VIEW
     res.render('nonacademic_students', { employee: employee_details, faculties: faculties, batches: batches, degrees: degrees, students: students });
@@ -135,7 +135,7 @@ exports.stu_get_profile = async (req, res) => {
 
     employee_details = await loadInitialDetails();
 
-    let sql = 'SELECT id,IndexNo,Name,Email,Degree,Batch FROM students';
+    let sql = 'SELECT id,IndexNo,Name,Email,Degree,Batch,Telephone,Address FROM students';
 
     if (search_index == 0) {
         sql += ' WHERE IndexNo = "' + search_keyword + '"';
@@ -162,14 +162,33 @@ exports.stu_get_profile = async (req, res) => {
     }
 
     if (student.length == 0) {
-        //res.send({ status: '201' });
-        console.log('yes');
-        res.status(201).send({res : 'No such students'});
+        res.status(201).send({ res: 'No such students' });
         return;
     } else {
+        //RETRIEVING DEGREE OF THE STUDENT
+        let degree = [student[0].Degree];
+
+        let deg, bat;
+        try {
+            deg = await commonFunctions.getDegreeDetails(conn, degree);
+            student[0].Degree = deg[0].Degree;
+        } catch (e) {
+            console.log('Error : ' + e);
+        }
+
+        //RETRIEVING Batch OF THE STUDENT
+        let batch = [student[0].Batch];
+        try {
+            bat = await commonFunctions.getBatchDetails(conn, batch);
+            student[0].Batch = bat[0].Batch
+        } catch (e) {
+            console.log('Error : ' + e);
+        }
+
         // RETRIEVING ALL GROUPS OF THE STUDENT
         try {
             groups = await commonFunctions.getGroupsOfAStudent(conn, student[0].id);
+            console.log("Student Groups");
             console.log(groups);
         } catch (e) {
             console.log('Error : ' + e);
@@ -218,22 +237,47 @@ exports.stu_get_profile = async (req, res) => {
         //RETIEVING ALL ATTENDANCE ROWS OF SELECTED STUDENT RELEVANT TO EACH STUDENT GROUP
         attendances = [];
         let row = [];
-        groups.forEach(async element => {
-            try {
-                row = await commonFunctions.getAttendanceRow(conn, student[0].id, element.id);
-                row.push({
-                    group: element.id,
-                });
-                console.log(row);
-                attendances.push(row);
-            } catch (e) {
-                console.log('Error : ' + e);
-            }
-        })
 
+        const attendanceLoop = async _ => {
+            for (grp in groups) {
+                try {
+                    row = await commonFunctions.getAttendanceRow(conn, student[0].id, groups[grp].id);
+                    row.push({
+                        group: groups[grp].id,
+                    });
+                    //console.log(row);
+                    attendances.push(row);
+                } catch (e) {
+                    console.log('Error : ' + e);
+                }
+            }
+        }
+
+        await attendanceLoop();
+        let present,session_count,percentage;
+        for(let row in attendances){
+            present = 0;
+            session_count = 0;
+            for(let key in attendances[row][0]){
+                if(key != 'id' && key != 'Student'){
+                    session_count++;
+                    if(checkValidTimeStamp(attendances[row][0][key])){
+                        present++;
+                    }
+                }
+            }
+            (session_count==0)? percentage=100:percentage=(present/session_count)*100;
+            attendances[row].push({
+                percentage: percentage,
+                session_count: session_count,
+            });
+            //console.log(percentage + '%');
+        }
+
+        //console.log(attendances);
         console.log(attendances);
         console.log(student);
-        res.render('nonacademic_student_profile', { employee: employee_details, student: student });
+        res.render('nonacademic_student_profile', { employee: employee_details, student: student, modules: modules, groups: groups, attendance: attendances });
     }
 
 
@@ -259,6 +303,23 @@ function getEmployeeDetails(id, columns) {
     });
 }
 
+async function load_attendance_of_a_student(groups) {
+    let attendances = [];
+    let row = [];
+    groups.forEach(async element => {
+        try {
+            row = await commonFunctions.getAttendanceRow(conn, student[0].id, element.id);
+            row.push({
+                group: element.id,
+            });
+            console.log(row);
+            attendances.push(row);
+        } catch (e) {
+            console.log('Error : ' + e);
+        }
+    });
+}
+
 // GET EMPLOYEE DETAILS, MATCHING DESIGNATIONS
 async function loadInitialDetails() {
     var employee_details, designations;
@@ -266,7 +327,7 @@ async function loadInitialDetails() {
     // RETRIEVING ID AND THE DESIGNATION OF THE EMPLOYEE
     try {
         employee_details = await getEmployeeDetails(process.env.CURRENT_ID, ['Name', 'Designation']);
-        console.log(employee_details);
+        //console.log(employee_details);
     } catch (e) {
         console.log('Error : ' + e);
     }
@@ -274,7 +335,7 @@ async function loadInitialDetails() {
     // RETRIEVING ALL DESIGNATIONS
     try {
         designations = await commonFunctions.getDesignations(conn);
-        console.log(designations);
+        //console.log(designations);
     } catch (e) {
         console.log('Error : ' + e);
     }
@@ -290,3 +351,13 @@ async function loadInitialDetails() {
     return employee_details;
 }
 
+function checkValidTimeStamp(timestamp){
+    if(timestamp.length!=19){
+        return false;
+    }
+    if(timestamp.substring(4,5) == '-' && timestamp.substring(7,8) == '-' && timestamp.substring(13,14) == ':' && timestamp.substring(16,17) == ':'){
+        return true;
+    }else{
+        return false;
+    }
+}
