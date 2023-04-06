@@ -44,7 +44,7 @@ block content
                                 table#modules_table.table.align-items-center
                                     tbody#modules_table_body
                                         each module in modules
-                                            tr
+                                            tr.clickable-row(data-id=module.id onclick = ("rowSelect(this)"))
                                                 td.w-30
                                                     .d-flex.px-2.py-1.align-items-center
                                                         div
@@ -95,8 +95,19 @@ block content
             attendance = JSON.parse(JSON.stringify(!{JSON.stringify(attendance)}));
             sessions = JSON.parse(JSON.stringify(!{JSON.stringify(sessions)}));
             
+            /*$(".clickable-row").click(function() {
+                let data = $(this).data("id");
+                console.log(data);
+                //window.location = $(this).data("href");
+            });*/
+    
             onModuleSelectForAttendance();
         });
+
+        function rowSelect(element){
+            let data = element
+            console.log(data.dataset.id);
+        }
 
         function onModuleSelectForAttendance(){
             var module_selected = document.getElementById("module_select").value;

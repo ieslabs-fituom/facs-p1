@@ -30,3 +30,12 @@
     flex-flow: column;
     width: 100%;
 }
+
+.selection-row{
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+.selection-row:hover{
+    background-color: #eee;
+}

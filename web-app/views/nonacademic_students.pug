@@ -81,6 +81,7 @@ block content
             faculties = JSON.parse(JSON.stringify(!{JSON.stringify(faculties)}));
             batches = JSON.parse(JSON.stringify(!{JSON.stringify(batches)}));
             degrees = JSON.parse(JSON.stringify(!{JSON.stringify(degrees)}));
+            
             onFacultySelect();
         });
 
@@ -149,6 +150,10 @@ block content
                     rowCount = stu_table.rows.length;
                     row = stu_table.insertRow(rowCount);
                     row.classList.add("limited-rows-tr");
+                    row.classList.add("selection-row");
+                    row.classList.add("student-selection-row");
+                    row.setAttribute("data-id",students[stu].IndexNo);
+                    row.setAttribute("onclick","onStudentSelectFromTable(this)");
                     cell = row.insertCell(0);
 
 
@@ -233,6 +238,20 @@ block content
             console.log(index + " : " + keyword);
             console.log('searching...');
 
+            keywordSearch_AJAX(index,keyword);
+
+        }
+
+        function onStudentSelectFromTable(row){
+            console.log(row.dataset.id);
+            document.getElementById("keyword").value = row.dataset.id;
+            document.getElementById("searchby").value = 0;
+            document.getElementById("search_form").submit();
+            //keywordSearch_AJAX(0,row.dataset.id);
+        }
+
+        
+        function keywordSearch_AJAX(index,keyword){
             $.ajax({
                     type: 'GET',
                     url: '/nac/stuprofile',
@@ -243,7 +262,7 @@ block content
                     },
                     dataType: 'json',
                     encode: true
-                }).always(function (response) {
+            }).always(function (response) {
                     if(response.status=='200'){
                         console.log('success');
                     }else if(response.status=='201'){
@@ -252,8 +271,7 @@ block content
                         console.log('error');
                     }
                     console.log('triggered');
-                });
-
+            });
         }
 
         function clearSelectOptions(element){
