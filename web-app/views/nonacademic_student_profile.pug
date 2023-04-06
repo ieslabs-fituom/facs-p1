@@ -90,11 +90,12 @@ block content
     script.
         var modules,groups,attendance,sessions;
         $(document).ready(function() {
+            sideBarChange();
             modules = JSON.parse(JSON.stringify(!{JSON.stringify(modules)}));
             groups = JSON.parse(JSON.stringify(!{JSON.stringify(groups)}));
             attendance = JSON.parse(JSON.stringify(!{JSON.stringify(attendance)}));
             sessions = JSON.parse(JSON.stringify(!{JSON.stringify(sessions)}));
-            
+
             /*$(".clickable-row").click(function() {
                 let data = $(this).data("id");
                 console.log(data);
@@ -103,6 +104,14 @@ block content
     
             onModuleSelectForAttendance();
         });
+
+        function sideBarChange(){
+            document.getElementById("students-nav-link").classList.add('active');
+            document.getElementById("today-nav-link").classList.remove('active');
+            document.getElementById("pastreports-nav-link").classList.remove('active');
+            document.getElementById("employees-nav-link").classList.remove('active');
+            document.getElementById("semester-nav-link").classList.remove('active');
+        }
 
         function rowSelect(element){
             let data = element

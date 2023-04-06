@@ -78,12 +78,21 @@ block content
 
         var faculties,batches,degrees;
         $(document).ready(function() {
+            sideBarChange();
             faculties = JSON.parse(JSON.stringify(!{JSON.stringify(faculties)}));
             batches = JSON.parse(JSON.stringify(!{JSON.stringify(batches)}));
             degrees = JSON.parse(JSON.stringify(!{JSON.stringify(degrees)}));
             
             onFacultySelect();
         });
+
+        function sideBarChange(){
+            document.getElementById("students-nav-link").classList.add('active');
+            document.getElementById("today-nav-link").classList.remove('active');
+            document.getElementById("pastreports-nav-link").classList.remove('active');
+            document.getElementById("employees-nav-link").classList.remove('active');
+            document.getElementById("semester-nav-link").classList.remove('active');
+        }
 
         var win = navigator.platform.indexOf('Win') > -1;
         if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -107,6 +116,7 @@ block content
                     degree_select.add(new Option(degrees[deg].Degree,degrees[deg].id),undefined);
                 }
             }
+            //$('#students-nav-link').classList.add('active');
         }
 
         function onFilteredSearch(){
