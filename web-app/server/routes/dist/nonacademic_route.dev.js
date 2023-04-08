@@ -11,4 +11,7 @@ router.get('/sem/', nonacademic_controller.sem_view);
 router.get('/stu/', nonacademic_controller.stu_view);
 router.get('/stu/getfiltered', nonacademic_controller.stu_get_filtered);
 router.get('/stuprofile', nonacademic_controller.stu_get_profile);
+router.get('/past', nonacademic_controller.past_reports_view);
+router.get('/past/getgroups', nonacademic_controller.past_get_groups);
+router.get('/past/getsessions', nonacademic_controller.past_get_sessions);
 module.exports = router;

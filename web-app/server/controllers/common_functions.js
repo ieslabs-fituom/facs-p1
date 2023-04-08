@@ -142,14 +142,24 @@ exports.getGroupsofEmployee = (conn, employee_id) => {
 }
 
 // GET DETAILS OF SELECTED STUDENT GROUPS
-exports.getStudentGroupDetails = (conn, StudentGroups) => {
+exports.getStudentGroupDetails = (conn, filterArray, type) => { // type = 0 -> get all details, type = 1 -> get according to id, type = 2 -> get according to module
     return new Promise((resolve, reject) => {
-        let sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE id IN (';
-        StudentGroups.forEach(element => {
-            sql = sql + element + ',';
-        });
-        sql = sql.substring(0, sql.length - 1);
-        sql = sql + ')';
+        let sql;
+        if(type==0){
+            sql = 'SELECT id,Name,Module,Batch FROM student_groups';
+        }else if(type==1){
+            sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE id IN (';
+        }else{
+            sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE Module IN (';
+        }
+        if(type!=0){
+            filterArray.forEach(element => {
+                sql = sql + element + ',';
+            });
+            sql = sql.substring(0, sql.length - 1);
+            sql = sql + ')';
+        }
+
         conn.query(sql, (err, rows) => {
             if (!err) {
                 return resolve(rows);
