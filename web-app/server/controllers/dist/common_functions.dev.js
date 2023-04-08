@@ -151,14 +151,27 @@ exports.getGroupsofEmployee = function (conn, employee_id) {
 }; // GET DETAILS OF SELECTED STUDENT GROUPS
 
 
-exports.getStudentGroupDetails = function (conn, StudentGroups) {
+exports.getStudentGroupDetails = function (conn, filterArray, type) {
+  // type = 0 -> get all details, type = 1 -> get according to id, type = 2 -> get according to module
   return new Promise(function (resolve, reject) {
-    var sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE id IN (';
-    StudentGroups.forEach(function (element) {
-      sql = sql + element + ',';
-    });
-    sql = sql.substring(0, sql.length - 1);
-    sql = sql + ')';
+    var sql;
+
+    if (type == 0) {
+      sql = 'SELECT id,Name,Module,Batch FROM student_groups';
+    } else if (type == 1) {
+      sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE id IN (';
+    } else {
+      sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE Module IN (';
+    }
+
+    if (type != 0) {
+      filterArray.forEach(function (element) {
+        sql = sql + element + ',';
+      });
+      sql = sql.substring(0, sql.length - 1);
+      sql = sql + ')';
+    }
+
     conn.query(sql, function (err, rows) {
       if (!err) {
         return resolve(rows);

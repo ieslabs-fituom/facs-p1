@@ -84,7 +84,7 @@ exports.view = function _callee(req, res) {
 
           _context.prev = 35;
           _context.next = 38;
-          return regeneratorRuntime.awrap(commonFunctions.getStudentGroupDetails(conn, group_ids));
+          return regeneratorRuntime.awrap(commonFunctions.getStudentGroupDetails(conn, group_ids, 1));
 
         case 38:
           groups_of_employee = _context.sent;

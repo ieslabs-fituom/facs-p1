@@ -202,7 +202,7 @@ exports.stu_get_profile = async (req, res) => {
 
         // RETRIEVING ALL GROUPS RELEVANT TO THE STUDENT
         try {
-            groups = await commonFunctions.getStudentGroupDetails(conn, id_list);
+            groups = await commonFunctions.getStudentGroupDetails(conn, id_list,1);
             console.log(groups);
         } catch (e) {
             console.log('Error : ' + e);
@@ -282,6 +282,79 @@ exports.stu_get_profile = async (req, res) => {
 
 
 
+}
+
+// RETRIEVE VIEW RELATED TO PAST REPORTS SECTION
+exports.past_reports_view = async (req, res) => {
+    console.log('Function starting... get_past_reports');
+
+    var employee_details, groups, modules, batches;
+
+    employee_details = await loadInitialDetails();
+
+    
+    try {
+        batches = await commonFunctions.getBatchDetails(conn, null);
+        console.log(batches);
+    } catch (e) {
+        console.log('Error : ' + e);
+    }
+
+    try {
+        modules = await commonFunctions.getModuleDetails(conn, null);
+        console.log(modules);
+    } catch (e) {
+        console.log('Error : ' + e);
+    }
+    
+    res.render('nonacademic_past_reports', { employee: employee_details, batches: batches, modules: modules, groups: groups});
+}
+
+// RETRIEVE GROUPS RELATED TO THE MODULE SELECTED BY THE USER
+exports.past_get_groups = async (req, res) => {
+    let module = req.query.module;
+    let batch = req.query.batch;
+
+    console.log(module)
+    let modules = [module]
+    let groups = [];
+
+    try {
+        groups = await commonFunctions.getStudentGroupDetails(conn, modules,2);
+        console.log(groups);
+    } catch (e) {
+        console.log('Error : ' + e);
+        res.send({ status: '500', groups: groups});
+    }
+
+    let matchingGroups = [];
+    for(group in groups){
+        if(groups[group].Batch == batch){
+            matchingGroups.push(groups[group]);  
+        }
+    }
+
+    console.log(groups);
+    res.send({ status: '200', groups: matchingGroups });
+    
+}
+
+// RETRIEVE SESSIONS ACCORDING TO THE GIVEN BATCH, MODULE AND GROUP
+exports.past_get_sessions = async (req, res) => {
+    let group = req.query.group;
+
+    let groups = [group],sessions;
+
+    try {
+        sessions = await commonFunctions.getSessions(conn, groups,1);
+        console.log(sessions);
+    } catch (e) {
+        console.log('Error : ' + e);
+        res.send({ status: '500', sessions: sessions});
+    }
+
+    res.send({ status: '200', sessions: sessions });
+    
 }
 
 // GET DETAILS OF THE EMPLYEE ( PARAMS : ID OF THE EMPLOYEE, COLUMNS : COLUMNS WHICH ARE NEED TO BE RETRIEVED)
