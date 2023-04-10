@@ -357,6 +357,52 @@ exports.past_get_sessions = async (req, res) => {
     
 }
 
+exports.past_get_sessionattendance = async(req, res) => {
+    let session = [];
+    session.push(req.query.session);
+    let attendance = [];
+
+    try {
+        session = await commonFunctions.getSessions(conn, session,2);
+        console.log(session);
+    } catch (e) {
+        console.log('Error : ' + e);
+        res.send({ status: '500', attendance: attendance});
+    }
+
+    try{
+        attendance = await commonFunctions.getAttendanceofSession(conn, session[0].id,session[0].Ses_group);
+        console.log(attendance);
+    } catch (e) {
+        console.log('Error : ' + e);
+        res.send({ status: '500', attendance: attendance});
+    }
+
+    let students = [];
+    for(student in attendance){
+        students.push([attendance[student].Student]);
+    }
+    
+    try{
+        students = await commonFunctions.getStudentsFiltered(conn, students,0);
+        console.log(students);
+    } catch (e) {
+        console.log('Error : ' + e);
+        res.send({ status: '500', attendance: attendance});
+    }
+
+    for(row in attendance){
+        for(student in students){
+            if(students[student].id == attendance[row].Student){
+                attendance[row].Student = students[student].IndexNo;
+            }
+        }
+    }
+
+    res.send({status: '200', attendance: attendance});
+ 
+}
+
 // GET DETAILS OF THE EMPLYEE ( PARAMS : ID OF THE EMPLOYEE, COLUMNS : COLUMNS WHICH ARE NEED TO BE RETRIEVED)
 function getEmployeeDetails(id, columns) {
     let sql = 'SELECT ';

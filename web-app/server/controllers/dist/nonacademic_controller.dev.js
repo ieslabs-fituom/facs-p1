@@ -242,7 +242,7 @@ exports.stu_get_filtered = function _callee4(req, res) {
 };
 
 exports.stu_get_profile = function _callee5(req, res) {
-  var search_index, search_keyword, employee_details, student, groups, modules, sessions, attendances, sql, degree, deg, bat, batch, id_list, row, attendanceLoop, present, session_count, percentage, _row, key;
+  var search_index, search_keyword, employee_details, student, groups, modules, sessions, attendances, sql, degree, deg, bat, batch, id_list, _row, attendanceLoop, present, session_count, percentage, _row2, key;
 
   return regeneratorRuntime.async(function _callee5$(_context6) {
     while (1) {
@@ -422,7 +422,7 @@ exports.stu_get_profile = function _callee5(req, res) {
         case 92:
           //RETIEVING ALL ATTENDANCE ROWS OF SELECTED STUDENT RELEVANT TO EACH STUDENT GROUP
           attendances = [];
-          row = [];
+          _row = [];
 
           attendanceLoop = function attendanceLoop(_) {
             return regeneratorRuntime.async(function attendanceLoop$(_context5) {
@@ -443,12 +443,14 @@ exports.stu_get_profile = function _callee5(req, res) {
                     return regeneratorRuntime.awrap(commonFunctions.getAttendanceRow(conn, student[0].id, groups[grp].id));
 
                   case 6:
-                    row = _context5.sent;
-                    row.push({
+                    _row = _context5.sent;
+
+                    _row.push({
                       group: groups[grp].id
                     }); //console.log(row);
 
-                    attendances.push(row);
+
+                    attendances.push(_row);
                     _context5.next = 14;
                     break;
 
@@ -473,15 +475,15 @@ exports.stu_get_profile = function _callee5(req, res) {
           return regeneratorRuntime.awrap(attendanceLoop());
 
         case 97:
-          for (_row in attendances) {
+          for (_row2 in attendances) {
             present = 0;
             session_count = 0;
 
-            for (key in attendances[_row][0]) {
+            for (key in attendances[_row2][0]) {
               if (key != 'id' && key != 'Student') {
                 session_count++;
 
-                if (checkValidTimeStamp(attendances[_row][0][key])) {
+                if (checkValidTimeStamp(attendances[_row2][0][key])) {
                   present++;
                 }
               }
@@ -489,7 +491,7 @@ exports.stu_get_profile = function _callee5(req, res) {
 
             session_count == 0 ? percentage = 100 : percentage = present / session_count * 100;
 
-            attendances[_row].push({
+            attendances[_row2].push({
               percentage: percentage,
               session_count: session_count
             }); //console.log(percentage + '%');
@@ -670,6 +672,102 @@ exports.past_get_sessions = function _callee8(req, res) {
       }
     }
   }, null, null, [[2, 9]]);
+};
+
+exports.past_get_sessionattendance = function _callee9(req, res) {
+  var session, attendance, students;
+  return regeneratorRuntime.async(function _callee9$(_context10) {
+    while (1) {
+      switch (_context10.prev = _context10.next) {
+        case 0:
+          session = [];
+          session.push(req.query.session);
+          attendance = [];
+          _context10.prev = 3;
+          _context10.next = 6;
+          return regeneratorRuntime.awrap(commonFunctions.getSessions(conn, session, 2));
+
+        case 6:
+          session = _context10.sent;
+          console.log(session);
+          _context10.next = 14;
+          break;
+
+        case 10:
+          _context10.prev = 10;
+          _context10.t0 = _context10["catch"](3);
+          console.log('Error : ' + _context10.t0);
+          res.send({
+            status: '500',
+            attendance: attendance
+          });
+
+        case 14:
+          _context10.prev = 14;
+          _context10.next = 17;
+          return regeneratorRuntime.awrap(commonFunctions.getAttendanceofSession(conn, session[0].id, session[0].Ses_group));
+
+        case 17:
+          attendance = _context10.sent;
+          console.log(attendance);
+          _context10.next = 25;
+          break;
+
+        case 21:
+          _context10.prev = 21;
+          _context10.t1 = _context10["catch"](14);
+          console.log('Error : ' + _context10.t1);
+          res.send({
+            status: '500',
+            attendance: attendance
+          });
+
+        case 25:
+          students = [];
+
+          for (student in attendance) {
+            students.push([attendance[student].Student]);
+          }
+
+          _context10.prev = 27;
+          _context10.next = 30;
+          return regeneratorRuntime.awrap(commonFunctions.getStudentsFiltered(conn, students, 0));
+
+        case 30:
+          students = _context10.sent;
+          console.log(students);
+          _context10.next = 38;
+          break;
+
+        case 34:
+          _context10.prev = 34;
+          _context10.t2 = _context10["catch"](27);
+          console.log('Error : ' + _context10.t2);
+          res.send({
+            status: '500',
+            attendance: attendance
+          });
+
+        case 38:
+          for (row in attendance) {
+            for (student in students) {
+              if (students[student].id == attendance[row].Student) {
+                attendance[row].Student = students[student].IndexNo;
+              }
+            }
+          }
+
+          res.send({
+            status: '200',
+            attendance: attendance
+          });
+
+        case 40:
+        case "end":
+          return _context10.stop();
+      }
+    }
+  }, null, null, [[3, 10], [14, 21], [27, 34]]);
 }; // GET DETAILS OF THE EMPLYEE ( PARAMS : ID OF THE EMPLOYEE, COLUMNS : COLUMNS WHICH ARE NEED TO BE RETRIEVED)
 
 
@@ -693,39 +791,39 @@ function getEmployeeDetails(id, columns) {
 
 function load_attendance_of_a_student(groups) {
   var attendances, row;
-  return regeneratorRuntime.async(function load_attendance_of_a_student$(_context11) {
+  return regeneratorRuntime.async(function load_attendance_of_a_student$(_context12) {
     while (1) {
-      switch (_context11.prev = _context11.next) {
+      switch (_context12.prev = _context12.next) {
         case 0:
           attendances = [];
           row = [];
-          groups.forEach(function _callee9(element) {
-            return regeneratorRuntime.async(function _callee9$(_context10) {
+          groups.forEach(function _callee10(element) {
+            return regeneratorRuntime.async(function _callee10$(_context11) {
               while (1) {
-                switch (_context10.prev = _context10.next) {
+                switch (_context11.prev = _context11.next) {
                   case 0:
-                    _context10.prev = 0;
-                    _context10.next = 3;
+                    _context11.prev = 0;
+                    _context11.next = 3;
                     return regeneratorRuntime.awrap(commonFunctions.getAttendanceRow(conn, student[0].id, element.id));
 
                   case 3:
-                    row = _context10.sent;
+                    row = _context11.sent;
                     row.push({
                       group: element.id
                     });
                     console.log(row);
                     attendances.push(row);
-                    _context10.next = 12;
+                    _context11.next = 12;
                     break;
 
                   case 9:
-                    _context10.prev = 9;
-                    _context10.t0 = _context10["catch"](0);
-                    console.log('Error : ' + _context10.t0);
+                    _context11.prev = 9;
+                    _context11.t0 = _context11["catch"](0);
+                    console.log('Error : ' + _context11.t0);
 
                   case 12:
                   case "end":
-                    return _context10.stop();
+                    return _context11.stop();
                 }
               }
             }, null, null, [[0, 9]]);
@@ -733,7 +831,7 @@ function load_attendance_of_a_student(groups) {
 
         case 3:
         case "end":
-          return _context11.stop();
+          return _context12.stop();
       }
     }
   });
@@ -742,38 +840,38 @@ function load_attendance_of_a_student(groups) {
 
 function loadInitialDetails() {
   var employee_details, designations;
-  return regeneratorRuntime.async(function loadInitialDetails$(_context12) {
+  return regeneratorRuntime.async(function loadInitialDetails$(_context13) {
     while (1) {
-      switch (_context12.prev = _context12.next) {
+      switch (_context13.prev = _context13.next) {
         case 0:
-          _context12.prev = 0;
-          _context12.next = 3;
+          _context13.prev = 0;
+          _context13.next = 3;
           return regeneratorRuntime.awrap(getEmployeeDetails(process.env.CURRENT_ID, ['Name', 'Designation']));
 
         case 3:
-          employee_details = _context12.sent;
-          _context12.next = 9;
+          employee_details = _context13.sent;
+          _context13.next = 9;
           break;
 
         case 6:
-          _context12.prev = 6;
-          _context12.t0 = _context12["catch"](0);
-          console.log('Error : ' + _context12.t0);
+          _context13.prev = 6;
+          _context13.t0 = _context13["catch"](0);
+          console.log('Error : ' + _context13.t0);
 
         case 9:
-          _context12.prev = 9;
-          _context12.next = 12;
+          _context13.prev = 9;
+          _context13.next = 12;
           return regeneratorRuntime.awrap(commonFunctions.getDesignations(conn));
 
         case 12:
-          designations = _context12.sent;
-          _context12.next = 18;
+          designations = _context13.sent;
+          _context13.next = 18;
           break;
 
         case 15:
-          _context12.prev = 15;
-          _context12.t1 = _context12["catch"](9);
-          console.log('Error : ' + _context12.t1);
+          _context13.prev = 15;
+          _context13.t1 = _context13["catch"](9);
+          console.log('Error : ' + _context13.t1);
 
         case 18:
           // MATCHING DESTINATION OF THE EMPLOYEE WITH THE DESIGNATION LIST
@@ -783,11 +881,11 @@ function loadInitialDetails() {
               return;
             }
           });
-          return _context12.abrupt("return", employee_details);
+          return _context13.abrupt("return", employee_details);
 
         case 20:
         case "end":
-          return _context12.stop();
+          return _context13.stop();
       }
     }
   }, null, null, [[0, 6], [9, 15]]);
