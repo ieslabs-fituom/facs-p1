@@ -145,14 +145,14 @@ exports.getGroupsofEmployee = (conn, employee_id) => {
 exports.getStudentGroupDetails = (conn, filterArray, type) => { // type = 0 -> get all details, type = 1 -> get according to id, type = 2 -> get according to module
     return new Promise((resolve, reject) => {
         let sql;
-        if(type==0){
+        if (type == 0) {
             sql = 'SELECT id,Name,Module,Batch FROM student_groups';
-        }else if(type==1){
+        } else if (type == 1) {
             sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE id IN (';
-        }else{
+        } else {
             sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE Module IN (';
         }
-        if(type!=0){
+        if (type != 0) {
             filterArray.forEach(element => {
                 sql = sql + element + ',';
             });
@@ -191,6 +191,8 @@ exports.getSessions = (conn, params, index) => {
             sql = 'SELECT * FROM sessions';
         } else if (index == 1) {
             sql = 'SELECT * FROM sessions WHERE Ses_group IN (';
+        } else if (index == 2) {
+            sql = 'SELECT * FROM sessions WHERE id IN (';
         }
         if (index != 0) {
             params.forEach(element => {
@@ -222,4 +224,44 @@ exports.getAttendanceRow = (conn, student, group) => {
             }
         })
     })
+}
+
+exports.getAttendanceofSession = (conn, session, group) => {
+    return new Promise((resolve, reject) => {
+        let sql;
+        sql = 'SELECT id,Student,ses' + session + ' FROM attendance_' + group;
+        conn.query(sql, (err, rows) => {
+            if (!err) {
+                return resolve(rows);
+            } else {
+                return reject(err);
+            }
+        });
+    });
+}
+
+exports.getStudentsFiltered = (conn, params, index) => { //index -> 0 - id, 1 - index no
+    return new Promise((resolve, reject) => {
+
+        let sql;
+        if(index==0){
+            sql = 'SELECT id,IndexNo,Name FROM students WHERE id IN (';
+        }else if(index ==1){
+            sql = 'SELECT id,IndexNo,Name FROM students WHERE id IN (';
+        }
+        
+        params.forEach(element => {
+            sql = sql + element + ',';
+        });
+        sql = sql.substring(0, sql.length - 1);
+        sql = sql + ')';
+
+        conn.query(sql, (err, rows) => {
+            if (!err) {
+                return resolve(rows);
+            } else {
+                return reject(err);
+            }
+        });
+    });
 }
