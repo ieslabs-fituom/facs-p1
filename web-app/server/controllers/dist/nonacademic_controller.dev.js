@@ -520,7 +520,7 @@ exports.stu_get_profile = function _callee5(req, res) {
 
 
 exports.past_reports_view = function _callee6(req, res) {
-  var employee_details, groups, modules, batches;
+  var employee_details, groups, modules, batches, degrees;
   return regeneratorRuntime.async(function _callee6$(_context7) {
     while (1) {
       switch (_context7.prev = _context7.next) {
@@ -563,19 +563,36 @@ exports.past_reports_view = function _callee6(req, res) {
           console.log('Error : ' + _context7.t1);
 
         case 24:
+          _context7.prev = 24;
+          _context7.next = 27;
+          return regeneratorRuntime.awrap(commonFunctions.getDegreeDetails(conn, null));
+
+        case 27:
+          degrees = _context7.sent;
+          console.log(degrees);
+          _context7.next = 34;
+          break;
+
+        case 31:
+          _context7.prev = 31;
+          _context7.t2 = _context7["catch"](24);
+          console.log('Error : ' + _context7.t2);
+
+        case 34:
           res.render('nonacademic_past_reports', {
             employee: employee_details,
             batches: batches,
             modules: modules,
-            groups: groups
+            groups: groups,
+            degrees: degrees
           });
 
-        case 25:
+        case 35:
         case "end":
           return _context7.stop();
       }
     }
-  }, null, null, [[4, 11], [14, 21]]);
+  }, null, null, [[4, 11], [14, 21], [24, 31]]);
 }; // RETRIEVE GROUPS RELATED TO THE MODULE SELECTED BY THE USER
 
 
@@ -753,6 +770,7 @@ exports.past_get_sessionattendance = function _callee9(req, res) {
             for (student in students) {
               if (students[student].id == attendance[row].Student) {
                 attendance[row].Student = students[student].IndexNo;
+                attendance[row].Degree = students[student].Degree;
               }
             }
           }
