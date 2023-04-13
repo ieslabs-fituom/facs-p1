@@ -152,7 +152,7 @@ exports.getGroupsofEmployee = function (conn, employee_id) {
 
 
 exports.getStudentGroupDetails = function (conn, filterArray, type) {
-  // type = 0 -> get all details, type = 1 -> get according to id, type = 2 -> get according to module
+  // type = 0 -> get all details, type = 1 -> get according to id, type = 2 -> get according to module, type = 3 -> get according to batch
   return new Promise(function (resolve, reject) {
     var sql;
 
@@ -160,8 +160,10 @@ exports.getStudentGroupDetails = function (conn, filterArray, type) {
       sql = 'SELECT id,Name,Module,Batch FROM student_groups';
     } else if (type == 1) {
       sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE id IN (';
-    } else {
+    } else if (type == 2) {
       sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE Module IN (';
+    } else {
+      sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE Batch IN (';
     }
 
     if (type != 0) {
@@ -260,12 +262,51 @@ exports.getStudentsFiltered = function (conn, params, index) {
     var sql;
 
     if (index == 0) {
-      sql = 'SELECT id,IndexNo,Name FROM students WHERE id IN (';
+      sql = 'SELECT id,IndexNo,Name,Degree,Batch FROM students WHERE id IN (';
     } else if (index == 1) {
-      sql = 'SELECT id,IndexNo,Name FROM students WHERE id IN (';
+      sql = 'SELECT id,IndexNo,Name,Degree,Batch FROM students WHERE id IN (';
     }
 
     params.forEach(function (element) {
+      sql = sql + element + ',';
+    });
+    sql = sql.substring(0, sql.length - 1);
+    sql = sql + ')';
+    conn.query(sql, function (err, rows) {
+      if (!err) {
+        return resolve(rows);
+      } else {
+        return reject(err);
+      }
+    });
+  });
+}; // RETRIEVE GROUPS WHICH ARE MATCHING TO THE GIVEN DEGREE AND INCLUDED IN GIVEN GROUPS LIST
+
+
+exports.getGroups_DegreeFiltered = function (conn, degree, groups) {
+  return new Promise(function (resolve, reject) {
+    var sql;
+    sql = 'SELECT Stu_group FROM degree_of_groups WHERE Degree=' + degree + ' AND Stu_groups IN (';
+    groups.forEach(function (element) {
+      sql = sql + element + ',';
+    });
+    sql = sql.substring(0, sql.length - 1);
+    sql = sql + ')';
+    conn.query(sql, function (err, rows) {
+      if (!err) {
+        return resolve(rows);
+      } else {
+        return reject(err);
+      }
+    });
+  });
+};
+
+exports.getTimeTable = function (conn, day, groups) {
+  return new Promise(function (resolve, reject) {
+    var sql;
+    sql = 'SELECT id,T_group,Start_time,Duration WHERE Day=' + day + ' AND T_group IN (';
+    groups.forEach(function (element) {
       sql = sql + element + ',';
     });
     sql = sql.substring(0, sql.length - 1);
