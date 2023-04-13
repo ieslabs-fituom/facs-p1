@@ -127,7 +127,8 @@ block content
                     if(response.status=='200'){
                         console.log('success');
                         groups = response.groups;
-                        
+                        document.getElementById("group_select").value = '';
+                        document.getElementById("group_select").innerText = '';
                         clearSelectOptions(groupDatalist);
                         var option;
                         for(group in groups){
@@ -231,6 +232,7 @@ block content
                     row.classList.add("limited-rows-tr");
                     row.classList.add("selection-row");
                     row.setAttribute("data-id",sessions[ses].id);
+                    row.setAttribute("data-date",sessions[ses].Start_time);
                     row.setAttribute("onclick","onSessionSelectFromTable(this)");
                     
                     cell = row.insertCell(0);
@@ -328,7 +330,7 @@ block content
                         if(attendance.length==0){
                             window.alert("No students available for the selected session.");
                         }
-                        showAttendanceTable(attendance,row.dataset.id)  
+                        showAttendanceTable(attendance,row);  
                         
 
                     }else{
@@ -338,10 +340,12 @@ block content
                 });
         }
 
-        function showAttendanceTable(attendance,session){
+        function showAttendanceTable(attendance,row){
             var student_table_row = document.getElementById("student_row");
             var student_table = document.getElementById("student_table_body");
-            let key = 'ses' + session;    
+
+            let key = 'ses' + row.dataset.id;   
+            document.getElementById("session_details").innerText = 'Session : ' + row.dataset.date;
 
             clearSelectOptions(student_table)
             if(attendance.length != 0){

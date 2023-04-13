@@ -15,4 +15,6 @@ router.get('/past', nonacademic_controller.past_reports_view);
 router.get('/past/getgroups', nonacademic_controller.past_get_groups);
 router.get('/past/getsessions', nonacademic_controller.past_get_sessions);
 router.get('/past/getsessionattendance', nonacademic_controller.past_get_sessionattendance);
+router.get('/timetable', nonacademic_controller.timetable_view);
+router.get('/timetable/getlectures', nonacademic_controller.timetable_getlectures);
 module.exports = router;
