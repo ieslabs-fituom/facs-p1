@@ -388,7 +388,7 @@ block content
                     element_p.classList.add("text-xs");
                     element_p.classList.add("font-weight-bold");
                     element_p.classList.add("mb-0");
-                    element_p.innerHTML = 'Student :';
+                    element_p.innerHTML = 'Index :';
                     cell.appendChild(element_p);
                     element_h6 = document.createElement("h6");
                     element_h6.classList.add("text-sm");
@@ -396,8 +396,21 @@ block content
                     element_h6.innerHTML = attendance[att].Student;
                     cell.appendChild(element_h6);
 
+                    cell = row.insertCell(1);
+                    element_p = document.createElement("p");
+                    element_p.classList.add("text-xs");
+                    element_p.classList.add("font-weight-bold");
+                    element_p.classList.add("mb-0");
+                    element_p.innerHTML = 'Name :';
+                    cell.appendChild(element_p);
+                    element_h6 = document.createElement("h6");
+                    element_h6.classList.add("text-sm");
+                    element_h6.classList.add("mb-0");
+                    element_h6.innerHTML = attendance[att].Name;
+                    cell.appendChild(element_h6);
+
                     if(degree==0){
-                        cell = row.insertCell(1);
+                        cell = row.insertCell(2);
                         element_p = document.createElement("p");
                         element_p.classList.add("text-xs");
                         element_p.classList.add("font-weight-bold");
@@ -414,9 +427,9 @@ block content
                     }
 
                     if(degree==0){
-                        cell = row.insertCell(2);
+                        cell = row.insertCell(3);
                     }else{
-                        cell = row.insertCell(1);   
+                        cell = row.insertCell(2);   
                     }
                     
                     element_p = document.createElement("p");
