@@ -403,6 +403,7 @@ exports.past_get_sessionattendance = async (req, res) => {
             if (students[student].id == attendance[row].Student) {
                 attendance[row].Student = students[student].IndexNo;
                 attendance[row].Degree = students[student].Degree;
+                attendance[row].Name = students[student].Name;
             }
         }
     }
