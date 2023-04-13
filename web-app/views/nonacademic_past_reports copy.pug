@@ -47,7 +47,7 @@ block content
                                 button.btn.btn-primary.btn-sm.mt-3.ps-7.pe-7(onclick="searchSessions()") Search
         
                                     
-        .row#sessions_row.mt-3.visible
+        .row#sessions_row.mt-3.invisible
             .col-lg-0.mb-xl-0.mb-4
                 .card
                     .card-header.pb-0.pt-3.bg-transparent
@@ -55,87 +55,8 @@ block content
                     .card-body.p-3
                         .table-responsive
                             //Class limited-rows-table - used to specify the max height and make scrollbars visible
-                            table#session_table.table.align-items-center
-                                tr  
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Module:
-                                            h6.text-sm.mb-0 IN 1400-Fundamentals of Databases
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Group:
-                                            h6.text-sm.mb-0 mod1-grp1
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Start Time:
-                                            h6.text-sm.mb-0 8:00:00
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Duration:
-                                            h6.text-sm.mb-0 02 Hours
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Lecturer:
-                                            h6.text-sm.mb-0 Dr.S Ahangama                                  
-                                tr  
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Module:
-                                            h6.text-sm.mb-0 IN 1400-Fundamentals of Databases
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Group:
-                                            h6.text-sm.mb-0 mod1-grp1
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Start Time:
-                                            h6.text-sm.mb-0 8:00:00
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Duration:
-                                            h6.text-sm.mb-0 02 Hours
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Lecturer:
-                                            h6.text-sm.mb-0 Dr.S Ahangama                                  
-                                tr  
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Module:
-                                            h6.text-sm.mb-0 IN 1400-Fundamentals of Databases
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Group:
-                                            h6.text-sm.mb-0 mod1-grp1
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Start Time:
-                                            h6.text-sm.mb-0 8:00:00
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Duration:
-                                            h6.text-sm.mb-0 02 Hours
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Lecturer:
-                                            h6.text-sm.mb-0 Dr.S Ahangama                                  
-
-                            tbody#session_table_body
+                            table#session_table.table.align-items-center  
+                                tbody#session_table_body
         .row#student_row.mt-3.invisible
             .col-lg-0.mb-xl-0.mb-4
                 .card
