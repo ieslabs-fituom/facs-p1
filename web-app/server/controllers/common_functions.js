@@ -142,15 +142,17 @@ exports.getGroupsofEmployee = (conn, employee_id) => {
 }
 
 // GET DETAILS OF SELECTED STUDENT GROUPS
-exports.getStudentGroupDetails = (conn, filterArray, type) => { // type = 0 -> get all details, type = 1 -> get according to id, type = 2 -> get according to module
+exports.getStudentGroupDetails = (conn, filterArray, type) => { // type = 0 -> get all details, type = 1 -> get according to id, type = 2 -> get according to module, type = 3 -> get according to batch
     return new Promise((resolve, reject) => {
         let sql;
         if (type == 0) {
             sql = 'SELECT id,Name,Module,Batch FROM student_groups';
         } else if (type == 1) {
             sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE id IN (';
-        } else {
+        } else if (type == 2){
             sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE Module IN (';
+        } else{
+            sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE Batch IN (';
         }
         if (type != 0) {
             filterArray.forEach(element => {
@@ -245,12 +247,53 @@ exports.getStudentsFiltered = (conn, params, index) => { //index -> 0 - id, 1 - 
 
         let sql;
         if(index==0){
-            sql = 'SELECT id,IndexNo,Name FROM students WHERE id IN (';
+            sql = 'SELECT id,IndexNo,Name,Degree,Batch FROM students WHERE id IN (';
         }else if(index ==1){
-            sql = 'SELECT id,IndexNo,Name FROM students WHERE id IN (';
+            sql = 'SELECT id,IndexNo,Name,Degree,Batch FROM students WHERE id IN (';
         }
         
         params.forEach(element => {
+            sql = sql + element + ',';
+        });
+        sql = sql.substring(0, sql.length - 1);
+        sql = sql + ')';
+
+        conn.query(sql, (err, rows) => {
+            if (!err) {
+                return resolve(rows);
+            } else {
+                return reject(err);
+            }
+        });
+    });
+}
+
+// RETRIEVE GROUPS WHICH ARE MATCHING TO THE GIVEN DEGREE AND INCLUDED IN GIVEN GROUPS LIST
+exports.getGroups_DegreeFiltered = (conn, degree, groups) => {
+    return new Promise((resolve, reject) => {
+        let sql;
+        sql = 'SELECT Stu_group FROM degree_of_groups WHERE Degree=' + degree + ' AND Stu_groups IN (';
+        groups.forEach(element => {
+            sql = sql + element + ',';
+        });
+        sql = sql.substring(0, sql.length - 1);
+        sql = sql + ')';
+
+        conn.query(sql, (err, rows) => {
+            if (!err) {
+                return resolve(rows);
+            } else {
+                return reject(err);
+            }
+        });
+    });
+}
+
+exports.getTimeTable = (conn,day,groups) => {
+    return new Promise((resolve,reject) => {
+        let sql;
+        sql = 'SELECT id,T_group,Start_time,Duration WHERE Day=' + day + ' AND T_group IN (';
+        groups.forEach(element => {
             sql = sql + element + ',';
         });
         sql = sql.substring(0, sql.length - 1);

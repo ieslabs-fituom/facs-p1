@@ -520,7 +520,7 @@ exports.stu_get_profile = function _callee5(req, res) {
 
 
 exports.past_reports_view = function _callee6(req, res) {
-  var employee_details, groups, modules, batches;
+  var employee_details, groups, modules, batches, degrees;
   return regeneratorRuntime.async(function _callee6$(_context7) {
     while (1) {
       switch (_context7.prev = _context7.next) {
@@ -563,19 +563,36 @@ exports.past_reports_view = function _callee6(req, res) {
           console.log('Error : ' + _context7.t1);
 
         case 24:
+          _context7.prev = 24;
+          _context7.next = 27;
+          return regeneratorRuntime.awrap(commonFunctions.getDegreeDetails(conn, null));
+
+        case 27:
+          degrees = _context7.sent;
+          console.log(degrees);
+          _context7.next = 34;
+          break;
+
+        case 31:
+          _context7.prev = 31;
+          _context7.t2 = _context7["catch"](24);
+          console.log('Error : ' + _context7.t2);
+
+        case 34:
           res.render('nonacademic_past_reports', {
             employee: employee_details,
             batches: batches,
             modules: modules,
-            groups: groups
+            groups: groups,
+            degrees: degrees
           });
 
-        case 25:
+        case 35:
         case "end":
           return _context7.stop();
       }
     }
-  }, null, null, [[4, 11], [14, 21]]);
+  }, null, null, [[4, 11], [14, 21], [24, 31]]);
 }; // RETRIEVE GROUPS RELATED TO THE MODULE SELECTED BY THE USER
 
 
@@ -753,6 +770,8 @@ exports.past_get_sessionattendance = function _callee9(req, res) {
             for (student in students) {
               if (students[student].id == attendance[row].Student) {
                 attendance[row].Student = students[student].IndexNo;
+                attendance[row].Degree = students[student].Degree;
+                attendance[row].Name = students[student].Name;
               }
             }
           }
@@ -768,6 +787,163 @@ exports.past_get_sessionattendance = function _callee9(req, res) {
       }
     }
   }, null, null, [[3, 10], [14, 21], [27, 34]]);
+}; // GET REQUIRED DETAILS TO LOAD TIME TABLE SCREEN
+
+
+exports.timetable_view = function _callee10(req, res) {
+  var employee_details, degrees, batches;
+  return regeneratorRuntime.async(function _callee10$(_context11) {
+    while (1) {
+      switch (_context11.prev = _context11.next) {
+        case 0:
+          console.log('Function starting... get time table');
+          _context11.next = 3;
+          return regeneratorRuntime.awrap(loadInitialDetails());
+
+        case 3:
+          employee_details = _context11.sent;
+          _context11.prev = 4;
+          _context11.next = 7;
+          return regeneratorRuntime.awrap(commonFunctions.getBatchDetails(conn, null));
+
+        case 7:
+          batches = _context11.sent;
+          console.log(batches);
+          _context11.next = 14;
+          break;
+
+        case 11:
+          _context11.prev = 11;
+          _context11.t0 = _context11["catch"](4);
+          console.log('Error : ' + _context11.t0);
+
+        case 14:
+          _context11.prev = 14;
+          _context11.next = 17;
+          return regeneratorRuntime.awrap(commonFunctions.getDegreeDetails(conn, null));
+
+        case 17:
+          degrees = _context11.sent;
+          console.log(degrees);
+          _context11.next = 24;
+          break;
+
+        case 21:
+          _context11.prev = 21;
+          _context11.t1 = _context11["catch"](14);
+          console.log('Error : ' + _context11.t1);
+
+        case 24:
+          res.render('nonacademic_timetable', {
+            employee: employee_details,
+            batches: batches,
+            degrees: degrees
+          });
+
+        case 25:
+        case "end":
+          return _context11.stop();
+      }
+    }
+  }, null, null, [[4, 11], [14, 21]]);
+}; // GET LECTURES RELEVANT TO GIVEN DAY, BATCH AND DEGREE
+
+
+exports.timetable_getlectures = function _callee11(req, res) {
+  var day, batch, degree, groups, group_ids, lectures;
+  return regeneratorRuntime.async(function _callee11$(_context12) {
+    while (1) {
+      switch (_context12.prev = _context12.next) {
+        case 0:
+          day = req.query.day;
+          batch = [];
+          batch.push(req.query.batch);
+          degree = req.query.degree;
+          groups = [];
+          _context12.prev = 5;
+          _context12.next = 8;
+          return regeneratorRuntime.awrap(commonFunctions.getStudentGroupDetails(conn, batch, 3));
+
+        case 8:
+          groups = _context12.sent;
+          console.log(groups);
+          _context12.next = 16;
+          break;
+
+        case 12:
+          _context12.prev = 12;
+          _context12.t0 = _context12["catch"](5);
+          console.log('Error : ' + _context12.t0);
+          res.send({
+            status: '500',
+            lectures: []
+          });
+
+        case 16:
+          group_ids = [];
+
+          for (group in groups) {
+            group_ids.push(groups[group].id);
+          }
+
+          _context12.prev = 18;
+          _context12.next = 21;
+          return regeneratorRuntime.awrap(commonFunctions.getGroups_DegreeFiltered(conn, degree, group_ids));
+
+        case 21:
+          groups = _context12.sent;
+          console.log(groups);
+          _context12.next = 29;
+          break;
+
+        case 25:
+          _context12.prev = 25;
+          _context12.t1 = _context12["catch"](18);
+          console.log('Error : ' + _context12.t1);
+          res.send({
+            status: '500',
+            lectures: []
+          });
+
+        case 29:
+          group_ids = [];
+
+          for (group in groups) {
+            group_ids.push(groups[group].id);
+          }
+
+          lectures = [];
+          _context12.prev = 32;
+          _context12.next = 35;
+          return regeneratorRuntime.awrap(commonFunctions.getTimeTable(conn, day, group_ids));
+
+        case 35:
+          lectures = _context12.sent;
+          console.log(lectures);
+          _context12.next = 43;
+          break;
+
+        case 39:
+          _context12.prev = 39;
+          _context12.t2 = _context12["catch"](32);
+          console.log('Error : ' + _context12.t2);
+          res.send({
+            status: '500',
+            lectures: []
+          });
+
+        case 43:
+          res.send({
+            status: '200',
+            lectures: lectures
+          });
+
+        case 44:
+        case "end":
+          return _context12.stop();
+      }
+    }
+  }, null, null, [[5, 12], [18, 25], [32, 39]]);
 }; // GET DETAILS OF THE EMPLYEE ( PARAMS : ID OF THE EMPLOYEE, COLUMNS : COLUMNS WHICH ARE NEED TO BE RETRIEVED)
 
 
@@ -791,39 +967,39 @@ function getEmployeeDetails(id, columns) {
 
 function load_attendance_of_a_student(groups) {
   var attendances, row;
-  return regeneratorRuntime.async(function load_attendance_of_a_student$(_context12) {
+  return regeneratorRuntime.async(function load_attendance_of_a_student$(_context14) {
     while (1) {
-      switch (_context12.prev = _context12.next) {
+      switch (_context14.prev = _context14.next) {
         case 0:
           attendances = [];
           row = [];
-          groups.forEach(function _callee10(element) {
-            return regeneratorRuntime.async(function _callee10$(_context11) {
+          groups.forEach(function _callee12(element) {
+            return regeneratorRuntime.async(function _callee12$(_context13) {
               while (1) {
-                switch (_context11.prev = _context11.next) {
+                switch (_context13.prev = _context13.next) {
                   case 0:
-                    _context11.prev = 0;
-                    _context11.next = 3;
+                    _context13.prev = 0;
+                    _context13.next = 3;
                     return regeneratorRuntime.awrap(commonFunctions.getAttendanceRow(conn, student[0].id, element.id));
 
                   case 3:
-                    row = _context11.sent;
+                    row = _context13.sent;
                     row.push({
                       group: element.id
                     });
                     console.log(row);
                     attendances.push(row);
-                    _context11.next = 12;
+                    _context13.next = 12;
                     break;
 
                   case 9:
-                    _context11.prev = 9;
-                    _context11.t0 = _context11["catch"](0);
-                    console.log('Error : ' + _context11.t0);
+                    _context13.prev = 9;
+                    _context13.t0 = _context13["catch"](0);
+                    console.log('Error : ' + _context13.t0);
 
                   case 12:
                   case "end":
-                    return _context11.stop();
+                    return _context13.stop();
                 }
               }
             }, null, null, [[0, 9]]);
@@ -831,7 +1007,7 @@ function load_attendance_of_a_student(groups) {
 
         case 3:
         case "end":
-          return _context12.stop();
+          return _context14.stop();
       }
     }
   });
@@ -840,38 +1016,38 @@ function load_attendance_of_a_student(groups) {
 
 function loadInitialDetails() {
   var employee_details, designations;
-  return regeneratorRuntime.async(function loadInitialDetails$(_context13) {
+  return regeneratorRuntime.async(function loadInitialDetails$(_context15) {
     while (1) {
-      switch (_context13.prev = _context13.next) {
+      switch (_context15.prev = _context15.next) {
         case 0:
-          _context13.prev = 0;
-          _context13.next = 3;
+          _context15.prev = 0;
+          _context15.next = 3;
           return regeneratorRuntime.awrap(getEmployeeDetails(process.env.CURRENT_ID, ['Name', 'Designation']));
 
         case 3:
-          employee_details = _context13.sent;
-          _context13.next = 9;
+          employee_details = _context15.sent;
+          _context15.next = 9;
           break;
 
         case 6:
-          _context13.prev = 6;
-          _context13.t0 = _context13["catch"](0);
-          console.log('Error : ' + _context13.t0);
+          _context15.prev = 6;
+          _context15.t0 = _context15["catch"](0);
+          console.log('Error : ' + _context15.t0);
 
         case 9:
-          _context13.prev = 9;
-          _context13.next = 12;
+          _context15.prev = 9;
+          _context15.next = 12;
           return regeneratorRuntime.awrap(commonFunctions.getDesignations(conn));
 
         case 12:
-          designations = _context13.sent;
-          _context13.next = 18;
+          designations = _context15.sent;
+          _context15.next = 18;
           break;
 
         case 15:
-          _context13.prev = 15;
-          _context13.t1 = _context13["catch"](9);
-          console.log('Error : ' + _context13.t1);
+          _context15.prev = 15;
+          _context15.t1 = _context15["catch"](9);
+          console.log('Error : ' + _context15.t1);
 
         case 18:
           // MATCHING DESTINATION OF THE EMPLOYEE WITH THE DESIGNATION LIST
@@ -881,11 +1057,11 @@ function loadInitialDetails() {
               return;
             }
           });
-          return _context13.abrupt("return", employee_details);
+          return _context15.abrupt("return", employee_details);
 
         case 20:
         case "end":
-          return _context13.stop();
+          return _context15.stop();
       }
     }
   }, null, null, [[0, 6], [9, 15]]);

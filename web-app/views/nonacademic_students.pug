@@ -216,7 +216,9 @@ block content
                     element_h6 = document.createElement("h6");
                     element_h6.classList.add("text-sm");
                     element_h6.classList.add("mb-0");
-                    element_h6.innerHTML = batches[students[stu].Batch-1].Batch;
+                    element_h6.innerHTML = batches.find(item => {
+                        return item.id == students[stu].Batch
+                    }).Batch
                     cell.appendChild(element_h6);
 
                     cell = row.insertCell(4);
@@ -229,7 +231,9 @@ block content
                     element_h6 = document.createElement("h6");
                     element_h6.classList.add("text-sm");
                     element_h6.classList.add("mb-0");
-                    element_h6.innerHTML = degrees[students[stu].Degree-1].Degree;
+                    element_h6.innerHTML = degrees.find(item => {
+                        return item.id == students[stu].Degree
+                    }).Degree
                     cell.appendChild(element_h6);
                 }
 
