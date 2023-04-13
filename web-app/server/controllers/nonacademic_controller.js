@@ -288,7 +288,7 @@ exports.stu_get_profile = async (req, res) => {
 exports.past_reports_view = async (req, res) => {
     console.log('Function starting... get_past_reports');
 
-    var employee_details, groups, modules, batches;
+    var employee_details, groups, modules, batches, degrees;
 
     employee_details = await loadInitialDetails();
 
@@ -307,7 +307,14 @@ exports.past_reports_view = async (req, res) => {
         console.log('Error : ' + e);
     }
 
-    res.render('nonacademic_past_reports', { employee: employee_details, batches: batches, modules: modules, groups: groups });
+    try {
+        degrees = await commonFunctions.getDegreeDetails(conn, null);
+        console.log(degrees);
+    } catch (e) {
+        console.log('Error : ' + e);
+    }
+
+    res.render('nonacademic_past_reports', { employee: employee_details, batches: batches, modules: modules, groups: groups, degrees: degrees });
 }
 
 // RETRIEVE GROUPS RELATED TO THE MODULE SELECTED BY THE USER
@@ -395,6 +402,7 @@ exports.past_get_sessionattendance = async (req, res) => {
         for (student in students) {
             if (students[student].id == attendance[row].Student) {
                 attendance[row].Student = students[student].IndexNo;
+                attendance[row].Degree = students[student].Degree;
             }
         }
     }

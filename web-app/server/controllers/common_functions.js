@@ -247,9 +247,9 @@ exports.getStudentsFiltered = (conn, params, index) => { //index -> 0 - id, 1 - 
 
         let sql;
         if(index==0){
-            sql = 'SELECT id,IndexNo,Name FROM students WHERE id IN (';
+            sql = 'SELECT id,IndexNo,Name,Degree,Batch FROM students WHERE id IN (';
         }else if(index ==1){
-            sql = 'SELECT id,IndexNo,Name FROM students WHERE id IN (';
+            sql = 'SELECT id,IndexNo,Name,Degree,Batch FROM students WHERE id IN (';
         }
         
         params.forEach(element => {
