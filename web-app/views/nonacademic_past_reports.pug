@@ -6,48 +6,38 @@ block content
             .col-lg-0.mb-xl-0.mb-4
                 .card
                     .card-header.pb-0.pt-3.bg-transparent
-                        h6.text-capitalize Time table 
+                        h6.text-capitalize Search Sessions
                     .card-body.p-3
                         .row.mt-3
                             .col-lg-4.col-xs-0 
                                 .d-flex.align-items-center
                                     .d-flex.flex-column.w-90
-                                        h6.text-dark.text-sm Date
-                                        select#batch_select.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="searchGroups()")
-                                            
-                                                 option(value=monday) Monday
-                                                  option(value=tuesday) Tuesday
-                                                   option(value=wednesday) Wednesday
-                                                    option(value=thursday) Thursday
-                                                     option(value=friday) Friday
-                                                      option(value=Saturday) Saturday
-                                                       option(value=Sunday) Sunday
-                            .col-lg-4.col-xs-0 
-                                .d-flex.align-items-center
-                                    .d-flex.flex-column.w-90
                                         h6.text-dark.text-sm Batch
-                                        select#module_select.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="searchGroups()")
-                                       
-                                                     option(value=Batch21) Batch 22  
-                                                      option(value=Batch22) Batch 21 
-                                                       option(value=Batch21) Batch 20
-                                                        option(value=Batch21) Batch 19 
+                                        select#batch_select.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="searchGroups()")
+                                            each batch in batches 
+                                                option(value=batch.id) Batch #{batch.Batch}
                             .col-lg-4.col-xs-0 
                                 .d-flex.align-items-center
                                     .d-flex.flex-column.w-90
-                                        h6.text-dark.text-sm Degree
-                                        select#module_select.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="searchGroups()")
-                                       
-                                                     option(value=IT) Bsc (IT)
-                                                      option(value=ITM) Bsc (ITM)
-                                                       option(value=AI) Bsc (AI)  
+                                        h6.text-dark.text-sm Module
+                                        input#module_select.form-control.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg(type='text' value='' placeholder='Select module' name='module' list="modules" onchange="searchGroups()")
+                                        datalist(id="modules")
+                                            each module in modules 
+                                                option(value=module.Code) #{module.Name}         
+                            .col-lg-4.col-xs-0 
+                                .d-flex.align-items-center
+                                    .d-flex.flex-column.w-90
+                                        h6.text-dark.text-sm Group
+                                        input#group_select.form-control.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg(type='text' value='' placeholder='Select group' name='group' list="group_datalist")
+                                        datalist#group_datalist
+                                            option(value="test") TEST 
                                             
                         .row   
                             .col-lg-0.text-center
                                 button.btn.btn-primary.btn-sm.mt-3.ps-7.pe-7(onclick="searchSessions()") Search
         
                                     
-        .row#sessions_row.mt-3.visible
+        .row#sessions_row.mt-3.invisible
             .col-lg-0.mb-xl-0.mb-4
                 .card
                     .card-header.pb-0.pt-3.bg-transparent
@@ -56,106 +46,38 @@ block content
                         .table-responsive
                             //Class limited-rows-table - used to specify the max height and make scrollbars visible
                             table#session_table.table.align-items-center
-                                tr  
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Module:
-                                            h6.text-sm.mb-0 IN 1400-Fundamentals of Databases
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Group:
-                                            h6.text-sm.mb-0 mod1-grp1
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Start Time:
-                                            h6.text-sm.mb-0 8:00:00
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Duration:
-                                            h6.text-sm.mb-0 02 Hours
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Lecturer:
-                                            h6.text-sm.mb-0 Dr.S Ahangama                                  
-                                tr  
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Module:
-                                            h6.text-sm.mb-0 IN 1400-Fundamentals of Databases
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Group:
-                                            h6.text-sm.mb-0 mod1-grp1
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Start Time:
-                                            h6.text-sm.mb-0 8:00:00
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Duration:
-                                            h6.text-sm.mb-0 02 Hours
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Lecturer:
-                                            h6.text-sm.mb-0 Dr.S Ahangama                                  
-                                tr  
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Module:
-                                            h6.text-sm.mb-0 IN 1400-Fundamentals of Databases
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Group:
-                                            h6.text-sm.mb-0 mod1-grp1
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Start Time:
-                                            h6.text-sm.mb-0 8:00:00
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Duration:
-                                            h6.text-sm.mb-0 02 Hours
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            p.text-xs.font-weight-bold.mb-0 Lecturer:
-                                            h6.text-sm.mb-0 Dr.S Ahangama                                  
-
-                            tbody#session_table_body
+                                tbody#session_table_body
         .row#student_row.mt-3.invisible
             .col-lg-0.mb-xl-0.mb-4
                 .card
                     .card-header.pb-0.pt-3.bg-transparent
                         h6#session_details.text-capitalize Session
-                    .card-body.p-3 
+                        .d-flex.align-items-center.mt-3
+                            .d-flex.flex-column.w-90
+                                h6.text-dark.text-sm Degree
+                                select#degree_select.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="filterStudentsWithDegree(this.value)")
+                                    option(value='0') All Degrees
+                                    each degree in degrees 
+                                        option(value=degree.id) #{degree.Degree}
+                    .card-body.p-3
                         .table-responsive
                             //Class limited-rows-table - used to specify the max height and make scrollbars visible
                             table#student_table.table.align-items-center
                                 tbody#student_table_body  
+                        .row   
+                            .col-lg-0.text-center
+                                button.btn.btn-primary.btn-sm.mt-3.ps-7.pe-7(onclick="printReport()") Print
+                    
                                                         
 
     script.
 
-        var batches,modules,groups;
+        var batches,modules,groups,degrees, attendances, selectedSessionID; // selectedSessionID - value is assigned for this when an user select a session from session
         $(document).ready(function() {
             sideBarChange();
             batches = JSON.parse(JSON.stringify(!{JSON.stringify(batches)}));
             modules = JSON.parse(JSON.stringify(!{JSON.stringify(modules)}));
-            
+            degrees = JSON.parse(JSON.stringify(!{JSON.stringify(degrees)}));
         });
 
         // HIGHLIGHTING RELATED OPTION IN SIDEBAR
@@ -216,7 +138,8 @@ block content
                     if(response.status=='200'){
                         console.log('success');
                         groups = response.groups;
-                        
+                        document.getElementById("group_select").value = '';
+                        document.getElementById("group_select").innerText = '';
                         clearSelectOptions(groupDatalist);
                         var option;
                         for(group in groups){
@@ -320,6 +243,7 @@ block content
                     row.classList.add("limited-rows-tr");
                     row.classList.add("selection-row");
                     row.setAttribute("data-id",sessions[ses].id);
+                    row.setAttribute("data-date",sessions[ses].Start_time);
                     row.setAttribute("onclick","onSessionSelectFromTable(this)");
                     
                     cell = row.insertCell(0);
@@ -398,6 +322,7 @@ block content
 
         function onSessionSelectFromTable(row){
             console.log(row.dataset.id);
+            selectedSessionID = row.dataset.id
             
             $.ajax({
                     type: 'GET',
@@ -412,12 +337,12 @@ block content
                     console.log(response);
                     if(response.status=='200'){
                         console.log('success');
-                        let attendance = response.attendance;
-                        console.log(attendance);
-                        if(attendance.length==0){
+                        attendances = response.attendance;
+                        console.log(attendances);
+                        if(attendances.length==0){
                             window.alert("No students available for the selected session.");
                         }
-                        showAttendanceTable(attendance,row.dataset.id)  
+                        showAttendanceTable(attendances,row,0);  
                         
 
                     }else{
@@ -427,16 +352,34 @@ block content
                 });
         }
 
-        function showAttendanceTable(attendance,session){
+        function filterStudentsWithDegree(degreeID){ // degreeID -> 0 - all degrees,  Else - Degree ID
+            if(attendances.length==0){
+                //document.getElementById("degree_select").value = 0;
+            }else{
+                showAttendanceTable(attendances,null,degreeID);
+            }
+        }
+
+        function showAttendanceTable(attendance,row, degree){
             var student_table_row = document.getElementById("student_row");
             var student_table = document.getElementById("student_table_body");
-            let key = 'ses' + session;    
+
+            let key;
+            if(row!=null){
+                key = 'ses' + row.dataset.id; 
+                document.getElementById("session_details").innerText = 'Session : ' + row.dataset.date;
+            } else{
+                key = 'ses' + selectedSessionID;
+            }
 
             clearSelectOptions(student_table)
             if(attendance.length != 0){
                 let row,cell,element_p,element_h6,rowCount;
 
                 for(att in attendance){
+                    if(degree!=0 && attendance[att].Degree!=degree){
+                        continue;
+                    }
                     rowCount = student_table.rows.length;
                     row = student_table.insertRow(rowCount);
                     row.classList.add("limited-rows-tr");
@@ -449,7 +392,7 @@ block content
                     element_p.classList.add("text-xs");
                     element_p.classList.add("font-weight-bold");
                     element_p.classList.add("mb-0");
-                    element_p.innerHTML = 'Student :';
+                    element_p.innerHTML = 'Index :';
                     cell.appendChild(element_p);
                     element_h6 = document.createElement("h6");
                     element_h6.classList.add("text-sm");
@@ -458,6 +401,41 @@ block content
                     cell.appendChild(element_h6);
 
                     cell = row.insertCell(1);
+                    element_p = document.createElement("p");
+                    element_p.classList.add("text-xs");
+                    element_p.classList.add("font-weight-bold");
+                    element_p.classList.add("mb-0");
+                    element_p.innerHTML = 'Name :';
+                    cell.appendChild(element_p);
+                    element_h6 = document.createElement("h6");
+                    element_h6.classList.add("text-sm");
+                    element_h6.classList.add("mb-0");
+                    element_h6.innerHTML = attendance[att].Name;
+                    cell.appendChild(element_h6);
+
+                    if(degree==0){
+                        cell = row.insertCell(2);
+                        element_p = document.createElement("p");
+                        element_p.classList.add("text-xs");
+                        element_p.classList.add("font-weight-bold");
+                        element_p.classList.add("mb-0");
+                        element_p.innerHTML = 'Degree :';
+                        cell.appendChild(element_p);
+                        element_h6 = document.createElement("h6");
+                        element_h6.classList.add("text-sm");
+                        element_h6.classList.add("mb-0");
+                        element_h6.innerHTML = degrees.find(item => {
+                            return item.id == attendance[att].Degree;
+                        }).Degree;
+                        cell.appendChild(element_h6);
+                    }
+
+                    if(degree==0){
+                        cell = row.insertCell(3);
+                    }else{
+                        cell = row.insertCell(2);   
+                    }
+                    
                     element_p = document.createElement("p");
                     element_p.classList.add("text-xs");
                     element_p.classList.add("font-weight-bold");
@@ -502,6 +480,16 @@ block content
             }else{
                 return false;
             }
+        }
+
+        function printReport(){
+            var prtContent = document.getElementById("student_table_div");
+            var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+            WinPrint.document.write(prtContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+            WinPrint.close();
         }
         
         function clearSelectOptions(element){
