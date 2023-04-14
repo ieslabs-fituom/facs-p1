@@ -286,7 +286,7 @@ exports.getStudentsFiltered = function (conn, params, index) {
 exports.getGroups_DegreeFiltered = function (conn, degree, groups) {
   return new Promise(function (resolve, reject) {
     var sql;
-    sql = 'SELECT Stu_group FROM degree_of_groups WHERE Degree=' + degree + ' AND Stu_groups IN (';
+    sql = 'SELECT Stu_group FROM degree_of_groups WHERE Degree=' + degree + ' AND Stu_group IN (';
     groups.forEach(function (element) {
       sql = sql + element + ',';
     });
@@ -304,8 +304,10 @@ exports.getGroups_DegreeFiltered = function (conn, degree, groups) {
 
 exports.getTimeTable = function (conn, day, groups) {
   return new Promise(function (resolve, reject) {
+    console.log(groups);
+    console.log(day);
     var sql;
-    sql = 'SELECT id,T_group,Start_time,Duration WHERE Day=' + day + ' AND T_group IN (';
+    sql = 'SELECT id,T_group,Start_time,Duration,Method,Type,Session_repeat FROM timetable WHERE Day=' + day + ' AND T_group IN (';
     groups.forEach(function (element) {
       sql = sql + element + ',';
     });

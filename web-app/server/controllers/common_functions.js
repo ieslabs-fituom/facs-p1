@@ -59,7 +59,7 @@ exports.getDepartments = (conn) => {
 }
 
 // GET DETAILS OF A REQUIRED MODULE
-exports.getModuleDetails = (conn, modules) => {
+exports.getModuleDetails = (conn, modules) => { 
     return new Promise((resolve, reject) => {
         let sql;
         if (modules != null) {
@@ -272,7 +272,7 @@ exports.getStudentsFiltered = (conn, params, index) => { //index -> 0 - id, 1 - 
 exports.getGroups_DegreeFiltered = (conn, degree, groups) => {
     return new Promise((resolve, reject) => {
         let sql;
-        sql = 'SELECT Stu_group FROM degree_of_groups WHERE Degree=' + degree + ' AND Stu_groups IN (';
+        sql = 'SELECT Stu_group FROM degree_of_groups WHERE Degree=' + degree + ' AND Stu_group IN (';
         groups.forEach(element => {
             sql = sql + element + ',';
         });
@@ -291,8 +291,10 @@ exports.getGroups_DegreeFiltered = (conn, degree, groups) => {
 
 exports.getTimeTable = (conn,day,groups) => {
     return new Promise((resolve,reject) => {
+        console.log(groups);
+        console.log(day);
         let sql;
-        sql = 'SELECT id,T_group,Start_time,Duration WHERE Day=' + day + ' AND T_group IN (';
+        sql = 'SELECT id,T_group,Start_time,Duration,Method,Type,Session_repeat FROM timetable WHERE Day=' + day + ' AND T_group IN (';
         groups.forEach(element => {
             sql = sql + element + ',';
         });
