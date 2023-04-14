@@ -850,7 +850,7 @@ exports.timetable_view = function _callee10(req, res) {
 
 
 exports.timetable_getlectures = function _callee11(req, res) {
-  var day, batch, degree, groups, group_ids, lectures;
+  var day, batch, degree, groups, group_ids, modules, lectures;
   return regeneratorRuntime.async(function _callee11$(_context12) {
     while (1) {
       switch (_context12.prev = _context12.next) {
@@ -859,91 +859,151 @@ exports.timetable_getlectures = function _callee11(req, res) {
           batch = [];
           batch.push(req.query.batch);
           degree = req.query.degree;
+          console.log(day);
           groups = [];
-          _context12.prev = 5;
-          _context12.next = 8;
+          _context12.prev = 6;
+          _context12.next = 9;
           return regeneratorRuntime.awrap(commonFunctions.getStudentGroupDetails(conn, batch, 3));
 
-        case 8:
+        case 9:
           groups = _context12.sent;
           console.log(groups);
-          _context12.next = 16;
+          _context12.next = 17;
           break;
 
-        case 12:
-          _context12.prev = 12;
-          _context12.t0 = _context12["catch"](5);
+        case 13:
+          _context12.prev = 13;
+          _context12.t0 = _context12["catch"](6);
           console.log('Error : ' + _context12.t0);
           res.send({
             status: '500',
             lectures: []
           });
 
-        case 16:
-          group_ids = [];
+        case 17:
+          group_ids = [], modules = [];
 
           for (group in groups) {
             group_ids.push(groups[group].id);
           }
 
-          _context12.prev = 18;
-          _context12.next = 21;
+          _context12.prev = 19;
+          _context12.next = 22;
           return regeneratorRuntime.awrap(commonFunctions.getGroups_DegreeFiltered(conn, degree, group_ids));
 
-        case 21:
+        case 22:
           groups = _context12.sent;
           console.log(groups);
-          _context12.next = 29;
+          _context12.next = 30;
           break;
 
-        case 25:
-          _context12.prev = 25;
-          _context12.t1 = _context12["catch"](18);
+        case 26:
+          _context12.prev = 26;
+          _context12.t1 = _context12["catch"](19);
           console.log('Error : ' + _context12.t1);
           res.send({
             status: '500',
             lectures: []
           });
 
-        case 29:
+        case 30:
           group_ids = [];
 
           for (group in groups) {
-            group_ids.push(groups[group].id);
+            group_ids.push(groups[group].Stu_group);
           }
 
           lectures = [];
-          _context12.prev = 32;
-          _context12.next = 35;
+          _context12.prev = 33;
+          _context12.next = 36;
           return regeneratorRuntime.awrap(commonFunctions.getTimeTable(conn, day, group_ids));
 
-        case 35:
+        case 36:
           lectures = _context12.sent;
           console.log(lectures);
-          _context12.next = 43;
+          _context12.next = 44;
           break;
 
-        case 39:
-          _context12.prev = 39;
-          _context12.t2 = _context12["catch"](32);
+        case 40:
+          _context12.prev = 40;
+          _context12.t2 = _context12["catch"](33);
           console.log('Error : ' + _context12.t2);
           res.send({
             status: '500',
             lectures: []
           });
 
-        case 43:
+        case 44:
+          group_ids = [];
+
+          for (lecture in lectures) {
+            group_ids.push(lectures[lecture].T_group);
+          }
+
+          _context12.prev = 46;
+          _context12.next = 49;
+          return regeneratorRuntime.awrap(commonFunctions.getStudentGroupDetails(conn, group_ids, 1));
+
+        case 49:
+          groups = _context12.sent;
+          console.log(groups);
+          _context12.next = 57;
+          break;
+
+        case 53:
+          _context12.prev = 53;
+          _context12.t3 = _context12["catch"](46);
+          console.log('Error : ' + _context12.t3);
           res.send({
-            status: '200',
-            lectures: lectures
+            status: '500',
+            lectures: []
           });
 
-        case 44:
+        case 57:
+          for (group in groups) {
+            modules.push(groups[group].Module);
+          }
+
+          _context12.prev = 58;
+          _context12.next = 61;
+          return regeneratorRuntime.awrap(commonFunctions.getModuleDetails(conn, modules));
+
+        case 61:
+          modules = _context12.sent;
+          console.log(modules);
+          _context12.next = 69;
+          break;
+
+        case 65:
+          _context12.prev = 65;
+          _context12.t4 = _context12["catch"](58);
+          console.log('Error : ' + _context12.t4);
+          res.send({
+            status: '500',
+            lectures: []
+          });
+
+        case 69:
+          for (group in groups) {
+            for (module in modules) {
+              if (groups[group].Module == modules[module].id) {
+                groups[group].Module = modules[module].Code + '<br>' + modules[module].Name;
+              }
+            }
+          }
+
+          res.send({
+            status: '200',
+            lectures: lectures,
+            groups: groups
+          });
+
+        case 71:
         case "end":
           return _context12.stop();
       }
     }
-  }, null, null, [[5, 12], [18, 25], [32, 39]]);
+  }, null, null, [[6, 13], [19, 26], [33, 40], [46, 53], [58, 65]]);
 }; // GET DETAILS OF THE EMPLYEE ( PARAMS : ID OF THE EMPLOYEE, COLUMNS : COLUMNS WHICH ARE NEED TO BE RETRIEVED)
 
 

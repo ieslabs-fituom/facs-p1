@@ -444,6 +444,7 @@ exports.timetable_getlectures = async (req, res) => {
     let batch = [];
     batch.push(req.query.batch);
     let degree = req.query.degree;
+    console.log(day);
 
     let groups = [];
 
@@ -455,7 +456,7 @@ exports.timetable_getlectures = async (req, res) => {
         res.send({ status: '500', lectures: [] });
     }
 
-    let group_ids = [];
+    let group_ids = [], modules = [];
     for(group in groups){
         group_ids.push(groups[group].id);
     }
@@ -470,9 +471,9 @@ exports.timetable_getlectures = async (req, res) => {
 
     group_ids = [];
     for(group in groups){
-        group_ids.push(groups[group].id);
+        group_ids.push(groups[group].Stu_group);
     }
-
+    
     let lectures = [];
     try {
         lectures = await commonFunctions.getTimeTable(conn, day, group_ids);
@@ -481,8 +482,40 @@ exports.timetable_getlectures = async (req, res) => {
         console.log('Error : ' + e);
         res.send({ status: '500', lectures: [] });
     }
+
+    group_ids = [];
+    for(lecture in lectures){
+        group_ids.push(lectures[lecture].T_group);   
+    }
+
+    try{
+        groups = await commonFunctions.getStudentGroupDetails(conn, group_ids, 1);
+        console.log(groups);
+    }catch (e) {
+        console.log('Error : ' + e);
+        res.send({ status: '500', lectures: [] });
+    }
+
+    for(group in groups){
+        modules.push(groups[group].Module);
+    }
+
+    try{
+        modules = await commonFunctions.getModuleDetails(conn, modules);
+        console.log(modules);
+    }catch (e) {
+        console.log('Error : ' + e);
+        res.send({ status: '500', lectures: [] });
+    }
     
-    res.send({ status: '200', lectures: lectures });
+    for(group in groups){
+        for(module in modules){
+            if(groups[group].Module == modules[module].id){
+                groups[group].Module = modules[module].Code + '<br>' + modules[module].Name;
+            }
+        }
+    }
+    res.send({ status: '200', lectures: lectures, groups: groups });
 }
 
 // GET DETAILS OF THE EMPLYEE ( PARAMS : ID OF THE EMPLOYEE, COLUMNS : COLUMNS WHICH ARE NEED TO BE RETRIEVED)
@@ -562,3 +595,5 @@ function checkValidTimeStamp(timestamp) {
         return false;
     }
 }
+
+
