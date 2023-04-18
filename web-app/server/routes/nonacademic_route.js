@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const nonacademic_controller = require('../controllers/nonacademic_controller');
 
-router.get('/view/',nonacademic_controller.view);
 router.get('/sem/',nonacademic_controller.sem_view);
 router.get('/stu/',nonacademic_controller.stu_view);
 router.get('/stu/getfiltered',nonacademic_controller.stu_get_filtered);
@@ -15,6 +14,8 @@ router.get('/past/getsessionattendance',nonacademic_controller.past_get_sessiona
 
 router.get('/timetable',nonacademic_controller.timetable_view);
 router.get('/timetable/getlectures',nonacademic_controller.timetable_getlectures);
+
+router.get('/today/',nonacademic_controller.today_view);
 
 module.exports = router;
 

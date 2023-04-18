@@ -10,9 +10,12 @@ let conn = mysql.createConnection({
     port: process.env.DB_PORT
 });
 
-exports.view = async (req, res) => {
+exports.today_view = async (req, res) => {
     console.log('Starting controller...');
     var employee_details = await loadInitialDetails();
+
+    let dayOfWeek = new Date().getDay().toLocaleString("en-UK", {timeZone: 'Asia/Kolkata'});
+    
 
     console.log('finishing...');
 
