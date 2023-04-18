@@ -14,13 +14,28 @@ exports.today_view = async (req, res) => {
     console.log('Starting controller...');
     var employee_details = await loadInitialDetails();
 
-    let dayOfWeek = new Date().getDay().toLocaleString("en-UK", {timeZone: 'Asia/Kolkata'});
+    //let dayOfWeek = new Date().getDay().toLocaleString("en-UK", {timeZone: 'Asia/Kolkata'});
     
+    let batches, degrees;
+
+    try {
+        batches = await commonFunctions.getBatchDetails(conn, null);
+        console.log(batches);
+    } catch (e) {
+        console.log('Error : ' + e);
+    }
+
+    try {
+        degrees = await commonFunctions.getDegreeDetails(conn, null);
+        console.log(degrees);
+    } catch (e) {
+        console.log('Error : ' + e);
+    }
 
     console.log('finishing...');
 
     // RENDERING THE VIEW
-    res.render('nonacademic_today', { title: 'title', employee: employee_details });
+    res.render('nonacademic_today', { title: 'title', employee: employee_details, batches: batches, degrees: degrees});
 }
 
 exports.sem_view = async (req, res) => {
@@ -453,10 +468,18 @@ exports.timetable_getlectures = async (req, res) => {
 
     try {
         groups = await commonFunctions.getStudentGroupDetails(conn, batch, 3);
+        console.log('groups of the batch');
         console.log(groups);
     } catch (e) {
         console.log('Error : ' + e);
         res.send({ status: '500', lectures: [] });
+        return;
+    }
+
+    // Looking that the results are null
+    if(groups.length == 0){
+        res.send({ status: '200', lectures: [] });
+        return;
     }
 
     let group_ids = [], modules = [];
@@ -466,10 +489,18 @@ exports.timetable_getlectures = async (req, res) => {
 
     try {
         groups = await commonFunctions.getGroups_DegreeFiltered(conn, degree, group_ids);
+        console.log('groups of the batch and degree');
         console.log(groups);
     } catch (e) {
         console.log('Error : ' + e);
         res.send({ status: '500', lectures: [] });
+        return;
+    }
+
+    // Looking that the results are null
+    if(groups.length == 0){
+        res.send({ status: '200', lectures: [] });
+        return;
     }
 
     group_ids = [];
@@ -480,10 +511,18 @@ exports.timetable_getlectures = async (req, res) => {
     let lectures = [];
     try {
         lectures = await commonFunctions.getTimeTable(conn, day, group_ids);
+        console.log('time table of the batch, degree and day');
         console.log(lectures);
     } catch (e) {
         console.log('Error : ' + e);
         res.send({ status: '500', lectures: [] });
+        return;
+    }
+
+    // Looking that the results are null
+    if(lectures.length == 0){
+        res.send({ status: '200', lectures: [] });
+        return;
     }
 
     group_ids = [];
@@ -493,10 +532,17 @@ exports.timetable_getlectures = async (req, res) => {
 
     try{
         groups = await commonFunctions.getStudentGroupDetails(conn, group_ids, 1);
+        console.log('groups that have lectures on the day in selected batch and degree');
         console.log(groups);
     }catch (e) {
         console.log('Error : ' + e);
         res.send({ status: '500', lectures: [] });
+        return;
+    }
+
+    if(groups.length == 0){
+        res.send({ status: '200', lectures: [] });
+        return;
     }
 
     for(group in groups){
@@ -505,10 +551,12 @@ exports.timetable_getlectures = async (req, res) => {
 
     try{
         modules = await commonFunctions.getModuleDetails(conn, modules);
+        console.log('modules of relvant groups');
         console.log(modules);
     }catch (e) {
         console.log('Error : ' + e);
         res.send({ status: '500', lectures: [] });
+        return;
     }
     
     for(group in groups){
