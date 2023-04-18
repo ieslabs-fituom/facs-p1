@@ -13,8 +13,8 @@ var conn = mysql.createConnection({
   port: process.env.DB_PORT
 });
 
-exports.view = function _callee(req, res) {
-  var employee_details;
+exports.today_view = function _callee(req, res) {
+  var employee_details, dayOfWeek;
   return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
@@ -25,6 +25,9 @@ exports.view = function _callee(req, res) {
 
         case 3:
           employee_details = _context.sent;
+          dayOfWeek = new Date().getDay().toLocaleString("en-UK", {
+            timeZone: 'Asia/Kolkata'
+          });
           console.log('finishing...'); // RENDERING THE VIEW
 
           res.render('nonacademic_today', {
@@ -32,7 +35,7 @@ exports.view = function _callee(req, res) {
             employee: employee_details
           });
 
-        case 6:
+        case 7:
         case "end":
           return _context.stop();
       }
