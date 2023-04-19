@@ -15,7 +15,7 @@ exports.today_view = async (req, res) => {
     var employee_details = await loadInitialDetails();
 
     //let dayOfWeek = new Date().getDay().toLocaleString("en-UK", {timeZone: 'Asia/Kolkata'});
-    
+
     let batches, degrees;
 
     try {
@@ -35,7 +35,91 @@ exports.today_view = async (req, res) => {
     console.log('finishing...');
 
     // RENDERING THE VIEW
-    res.render('nonacademic_today', { title: 'title', employee: employee_details, batches: batches, degrees: degrees});
+    res.render('nonacademic_today', { title: 'title', employee: employee_details, batches: batches, degrees: degrees });
+}
+
+exports.today_getsessions = async (req, res) => {
+    let date = [];
+    date.push(req.query.date);
+
+    let batch = [];
+    batch.push(req.query.batch);
+
+    let groups = [];
+    let sessions = [];
+
+    try {
+        sessions = await commonFunctions.getSessions(conn, date, 3);
+        console.log('sessions of date');
+        console.log(sessions);
+    } catch (e) {
+        console.log(e);
+        res.send({ status: '500', sessions: [], groups: [] });
+        return;
+    }
+
+    if (sessions.length == 0) {
+        res.send({ status: '200', sessions: [], groups: [] });
+        return;
+    }
+
+    let group_ids = []
+    for (session in sessions) {
+        group_ids.push(sessions[session].Ses_group);
+    }
+
+    try {
+        groups = await commonFunctions.getStudentGroupDetails(conn, batch, group_ids, 4);
+        console.log('groups of date, batch');
+        console.log(groups);
+    } catch (e) {
+        console.log(e);
+        res.send({ status: '500', sessions: [], groups: [] });
+        return;
+    }
+
+    if (groups.length == 0) {
+        res.send({ status: '200', sessions: [], groups: [] });
+        return;
+    }
+
+    let finalSessions = []; // This array includes sessions which are relevant to the batch and date
+
+    // Adding sessions to finalSessions
+    for (session in sessions) {
+        for (group in groups) {
+            if (sessions[session].Ses_group == groups[group].id) {
+                finalSessions.push(sessions[session]);
+            }
+        }
+    }
+
+    // Loading module details of related modules of student groups
+    let modules = [];
+
+    for (group in groups) {
+        modules.push(groups[group].Module);
+    }
+
+    try {
+        modules = await commonFunctions.getModuleDetails(conn, modules);
+        console.log('modules of relvant groups');
+        console.log(modules);
+    } catch (e) {
+        console.log(e);
+        res.send({ status: '500', sessions: [], groups: [] });
+        return;
+    }
+
+    for (group in groups) {
+        for (module in modules) {
+            if (groups[group].Module == modules[module].id) {
+                groups[group].Module = modules[module].Code + '<br>' + modules[module].Name;
+            }
+        }
+    }
+
+    res.send({ status: '200', sessions: finalSessions, groups: groups });
 }
 
 exports.sem_view = async (req, res) => {
@@ -220,7 +304,7 @@ exports.stu_get_profile = async (req, res) => {
 
         // RETRIEVING ALL GROUPS RELEVANT TO THE STUDENT
         try {
-            groups = await commonFunctions.getStudentGroupDetails(conn, id_list, 1);
+            groups = await commonFunctions.getStudentGroupDetails(conn, id_list, null, 1);
             console.log(groups);
         } catch (e) {
             console.log('Error : ' + e);
@@ -345,7 +429,7 @@ exports.past_get_groups = async (req, res) => {
     let groups = [];
 
     try {
-        groups = await commonFunctions.getStudentGroupDetails(conn, modules, 2);
+        groups = await commonFunctions.getStudentGroupDetails(conn, modules, null, 2);
         console.log(groups);
     } catch (e) {
         console.log('Error : ' + e);
@@ -385,22 +469,39 @@ exports.past_get_sessions = async (req, res) => {
 exports.past_get_sessionattendance = async (req, res) => {
     let session = [];
     session.push(req.query.session);
+    let group;
     let attendance = [];
 
-    try {
-        session = await commonFunctions.getSessions(conn, session, 2);
-        console.log(session);
-    } catch (e) {
-        console.log('Error : ' + e);
-        res.send({ status: '500', attendance: attendance });
+    if (req.query.group == 'null') {
+        try {
+            session = await commonFunctions.getSessions(conn, session, 2);
+            console.log(session);
+        } catch (e) {
+            console.log('Error : ' + e);
+            res.send({ status: '500', attendance: [] });
+            return;
+        }
+
+        group = session[0].Ses_group;
+        session = session[0].id;
+        
+    } else {
+        group = req.query.group;
+        session = req.query.session;
     }
 
     try {
-        attendance = await commonFunctions.getAttendanceofSession(conn, session[0].id, session[0].Ses_group);
+        attendance = await commonFunctions.getAttendanceofSession(conn, session, group);
         console.log(attendance);
     } catch (e) {
         console.log('Error : ' + e);
-        res.send({ status: '500', attendance: attendance });
+        res.send({ status: '500', attendance: [] });
+        return
+    }
+
+    if (attendance.length == 0) {
+        res.send({ status: '200', attendance: [] });
+        return
     }
 
     let students = [];
@@ -413,7 +514,8 @@ exports.past_get_sessionattendance = async (req, res) => {
         console.log(students);
     } catch (e) {
         console.log('Error : ' + e);
-        res.send({ status: '500', attendance: attendance });
+        res.send({ status: '500', attendance: [] });
+        return;
     }
 
     for (row in attendance) {
@@ -467,7 +569,7 @@ exports.timetable_getlectures = async (req, res) => {
     let groups = [];
 
     try {
-        groups = await commonFunctions.getStudentGroupDetails(conn, batch, 3);
+        groups = await commonFunctions.getStudentGroupDetails(conn, batch, null, 3);
         console.log('groups of the batch');
         console.log(groups);
     } catch (e) {
@@ -477,13 +579,13 @@ exports.timetable_getlectures = async (req, res) => {
     }
 
     // Looking that the results are null
-    if(groups.length == 0){
+    if (groups.length == 0) {
         res.send({ status: '200', lectures: [] });
         return;
     }
 
     let group_ids = [], modules = [];
-    for(group in groups){
+    for (group in groups) {
         group_ids.push(groups[group].id);
     }
 
@@ -498,16 +600,16 @@ exports.timetable_getlectures = async (req, res) => {
     }
 
     // Looking that the results are null
-    if(groups.length == 0){
+    if (groups.length == 0) {
         res.send({ status: '200', lectures: [] });
         return;
     }
 
     group_ids = [];
-    for(group in groups){
+    for (group in groups) {
         group_ids.push(groups[group].Stu_group);
     }
-    
+
     let lectures = [];
     try {
         lectures = await commonFunctions.getTimeTable(conn, day, group_ids);
@@ -520,48 +622,48 @@ exports.timetable_getlectures = async (req, res) => {
     }
 
     // Looking that the results are null
-    if(lectures.length == 0){
+    if (lectures.length == 0) {
         res.send({ status: '200', lectures: [] });
         return;
     }
 
     group_ids = [];
-    for(lecture in lectures){
-        group_ids.push(lectures[lecture].T_group);   
+    for (lecture in lectures) {
+        group_ids.push(lectures[lecture].T_group);
     }
 
-    try{
-        groups = await commonFunctions.getStudentGroupDetails(conn, group_ids, 1);
+    try {
+        groups = await commonFunctions.getStudentGroupDetails(conn, group_ids, null, 1);
         console.log('groups that have lectures on the day in selected batch and degree');
         console.log(groups);
-    }catch (e) {
+    } catch (e) {
         console.log('Error : ' + e);
         res.send({ status: '500', lectures: [] });
         return;
     }
 
-    if(groups.length == 0){
+    if (groups.length == 0) {
         res.send({ status: '200', lectures: [] });
         return;
     }
 
-    for(group in groups){
+    for (group in groups) {
         modules.push(groups[group].Module);
     }
 
-    try{
+    try {
         modules = await commonFunctions.getModuleDetails(conn, modules);
         console.log('modules of relvant groups');
         console.log(modules);
-    }catch (e) {
+    } catch (e) {
         console.log('Error : ' + e);
         res.send({ status: '500', lectures: [] });
         return;
     }
-    
-    for(group in groups){
-        for(module in modules){
-            if(groups[group].Module == modules[module].id){
+
+    for (group in groups) {
+        for (module in modules) {
+            if (groups[group].Module == modules[module].id) {
                 groups[group].Module = modules[module].Code + '<br>' + modules[module].Name;
             }
         }

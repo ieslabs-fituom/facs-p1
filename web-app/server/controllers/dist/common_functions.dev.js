@@ -24,6 +24,7 @@ exports.getDesignations = function (conn) {
 
 
 exports.getFaculties = function (conn, faculties) {
+  // faculties - array of faculty ids. [1,2,3]
   return new Promise(function (resolve, reject) {
     var sql;
 
@@ -151,8 +152,14 @@ exports.getGroupsofEmployee = function (conn, employee_id) {
 }; // GET DETAILS OF SELECTED STUDENT GROUPS
 
 
-exports.getStudentGroupDetails = function (conn, filterArray, type) {
-  // type = 0 -> get all details, type = 1 -> get according to id, type = 2 -> get according to module, type = 3 -> get according to batch
+exports.getStudentGroupDetails = function (conn, filterArray, filterArray2, type) {
+  /* type ==> 
+  0 -> get all details
+  type = 1 -> get according to id
+  type = 2 -> get according to module
+  type = 3 -> get according to batch
+  TYPE = 4 -> get according to batch (filter array 1) and id (filter array 2)
+  */
   return new Promise(function (resolve, reject) {
     var sql;
 
@@ -162,8 +169,10 @@ exports.getStudentGroupDetails = function (conn, filterArray, type) {
       sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE id IN (';
     } else if (type == 2) {
       sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE Module IN (';
-    } else {
+    } else if (type == 3) {
       sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE Batch IN (';
+    } else if (type = 4) {
+      sql = 'SELECT id,Name,Module FROM student_groups WHERE Batch IN (';
     }
 
     if (type != 0) {
@@ -174,6 +183,16 @@ exports.getStudentGroupDetails = function (conn, filterArray, type) {
       sql = sql + ')';
     }
 
+    if (type == 4) {
+      sql += ' AND id IN (';
+      filterArray2.forEach(function (element) {
+        sql = sql + element + ',';
+      });
+      sql = sql.substring(0, sql.length - 1);
+      sql = sql + ')';
+    }
+
+    console.log(sql);
     conn.query(sql, function (err, rows) {
       if (!err) {
         return resolve(rows);
@@ -199,6 +218,7 @@ exports.getGroupsOfAStudent = function (conn, Student) {
 };
 
 exports.getSessions = function (conn, params, index) {
+  // index --> 0 - all, 1 - according to group, 2 - according to id, 3 - according to date
   return new Promise(function (resolve, reject) {
     var sql;
 
@@ -208,16 +228,23 @@ exports.getSessions = function (conn, params, index) {
       sql = 'SELECT * FROM sessions WHERE Ses_group IN (';
     } else if (index == 2) {
       sql = 'SELECT * FROM sessions WHERE id IN (';
+    } else if (index == 3) {
+      sql = 'SELECT * FROM sessions WHERE SUBSTRING(Start_time,1,10) IN (';
     }
 
     if (index != 0) {
       params.forEach(function (element) {
-        sql = sql + element + ',';
+        if (index == 3) {
+          sql = sql + "'" + element + "',";
+        } else {
+          sql = sql + element + ',';
+        }
       });
       sql = sql.substring(0, sql.length - 1);
       sql = sql + ')';
     }
 
+    console.log(sql);
     conn.query(sql, function (err, rows) {
       if (!err) {
         return resolve(rows);
@@ -257,14 +284,14 @@ exports.getAttendanceofSession = function (conn, session, group) {
 };
 
 exports.getStudentsFiltered = function (conn, params, index) {
-  //index -> 0 - id, 1 - index no
+  //index -> 0 - id, 1 - index no 
   return new Promise(function (resolve, reject) {
     var sql;
 
     if (index == 0) {
       sql = 'SELECT id,IndexNo,Name,Degree,Batch FROM students WHERE id IN (';
     } else if (index == 1) {
-      sql = 'SELECT id,IndexNo,Name,Degree,Batch FROM students WHERE id IN (';
+      sql = 'SELECT id,IndexNo,Name,Degree,Batch FROM students WHERE indexNo IN (';
     }
 
     params.forEach(function (element) {

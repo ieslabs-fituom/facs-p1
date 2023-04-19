@@ -22,7 +22,7 @@ exports.getDesignations = (conn) => {
 }
 
 // GET ALL FACULTIES
-exports.getFaculties = (conn, faculties) => {
+exports.getFaculties = (conn, faculties) => { // faculties - array of faculty ids. [1,2,3]
     return new Promise((resolve, reject) => {
         let sql;
         if (faculties != null) {
@@ -30,11 +30,13 @@ exports.getFaculties = (conn, faculties) => {
             faculties.forEach(element => {
                 sql = sql + element + ',';
             });
+
             sql = sql.substring(0, sql.length - 1);
             sql = sql + ') ORDER BY id ASC';
         } else {
             sql = 'SELECT * FROM faculties ORDER BY id ASC';
         }
+
         conn.query(sql, (err, rows) => {
             if (!err) {
                 return resolve(rows);
@@ -59,7 +61,7 @@ exports.getDepartments = (conn) => {
 }
 
 // GET DETAILS OF A REQUIRED MODULE
-exports.getModuleDetails = (conn, modules) => { 
+exports.getModuleDetails = (conn, modules) => {
     return new Promise((resolve, reject) => {
         let sql;
         if (modules != null) {
@@ -142,17 +144,26 @@ exports.getGroupsofEmployee = (conn, employee_id) => {
 }
 
 // GET DETAILS OF SELECTED STUDENT GROUPS
-exports.getStudentGroupDetails = (conn, filterArray, type) => { // type = 0 -> get all details, type = 1 -> get according to id, type = 2 -> get according to module, type = 3 -> get according to batch
+exports.getStudentGroupDetails = (conn, filterArray, filterArray2, type) => { 
+    /* type ==> 
+    0 -> get all details
+    type = 1 -> get according to id
+    type = 2 -> get according to module
+    type = 3 -> get according to batch
+    TYPE = 4 -> get according to batch (filter array 1) and id (filter array 2)
+    */
     return new Promise((resolve, reject) => {
         let sql;
         if (type == 0) {
             sql = 'SELECT id,Name,Module,Batch FROM student_groups';
         } else if (type == 1) {
             sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE id IN (';
-        } else if (type == 2){
+        } else if (type == 2) {
             sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE Module IN (';
-        } else{
+        } else if (type == 3) {
             sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE Batch IN (';
+        } else if (type = 4) {
+            sql = 'SELECT id,Name,Module FROM student_groups WHERE Batch IN (';
         }
         if (type != 0) {
             filterArray.forEach(element => {
@@ -161,7 +172,15 @@ exports.getStudentGroupDetails = (conn, filterArray, type) => { // type = 0 -> g
             sql = sql.substring(0, sql.length - 1);
             sql = sql + ')';
         }
-
+        if (type == 4) {
+            sql += ' AND id IN (';
+            filterArray2.forEach(element => {
+                sql = sql + element + ',';
+            });
+            sql = sql.substring(0, sql.length - 1);
+            sql = sql + ')';
+        }
+        console.log(sql);
         conn.query(sql, (err, rows) => {
             if (!err) {
                 return resolve(rows);
@@ -186,7 +205,7 @@ exports.getGroupsOfAStudent = (conn, Student) => {
     })
 }
 
-exports.getSessions = (conn, params, index) => {
+exports.getSessions = (conn, params, index) => { // index --> 0 - all, 1 - according to group, 2 - according to id, 3 - according to date
     return new Promise((resolve, reject) => {
         let sql;
         if (index == 0) {
@@ -195,15 +214,22 @@ exports.getSessions = (conn, params, index) => {
             sql = 'SELECT * FROM sessions WHERE Ses_group IN (';
         } else if (index == 2) {
             sql = 'SELECT * FROM sessions WHERE id IN (';
+        } else if (index == 3) {
+            sql = 'SELECT * FROM sessions WHERE SUBSTRING(Start_time,1,10) IN ('
         }
         if (index != 0) {
             params.forEach(element => {
-                sql = sql + element + ',';
+                if(index == 3){
+                    sql = sql + "'" + element + "',";
+                }else{
+                    sql = sql + element + ',';
+                }
+                
             });
             sql = sql.substring(0, sql.length - 1);
             sql = sql + ')';
         }
-
+        console.log(sql);
         conn.query(sql, (err, rows) => {
             if (!err) {
                 return resolve(rows);
@@ -242,16 +268,16 @@ exports.getAttendanceofSession = (conn, session, group) => {
     });
 }
 
-exports.getStudentsFiltered = (conn, params, index) => { //index -> 0 - id, 1 - index no
+exports.getStudentsFiltered = (conn, params, index) => { //index -> 0 - id, 1 - index no 
     return new Promise((resolve, reject) => {
 
         let sql;
-        if(index==0){
+        if (index == 0) {
             sql = 'SELECT id,IndexNo,Name,Degree,Batch FROM students WHERE id IN (';
-        }else if(index ==1){
-            sql = 'SELECT id,IndexNo,Name,Degree,Batch FROM students WHERE id IN (';
+        } else if (index == 1) {
+            sql = 'SELECT id,IndexNo,Name,Degree,Batch FROM students WHERE indexNo IN (';
         }
-        
+
         params.forEach(element => {
             sql = sql + element + ',';
         });
@@ -289,8 +315,8 @@ exports.getGroups_DegreeFiltered = (conn, degree, groups) => {
     });
 }
 
-exports.getTimeTable = (conn,day,groups) => {
-    return new Promise((resolve,reject) => {
+exports.getTimeTable = (conn, day, groups) => {
+    return new Promise((resolve, reject) => {
         console.log(groups);
         console.log(day);
         let sql;
