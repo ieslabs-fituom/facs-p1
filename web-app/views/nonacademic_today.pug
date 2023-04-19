@@ -42,135 +42,48 @@ block content
                     .card-header.pb-0.pt-3.bg-transparent
                         h6.text-capitalize Sessions 
                     .card-body.p-3
-                        .row.mt-3
+                        .row.mt-1.justify-content-center
                             .col-lg-4.col-xs-0
                                 .d-flex.align-items-center
                                     .d-flex.flex-column.w-90
-                                        h6.text-dark.text-sm Batch
-                                        select#module_select.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="searchGroups()")
-                                       
-                                                    option(value=Batch21) Batch 22  
-                                                    option(value=Batch22) Batch 21 
-                                                    option(value=Batch21) Batch 20
-                                                    option(value=Batch21) Batch 19 
-                            .col-lg-4.col-xs-0  
-                                .d-flex.align-items-center
-                                    .d-flex.flex-column.w-90
-                                        h6.text-dark.text-sm Module
-                                        select#module_select.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="searchGroups()")
-                                       
-                                                    option(value="Database") Fundamentals of Databases
-                                                    option(value="English") English
-                                                    option(value="Maths") Static and Probability  
-                            .col-lg-4.col-xs-0  
-                                .d-flex.align-items-center
-                                    .d-flex.flex-column.w-90
-                                        h6.text-dark.text-sm Group
-                                        select#module_select.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="searchGroups()")
-                                       
-                                                    option(value="A1") A1
-                                                    option(value="A2") A2
-                                                    option(value="A3") A3                      
+                                        select#batch_select_sessions.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="")
+                                            each batch in batches 
+                                                option(value=batch.id) Batch #{batch.Batch}
                        
                         row   
                             .col-lg-0.text-center
-                                button.btn.btn-primary.btn-sm.mt-3.ps-7.pe-7(onclick="searchTimeTable()") Search
+                                button.btn.btn-primary.btn-sm.mt-3.ps-7.pe-7(onclick="searchSessions()") Search
                        
-                    .card-body.p-3
-                        .table-responsive
-                            //Class limited-rows-table - used to specify the max height and make scrollbars visible
-                            table#session_table.table.align-items-center
-                                tr  
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4
-                                            h6.text-sm.mb-0 Short Time
-                                            
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            h6.text-sm.mb-0 Duration
-                                           
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            h6.text-sm.mb-0 Method
+                    .row#sessions_row.invisible
+                        .col-lg-0.mb-xl-0.mb-4
+                            .card-header.pb-0.pt-3.bg-transparent
+                                h6.text-capitalize#day_of_week_text_sessions Sessions 
+                                p Click on each row to see attendance of the session
+                            .card-body.p-3
+                                .table-responsive
+                                    //Class limited-rows-table - used to specify the max height and make scrollbars visible
+                                    table#sessions_table.table.align-items-center  
+                                        tbody#sessions_table_body
 
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            h6.text-sm.mb-0 Type
-                                            
-                                              
-                                tr  
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                           
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-
-                .card.mt-3
+                .card.mt-3.invisible#attendance_row
                     .card-header.pb-0.pt-3.bg-transparent
-                        h6.text-capitalize Attendence  
+                        h6.text-capitalize#attendance_title Attendence  
                     .card-body.p-3
                         .row.mt-3
                             .col-lg-4.col-xs-0  
                                 .d-flex.align-items-center
                                     .d-flex.flex-column.w-90
                                         h6.text-dark.text-sm Degree
-                                        select#module_select.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="searchGroups()")
-                                       
-                                                    option(value=IT) Bsc (IT)
-                                                    option(value=ITM) Bsc (ITM)
-                                                    option(value=AI) Bsc (AI)                
-                       
-                    
-                       
+                                        select#degree_select_attendance.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="filterStudentsWithDegree(this.value)")
+                                            option(value=0) All Degrees
+                                            each degree in degrees  
+                                                option(value=degree.id) #{degree.Degree}                       
                     .card-body.p-3
                         .table-responsive
                             //Class limited-rows-table - used to specify the max height and make scrollbars visible
-                            table#session_table.table.align-items-center
-                                tr  
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4
-                                            h6.text-sm.mb-0 Student
-                                            
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            h6.text-sm.mb-0 Pref..
-                                           
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            h6.text-sm.mb-0 Degree
-
-                                  
-                                            
-                                              
-                                tr  
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                            
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
-                                           
-                                  td 
-                                    .d-flex.px-2.py-1.align-items-center
-                                        .ms-4 
+                            table#attendance_table.table.align-items-center  
+                                tbody#attendance_table_body
+                                 
     
     script.
         var win = navigator.platform.indexOf('Win') > -1;
@@ -249,130 +162,359 @@ block content
                 for(lec in lectures){
                     rowCount = lectures_table.rows.length;
                     row = lectures_table.insertRow(rowCount);
-                    row.classList.add("limited-rows-tr");
-                    row.classList.add("selection-row");
+                    row = styleTable_row(row);
                     row.setAttribute("data-id",lectures[lec].id);
                     
                     for(group in groups){
                         if(lectures[lec].T_group == groups[group].id){
                             cell = row.insertCell(0);
-                            element_p = document.createElement("p");
-                            element_p.classList.add("text-xs");
-                            element_p.classList.add("font-weight-bold");
-                            element_p.classList.add("mb-0");
-                            element_p.innerHTML = 'Module :';
+                            element_p = createTable_p_element('Module :');
                             cell.appendChild(element_p);
-                            element_h6 = document.createElement("h6");
-                            element_h6.classList.add("text-sm");
-                            element_h6.classList.add("mb-0");
-                            element_h6.innerHTML = groups[group].Module;
+                            element_h6 = createTable_h6_element(groups[group].Module);
                             cell.appendChild(element_h6);
 
                             cell = row.insertCell(1);
-                            element_p = document.createElement("p");
-                            element_p.classList.add("text-xs");
-                            element_p.classList.add("font-weight-bold");
-                            element_p.classList.add("mb-0");
-                            element_p.innerHTML = 'Group :';
+                            element_p = createTable_p_element('Group :');
                             cell.appendChild(element_p);
-                            element_h6 = document.createElement("h6");
-                            element_h6.classList.add("text-sm");
-                            element_h6.classList.add("mb-0");
-                            element_h6.innerHTML = groups[group].Name;
+                            element_h6 = createTable_h6_element(groups[group].Name);
                             cell.appendChild(element_h6);
                         }
                     }
                     
                     cell = row.insertCell(2);
-                    element_p = document.createElement("p");
-                    element_p.classList.add("text-xs");
-                    element_p.classList.add("font-weight-bold");
-                    element_p.classList.add("mb-0");
-                    element_p.innerHTML = 'Start Time :';
+                    element_p = createTable_p_element('Start Time :');
                     cell.appendChild(element_p);
-                    element_h6 = document.createElement("h6");
-                    element_h6.classList.add("text-sm");
-                    element_h6.classList.add("mb-0");
-                    element_h6.innerHTML = lectures[lec].Start_time;
+                    element_h6 = createTable_h6_element(lectures[lec].Start_time);
                     cell.appendChild(element_h6);
 
                     cell = row.insertCell(3);
-                    element_p = document.createElement("p");
-                    element_p.classList.add("text-xs");
-                    element_p.classList.add("font-weight-bold");
-                    element_p.classList.add("mb-0");
-                    element_p.innerHTML = 'Duration :';
+                    element_p = createTable_p_element('Duration :');
                     cell.appendChild(element_p);
-                    element_h6 = document.createElement("h6");
-                    element_h6.classList.add("text-sm");
-                    element_h6.classList.add("mb-0");
-                    element_h6.innerHTML = lectures[lec].Duration;
+                    element_h6 = createTable_h6_element(lectures[lec].Duration + ' hours');
                     cell.appendChild(element_h6);
 
                     cell = row.insertCell(4);
-                    element_p = document.createElement("p");
-                    element_p.classList.add("text-xs");
-                    element_p.classList.add("font-weight-bold");
-                    element_p.classList.add("mb-0");
-                    element_p.innerHTML = 'Method :';
+                    element_p = createTable_p_element('Method :');
                     cell.appendChild(element_p);
-                    element_h6 = document.createElement("h6");
-                    element_h6.classList.add("text-sm");
-                    element_h6.classList.add("mb-0");
                     if(lectures[lec].Method==0){
-                        element_h6.innerHTML = "Physical";
+                        element_h6 = createTable_h6_element('Physical');
                     }else{
-                        element_h6.innerHTML = "Online";
+                        element_h6 = createTable_h6_element('Online');
                     }
                     cell.appendChild(element_h6);
 
                     cell = row.insertCell(5);
-                    element_p = document.createElement("p");
-                    element_p.classList.add("text-xs");
-                    element_p.classList.add("font-weight-bold");
-                    element_p.classList.add("mb-0");
-                    element_p.innerHTML = 'Session Type :';
+                    element_p = createTable_p_element('Session Type :');
                     cell.appendChild(element_p);
-                    element_h6 = document.createElement("h6");
-                    element_h6.classList.add("text-sm");
-                    element_h6.classList.add("mb-0");
                     if(lectures[lec].Type==0){
-                        element_h6.innerHTML = "Lecture";
+                        element_h6 = createTable_h6_element('Lecture');
                     }else if(lectures[lec].Type==1){
-                        element_h6.innerHTML = "Tutorial/Lab";
+                        element_h6 = createTable_h6_element('Tutorial/Lab');
                     }else if(lectures[lec].Type==2){
-                        element_h6.innerHTML = "Assignment";
+                        element_h6 = createTable_h6_element('Assignment');
                     }else{
-                        element_h6.innerHTML = "Examination";
+                        element_h6 = createTable_h6_element('Examination');
                     }
                     cell.appendChild(element_h6);
 
                     cell = row.insertCell(6);
-                    element_p = document.createElement("p");
-                    element_p.classList.add("text-xs");
-                    element_p.classList.add("font-weight-bold");
-                    element_p.classList.add("mb-0");
-                    element_p.innerHTML = 'Session Repeat :';
+                    element_p = createTable_p_element('Session Repeat :');
                     cell.appendChild(element_p);
-                    element_h6 = document.createElement("h6");
-                    element_h6.classList.add("text-sm");
-                    element_h6.classList.add("mb-0");
                     if(lectures[lec].Session_repeat==0){
-                        element_h6.innerHTML = "Every Week";
+                        element_h6 = createTable_h6_element('Every Week');
                     }else{
-                        element_h6.innerHTML = "Every Other Week";
+                        element_h6 = createTable_h6_element('Every Other Week');
                     }
                     cell.appendChild(element_h6);
                 }
 
                 let days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-                document.getElementById("day_of_week_text").innerHTML = days[new Date().getDay()] + " Time Table"
+                let date = new Date();
+                document.getElementById("day_of_week_text").innerHTML = (date.getFullYear() + '/' + (date.getMonth()+1).toString().padStart(2, "0") + '/' + date.getDate().toString().padStart(2, "0")) + ' (' + days[date.getDay()] + ") Time Table"
                 lectures_table_row.classList.remove("invisible");
             }else{
                 lectures_table_row.classList.add("invisible");
                 //window.alert('No sessions for this filter');
             }
             
+        }
+
+        function searchSessions(){
+            let date = new Date()
+            date = (date.getFullYear() + '-' + (date.getMonth()+1).toString().padStart(2, "0") + '-' + date.getDate().toString().padStart(2, "0"))
+            console.log(date);
+
+            let selectedBatch = document.getElementById("batch_select_sessions").value;
+            
+            $.ajax({
+                    type: 'GET',
+                    url: '/nac/today/getSessions',
+                    //headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    data: {
+                        date: '2023-04-19',
+                        batch: selectedBatch,
+                    },
+                    dataType: 'json',
+                    encode: true
+                }).done(function (response) {
+                    console.log(response);
+                    let sessions,groups;
+                    if(response.status=='200'){
+                        console.log('success');
+                        sessions = response.sessions;
+                        groups = response.groups;
+                        if(sessions.length==0){
+                            window.alert("No sessions available for today and selected batch");
+                        }
+                        
+                        showSessionsTable(sessions, groups)  
+                        console.log(sessions);
+                        console.log(groups);
+
+                    }else{
+                        console.log('error');
+                        window.alert("Error occured while loading lectures")
+                    }
+                });
+
+        }
+
+        // SHOWING SESSIONS TABLE
+        function showSessionsTable(sessions, groups){
+            var sessions_table_row = document.getElementById("sessions_row");
+            var sessions_table = document.getElementById("sessions_table_body");
+            clearSelectOptions(sessions_table);
+
+            if(sessions.length != 0){
+                let row,cell,element_p,element_h6,rowCount;
+
+                for(ses in sessions){
+                    rowCount = sessions_table.rows.length;
+                    row = sessions_table.insertRow(rowCount);
+                    row = styleTable_row(row);
+                    row.setAttribute("data-id",sessions[ses].id);
+                    row.setAttribute("data-date",sessions[ses].Start_time);
+                    row.setAttribute("onclick","onSessionSelectFromTable(this)");
+                    
+                    for(group in groups){
+                        if(sessions[ses].Ses_group == groups[group].id){
+                            cell = row.insertCell(0);
+                            element_p = createTable_p_element('Module :');
+                            cell.appendChild(element_p);
+                            element_h6 = createTable_h6_element(groups[group].Module);
+                            cell.appendChild(element_h6);
+
+                            cell = row.insertCell(1);
+                            element_p = createTable_p_element('Group :');
+                            cell.appendChild(element_p);
+                            element_h6 = createTable_h6_element(groups[group].Name);
+                            cell.appendChild(element_h6);
+
+                            row.setAttribute("data-group",groups[group].id);
+                        }
+                    }
+                    
+                    cell = row.insertCell(2);
+                    element_p = createTable_p_element('Start Time :');
+                    cell.appendChild(element_p);
+                    element_h6 = createTable_h6_element(sessions[ses].Start_time);
+                    cell.appendChild(element_h6);
+
+                    cell = row.insertCell(3);
+                    element_p = createTable_p_element('Session Type :');
+                    cell.appendChild(element_p);
+                    let innerHTML = ""
+                    if(sessions[ses].Type==0){
+                        innerHTML = 'Lecture';
+                    }else if(sessions[ses].Type==1){
+                        innerHTML = 'Tutorial/Lab';
+                    }else if(sessions[ses].Type==2){
+                        innerHTML = 'Assignment';
+                    }else{
+                        innerHTML = 'Examination';
+                    }
+                    if(sessions[ses].Method==0){
+                        innerHTML += ' - Physical';
+                    }else{
+                        innerHTML += ' - Online';
+                    } 
+                    element_h6 = createTable_h6_element(innerHTML);
+                    cell.appendChild(element_h6);
+                }
+
+                let days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+                let date = new Date();
+                document.getElementById("day_of_week_text_sessions").innerHTML = (date.getFullYear() + '/' + (date.getMonth()+1).toString().padStart(2, "0") + '/' + date.getDate().toString().padStart(2, "0")) + ' (' + days[date.getDay()] + ") Time Table"
+                sessions_table_row.classList.remove("invisible");
+            }else{
+                sessions_table_row.classList.add("invisible");
+                //window.alert('No sessions for this filter');
+            }
+            
+        }
+
+        // Load attendance for the selected session from the sessions table
+        function onSessionSelectFromTable(row){
+            console.log('id : ' + row.dataset.id);
+            console.log('group : ' + row.dataset.group);
+            selectedSessionID = row.dataset.id
+            let selectedSessionGroup = row.dataset.group;
+            
+            document.getElementById("degree_select_attendance").value = 0;
+            
+            $.ajax({
+                    type: 'GET',
+                    url: '/nac/past/getsessionattendance',
+                    //headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    data: {
+                        session: selectedSessionID,
+                        group: selectedSessionGroup,
+                    },
+                    dataType: 'json',
+                    encode: true
+                }).done(function (response) {
+                    console.log(response);
+                    if(response.status=='200'){
+                        console.log('success');
+                        attendances = response.attendance;
+                        console.log(attendances);
+                        if(attendances.length==0){
+                            window.alert("No students available for the selected session.");
+                        }
+                        showAttendanceTable(attendances,row,0);  
+                        
+
+                    }else{
+                        console.log('error');
+                        window.alert("Error occured while loading students")
+                    }
+                });
+        }
+
+        function filterStudentsWithDegree(degreeID){ // degreeID -> 0 - all degrees,  Else - Degree ID
+            if(attendances.length==0){
+                //document.getElementById("degree_select").value = 0;
+            }else{
+                showAttendanceTable(attendances,null,degreeID);
+            }
+        }
+
+        function showAttendanceTable(attendance,row, degree){
+            var student_table_row = document.getElementById("attendance_row");
+            var student_table = document.getElementById("attendance_table_body");
+
+            let key;
+            if(row!=null){
+                key = 'ses' + row.dataset.id; 
+                document.getElementById("attendance_title").innerText = 'Session : ' + row.dataset.date;
+            } else{
+                key = 'ses' + selectedSessionID;
+            }
+
+            clearSelectOptions(student_table)
+            if(attendance.length != 0){
+                let row,cell,element_p,element_h6,rowCount;
+
+                for(att in attendance){
+                    if(degree!=0 && attendance[att].Degree!=degree){
+                        continue;
+                    }
+                    rowCount = student_table.rows.length;
+                    row = student_table.insertRow(rowCount);
+                    row = styleTable_row(row);
+                    row.setAttribute("data-id",attendance[att].Student);
+                    //row.setAttribute("onclick","onSessionSelectFromTable(this)");
+                    
+                    cell = row.insertCell(0);
+                    element_p = createTable_p_element('Index :');
+                    cell.appendChild(element_p);
+                    element_h6 = createTable_h6_element(attendance[att].Student);
+                    cell.appendChild(element_h6);
+
+                    cell = row.insertCell(1);
+                    element_p = createTable_p_element('Name :');
+                    cell.appendChild(element_p);
+                    element_h6 = createTable_h6_element(attendance[att].Name);
+                    cell.appendChild(element_h6);
+
+                    if(degree==0){
+                        cell = row.insertCell(2);
+                        element_p = createTable_p_element('Degree :');
+                        cell.appendChild(element_p);
+                        element_h6 = createTable_h6_element(degrees.find(item => {
+                            return item.id == attendance[att].Degree;
+                        }).Degree);
+                        cell.appendChild(element_h6);
+                    }
+
+                    if(degree==0){
+                        cell = row.insertCell(3);
+                    }else{
+                        cell = row.insertCell(2);   
+                    }
+                    
+                                        
+                    if(checkValidTimeStamp(attendance[att][key])){
+                        element_p = createTable_p_element('Presence :');
+                        element_h6 = createTable_h6_element(attendance[att][key]);
+                    }else if(attendance[att][key]==0){
+                        element_p = createTable_p_element('Presence :');
+                        element_h6 = createTable_h6_element('Absent');
+                    }else{
+                        element_p = createTable_p_element('Medical Form :');
+                        element_h6 = createTable_h6_element(attendance[att][key]);
+                    }
+                    cell.appendChild(element_p);
+                                
+                    cell.appendChild(element_h6);
+
+                    
+                }
+
+                student_table_row.classList.remove("invisible");
+            }else{
+                session_table_row.classList.add("invisible");
+                student_table_row.classList.add("invisible");
+                //window.alert('No sessions for this filter');
+            }
+            
+        }
+
+        // Functions for styling dynamic tables - rows
+        function styleTable_row(row){
+            row.classList.add("limited-rows-tr");
+            row.classList.add("selection-row");
+            return row;
+        }
+
+        // Functions for styling dynamic tables - paragraph element
+        function createTable_p_element(innerHTML){
+            let element_p = document.createElement("p");
+            element_p.classList.add("text-xs");
+            element_p.classList.add("font-weight-bold");
+            element_p.classList.add("mb-0");
+            element_p.innerHTML = innerHTML;
+            return element_p;
+        }
+
+        // Functions for styling dynamic tables - h6 element
+        function createTable_h6_element(innerHTML){
+            let element_h6 = document.createElement("h6");
+            element_h6.classList.add("text-sm");
+            element_h6.classList.add("mb-0");
+            element_h6.innerHTML = innerHTML;
+            return element_h6;
+        }
+
+        function checkValidTimeStamp(timestamp){
+            if(timestamp.length!=19){
+                return false;
+            }
+            if(timestamp.substring(4,5) == '-' && timestamp.substring(7,8) == '-' && timestamp.substring(13,14) == ':' && timestamp.substring(16,17) == ':'){
+                return true;
+            }else{
+                return false;
+            }
         }
 
         function clearSelectOptions(element){
