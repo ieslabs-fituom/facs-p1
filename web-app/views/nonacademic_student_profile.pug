@@ -37,7 +37,7 @@ block content
                 .row
                     .card
                         .card-header.pb-0.pt-3.bg-transparent
-                            h6.text-capitalize Attendance :Session-wise
+                            h6.text-capitalize Attendance : Module-wise
                         .card-body.p-3
                             .table-responsive
                                 //Class limited-rows-table - used to specify the max height and make scrollbars visible
@@ -72,7 +72,7 @@ block content
                 .row
                     .card.mt-3
                         .card-header.pb-0.pt-3.bg-transparent
-                            h6.text-capitalize Attendance : Module-wise
+                            h6.text-capitalize Attendance : Session-wise
                             h6.mb-1.mt-3.text-dark.text-sm Select Module
                             select.form-select.text-xs.me-8.pe-5.ms-0.mt-1#module_select(onchange="onModuleSelectForAttendance()")
                                 each module in modules
@@ -88,7 +88,7 @@ block content
     script.
         var modules,groups,attendance,sessions;
         $(document).ready(function() {
-            sideBarChange();
+            
             modules = JSON.parse(JSON.stringify(!{JSON.stringify(modules)}));
             groups = JSON.parse(JSON.stringify(!{JSON.stringify(groups)}));
             attendance = JSON.parse(JSON.stringify(!{JSON.stringify(attendance)}));
@@ -99,7 +99,7 @@ block content
                 console.log(data);
                 //window.location = $(this).data("href");
             });*/
-    
+            sideBarChange();
             onModuleSelectForAttendance();
         });
 
@@ -119,6 +119,7 @@ block content
         function onModuleSelectForAttendance(){
             var module_selected = document.getElementById("module_select").value;
             console.log("module = " + module_selected);
+            console.log(attendance);
             //var modules_table_row = document.getElementById("modules_table_row");
             var sessions_table = document.getElementById("sessions_table_body");
             clearSelectOptions(sessions_table);
