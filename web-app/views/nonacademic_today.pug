@@ -1,83 +1,123 @@
 extends main_nonacademic
 
 block content
+
     .container-fluid.py-4
         .row
             .col-lg-0.mb-xl-0.mb-4
-                .card
+                .card.mt-3
                     .card-header.pb-0.pt-3.bg-transparent
-                        h6.text-capitalize Search Sessions
-                    .card-body.p-3
-                        .row.mt-3
-                            .col-lg-4.col-xs-0 
+                        h6.text-capitalize Time table 
+                    .card-body.p-0
+                        .row.justify-content-center
+                            .col-lg-4.col-xs-0
                                 .d-flex.align-items-center
                                     .d-flex.flex-column.w-90
                                         h6.text-dark.text-sm Batch
-                                        select#batch_select.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="searchGroups()")
+                                        select#batch_select_timetable.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="")
                                             each batch in batches 
                                                 option(value=batch.id) Batch #{batch.Batch}
-                            .col-lg-4.col-xs-0 
+                            .col-lg-4.col-xs-0  
                                 .d-flex.align-items-center
                                     .d-flex.flex-column.w-90
-                                        h6.text-dark.text-sm Module
-                                        input#module_select.form-control.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg(type='text' value='' placeholder='Select module' name='module' list="modules" onchange="searchGroups()")
-                                        datalist(id="modules")
-                                            each module in modules 
-                                                option(value=module.Code) #{module.Name}         
-                            .col-lg-4.col-xs-0 
+                                        h6.text-dark.text-sm Degree
+                                        select#degree_select_timetable.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="")           
+                                            each degree in degrees 
+                                                option(value=degree.id) #{degree.Degree}  
+                        row   
+                            .col-lg-0.text-center
+                                button.btn.btn-primary.btn-sm.mt-3.ps-7.pe-7(onclick="searchTimeTable()") Search
+
+                    .row#lectures_row.invisible
+                        .col-lg-0.mb-xl-0.mb-4
+                            .card-header.pb-0.bg-transparent
+                                h6.text-capitalize#day_of_week_text Lectures 
+                            .card-body.ps-3
+                                .table-responsive
+                                    //Class limited-rows-table - used to specify the max height and make scrollbars visible
+                                    table#lectures_table.table.align-items-center
+                                        tbody#lectures_table_body
+
+
+                .card.mt-3
+                    .card-header.pb-0.pt-3.bg-transparent
+                        h6.text-capitalize Sessions 
+                    .card-body.p-3
+                        .row.mt-1.justify-content-center
+                            .col-lg-4.col-xs-0
                                 .d-flex.align-items-center
                                     .d-flex.flex-column.w-90
-                                        h6.text-dark.text-sm Group
-                                        input#group_select.form-control.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg(type='text' value='' placeholder='Select group' name='group' list="group_datalist")
-                                        datalist#group_datalist
-                                            option(value="test") TEST 
-                                            
-                        .row   
+                                        select#batch_select_sessions.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="")
+                                            each batch in batches 
+                                                option(value=batch.id) Batch #{batch.Batch}
+
+                        row   
                             .col-lg-0.text-center
                                 button.btn.btn-primary.btn-sm.mt-3.ps-7.pe-7(onclick="searchSessions()") Search
-        
-                                    
-        .row#sessions_row.mt-3.invisible
-            .col-lg-0.mb-xl-0.mb-4
-                .card
+
+                    .row#sessions_row.invisible
+                        .col-lg-0.mb-xl-0.mb-4
+                            .card-header.pb-0.pt-3.bg-transparent
+                                h6.text-capitalize#day_of_week_text_sessions Sessions 
+                                p.text-sm Click on each row to see attendance of the session
+                            .card-body.p-3
+                                .table-responsive
+                                    //Class limited-rows-table - used to specify the max height and make scrollbars visible
+                                    table#sessions_table.table.align-items-center  
+                                        tbody#sessions_table_body
+
+                .card.mt-3.invisible#attendance_row
                     .card-header.pb-0.pt-3.bg-transparent
-                        h6.text-capitalize Sessions
+                        h6.text-capitalize#attendance_title Attendence  
+                    .card-body.p-3
+                        .row.mt-3
+                            .col-lg-4.col-xs-0  
+                                .d-flex.align-items-center
+                                    .d-flex.flex-column.w-90
+                                        h6.text-dark.text-sm Degree
+                                        select#degree_select_attendance.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="filterStudentsWithDegree(this.value)")
+                                            option(value=0) All Degrees
+                                            each degree in degrees  
+                                                option(value=degree.id) #{degree.Degree}                       
                     .card-body.p-3
                         .table-responsive
                             //Class limited-rows-table - used to specify the max height and make scrollbars visible
-                            table#session_table.table.align-items-center
-                                tbody#session_table_body
-        .row#student_row.mt-3.invisible
-            .col-lg-0.mb-xl-0.mb-4
-                .card
-                    .card-header.pb-0.pt-3.bg-transparent
-                        h6#session_details.text-capitalize Session
-                    .card-body.p-3
-                        .table-responsive
-                            //Class limited-rows-table - used to specify the max height and make scrollbars visible
-                            table#student_table.table.align-items-center
-                                tbody#student_table_body  
-                                                        
+                            table#attendance_table.table.align-items-center  
+                                tbody#attendance_table_body
+
+    #selectEmployeeModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='selectEmployeeModalLabel' aria-hidden='true' data-id="none")
+        .modal-dialog(role='document')
+            .modal-content.bg-white
+                .modal-header
+                    h5#selectEmployeeModalLabel.modal-title Select Lecturer/Instructor/Official
+                    button.close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                        span(aria-hidden='true') &times;
+                .modal-body
+                    select#employeeSelect.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="")
+
+                .modal-footer
+                    button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Cancel
+                    button.btn.btn-primary(type='button' onClick="addSession()") Add Session
+
+    #sessionAddedModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='sessionAddedModalLabel' aria-hidden='true' data-id="none")
+        .modal-dialog(role='document')
+            .modal-content.bg-white
+                .modal-header
+                    h5#sessionAddedModalLabel.modal-title Session Added Successfully
+                    button.close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                        span(aria-hidden='true') &times;
+                .modal-body
+                    h5#sessionAdded_ID Session ID - 
+                    br
+                    h6#sessionAdded_Module 
+                    h6#sessionAdded_Time.text-secondary 
+                    p#sessionAdded_Employee.text-secondary 
+
+                .modal-footer
+                    button.btn.btn-primary(type='button' data-bs-dismiss='modal') Done
+
 
     script.
-
-        var batches,modules,groups;
-        $(document).ready(function() {
-            sideBarChange();
-            batches = JSON.parse(JSON.stringify(!{JSON.stringify(batches)}));
-            modules = JSON.parse(JSON.stringify(!{JSON.stringify(modules)}));
-            
-        });
-
-        // HIGHLIGHTING RELATED OPTION IN SIDEBAR
-        function sideBarChange(){
-            document.getElementById("students-nav-link").classList.remove('active');
-            document.getElementById("today-nav-link").classList.remove('active');
-            document.getElementById("pastreports-nav-link").classList.add('active');
-            document.getElementById("employees-nav-link").classList.remove('active');
-            document.getElementById("semester-nav-link").classList.remove('active');
-        }
-
         var win = navigator.platform.indexOf('Win') > -1;
         if (win && document.querySelector('#sidenav-scrollbar')) {
             var options = {
@@ -86,250 +126,307 @@ block content
             Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
 
-        // SEARCH GROUPS AFTER CHANGING THE MODULE IN MODULE SELECT 
-        function searchGroups(){
-            let selectedModule = document.getElementById("module_select").value;
-            let selectedBatch = document.getElementById("batch_select").value;
-            var groupDatalist = document.getElementById("group_datalist");
-            let validModule = false,selectedModuleID;
+        var degrees,batches;
 
-            if(selectedModule == ""){
-                clearSelectOptions(groupDatalist);
-                return;
-            }
+        var myModal
 
-            for(module in modules){
-                if(modules[module].Code == selectedModule){
-                    validModule = true;
-                    selectedModuleID = modules[module].id;
-                    break;
-                }
-            }
+        $(document).ready(function() {
+            sideBarChange();
+            batches = JSON.parse(JSON.stringify(!{JSON.stringify(batches)}));
+            degrees = JSON.parse(JSON.stringify(!{JSON.stringify(degrees)}));
+            myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {
+                backdrop: 'static'
+            });
+        });
 
-            if(!validModule){
-                clearSelectOptions(groupDatalist);
-                window.alert("Invalid module code");
-                document.getElementById("module_select").focus();
-            }else{
-                console.log(selectedModuleID);
-                $.ajax({
-                    type: 'GET',
-                    url: '/nac/past/getgroups',
-                    //headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                    data: {
-                        module: selectedModuleID,
-                        batch: selectedBatch,
-                    },
-                    dataType: 'json',
-                    encode: true
+        function sideBarChange(){
+            document.getElementById("students-nav-link").classList.remove('active');
+            document.getElementById("today-nav-link").classList.add('active');
+            document.getElementById("pastreports-nav-link").classList.remove('active');
+            document.getElementById("employees-nav-link").classList.remove('active');
+            document.getElementById("semester-nav-link").classList.remove('active');
+        }
+
+        function searchTimeTable(){
+            let dayOfWeek = new Date().getDay();
+
+            let selectedBatch = document.getElementById("batch_select_timetable").value;
+            let selectedDegree = document.getElementById("degree_select_timetable").value;
+
+            $.ajax({
+                type: 'GET',
+                url: '/nac/timetable/getlectures',
+                //headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                data: {
+                    day: dayOfWeek,
+                    batch: selectedBatch,
+                    degree: selectedDegree,
+                },
+                dataType: 'json',
+                encode: true
                 }).done(function (response) {
                     console.log(response);
+                    let lectures,groups;
                     if(response.status=='200'){
                         console.log('success');
+                        lectures = response.lectures;
                         groups = response.groups;
-                        
-                        clearSelectOptions(groupDatalist);
-                        var option;
-                        for(group in groups){
-                            option  = document.createElement('option');
-                            option.value = groups[group].Name;
-                            option.innerText = groups[group].id;
-                            groupDatalist.appendChild(option);
+                        if(lectures.length==0){
+                            window.alert("No lectures available for the selected day, batch and degree");
                         }
-
-                        if(groups.length==1){
-                            document.getElementById("group_select").value = groups[0].Name;
-                        }else if(groups.length==0){
-                            window.alert("No groups available for the selected module. Module code may be incorrect");
-                        }
+                        showLecturesTable(lectures, groups)  
+                        console.log(lectures);
+                        console.log(groups);
 
                     }else{
                         console.log('error');
-                        window.alert("Error occured while loading groups")
+                        window.alert("Error occured while loading lectures")
                     }
                 });
-            }
+
         }
 
-        // SEARCH SESSIONS AFTER CLICKING SEARCH
+        // SHOWING LECTURES TABLE
+        function showLecturesTable(lectures, groups){
+            var lectures_table_row = document.getElementById("lectures_row");
+            var lectures_table = document.getElementById("lectures_table_body");
+            clearSelectOptions(lectures_table);
+
+            if(lectures.length != 0){
+                let row,cell,element_p,element_h6,rowCount;
+
+                for(lec in lectures){
+                    rowCount = lectures_table.rows.length;
+                    row = lectures_table.insertRow(rowCount);
+                    row = styleTable_row(row);
+                    row.setAttribute("data-id",lectures[lec].id);
+
+                    for(group in groups){
+                        if(lectures[lec].T_group == groups[group].id){
+                            cell = row.insertCell(0);
+                            element_p = createTable_p_element('Module :');
+                            cell.appendChild(element_p);
+                            element_h6 = createTable_h6_element(groups[group].Module);
+                            cell.appendChild(element_h6);
+
+                            cell = row.insertCell(1);
+                            element_p = createTable_p_element('Group :');
+                            cell.appendChild(element_p);
+                            element_h6 = createTable_h6_element(groups[group].Name);
+                            cell.appendChild(element_h6);
+
+                            row.setAttribute("data-module",groups[group].Module);
+                        }
+                    }
+
+                    cell = row.insertCell(2);
+                    element_p = createTable_p_element('Start Time :');
+                    cell.appendChild(element_p);
+                    element_h6 = createTable_h6_element(lectures[lec].Start_time);
+                    cell.appendChild(element_h6);
+
+                    cell = row.insertCell(3);
+                    element_p = createTable_p_element('Duration :');
+                    cell.appendChild(element_p);
+                    element_h6 = createTable_h6_element(lectures[lec].Duration + ' hours');
+                    cell.appendChild(element_h6);
+
+
+                    cell = row.insertCell(4);
+                    element_p = createTable_p_element('Session Type :');
+                    cell.appendChild(element_p);
+                    let innerHTML = ""
+                    if(lectures[lec].Type==0){
+                        innerHTML = 'Lecture';
+                    }else if(lectures[lec].Type==1){
+                        innerHTML = 'Tutorial/Lab';
+                    }else if(lectures[lec].Type==2){
+                        innerHTML = 'Assignment';
+                    }else{
+                        innerHTML = 'Examination';
+                    }
+                    if(lectures[lec].Method==0){
+                        innerHTML += ' - Physical';
+                    }else{
+                        innerHTML += ' - Online';
+                    } 
+                    if(lectures[lec].Session_repeat==0){
+                        innerHTML += (' (E)');
+                    }else{
+                        innerHTML += (' (EO)');
+                    }
+                    element_h6 = createTable_h6_element(innerHTML);
+                    cell.appendChild(element_h6);
+
+                    cell = row.insertCell(5);
+                    innerHTML = "<br><button class='btn btn-primary' data-id='" + lectures[lec].id + "' data-group='" + lectures[lec].T_group + "' + onClick = 'showAddSessionDialog(this)'>Add Session</button>"
+                    element_h6 = createTable_h6_element(innerHTML);
+                    cell.appendChild(element_h6);
+                }
+
+                let days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+                let date = new Date();
+                document.getElementById("day_of_week_text").innerHTML = (date.getFullYear() + '/' + (date.getMonth()+1).toString().padStart(2, "0") + '/' + date.getDate().toString().padStart(2, "0")) + ' (' + days[date.getDay()] + ") Time Table" 
+                lectures_table_row.classList.remove("invisible");
+            }else{
+                lectures_table_row.classList.add("invisible");
+                //window.alert('No sessions for this filter');
+            }
+
+        }
+
         function searchSessions(){
-            let selectedModule = document.getElementById("module_select").value;
-            let selectedBatch = document.getElementById("batch_select").value;
-            let selectedGroup = document.getElementById("group_select").value;
-            
-            let validModule = false, validGroup = false, selectedModuleID, selectedGroupID;
+            let date = new Date()
+            date = (date.getFullYear() + '-' + (date.getMonth()+1).toString().padStart(2, "0") + '-' + date.getDate().toString().padStart(2, "0"))
+            //date = '2023-04-17';
+            console.log(date);
 
-            for(module in modules){
-                if(modules[module].Code == selectedModule){
-                    validModule = true;
-                    selectedModuleID = modules[module].id;
-                    break;
-                }
-            }
-
-            for(group in groups){
-                if(groups[group].Name == selectedGroup){
-                    validGroup = true;
-                    selectedGroupID = groups[group].id;
-                    break;
-                }
-            }
-
-            if(!validModule){
-                window.alert("Please select valid module");
-                document.getElementById("module_select").innerText = "";
-                return;
-            }
-
-            if(!validGroup){
-                window.alert("Please select valid group");
-                document.getElementById("group_select").innerText = "";
-                return;
-            }
+            let selectedBatch = document.getElementById("batch_select_sessions").value;
 
             $.ajax({
-                    type: 'GET',
-                    url: '/nac/past/getsessions',
-                    //headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                    data: {
-                        group: selectedGroupID,
-                    },
-                    dataType: 'json',
-                    encode: true
+                type: 'GET',
+                url: '/nac/today/getSessions',
+                //headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                data: {
+                    date: date,
+                    batch: selectedBatch,
+                },
+                dataType: 'json',
+                encode: true
                 }).done(function (response) {
                     console.log(response);
+                    let sessions,groups;
                     if(response.status=='200'){
                         console.log('success');
                         sessions = response.sessions;
-                        
+                        groups = response.groups;
                         if(sessions.length==0){
-                            window.alert("No sessions available for the selected module and group.");
+                            window.alert("No sessions available for today and selected batch");
                         }
-                        showSessionsTable(sessions)  
+
+                        showSessionsTable(sessions, groups)  
                         console.log(sessions);
+                        console.log(groups);
 
                     }else{
                         console.log('error');
-                        window.alert("Error occured while loading sessions")
+                        window.alert("Error occured while loading lectures")
                     }
                 });
 
         }
 
-        function showSessionsTable(sessions){
-            var session_table_row = document.getElementById("sessions_row");
-            var session_table = document.getElementById("session_table_body");
-            var student_table_row = document.getElementById("student_row");
-                
-            clearSelectOptions(session_table)
+        // SHOWING SESSIONS TABLE
+        function showSessionsTable(sessions, groups){
+            var sessions_table_row = document.getElementById("sessions_row");
+            var sessions_table = document.getElementById("sessions_table_body");
+            clearSelectOptions(sessions_table);
+
             if(sessions.length != 0){
                 let row,cell,element_p,element_h6,rowCount;
 
                 for(ses in sessions){
-                    rowCount = session_table.rows.length;
-                    row = session_table.insertRow(rowCount);
-                    row.classList.add("limited-rows-tr");
-                    row.classList.add("selection-row");
+                    rowCount = sessions_table.rows.length;
+                    row = sessions_table.insertRow(rowCount);
+                    row = styleTable_row(row);
                     row.setAttribute("data-id",sessions[ses].id);
+                    row.setAttribute("data-date",sessions[ses].Start_time);
                     row.setAttribute("onclick","onSessionSelectFromTable(this)");
-                    
+
+
                     cell = row.insertCell(0);
-                    element_p = document.createElement("p");
-                    element_p.classList.add("text-xs");
-                    element_p.classList.add("font-weight-bold");
-                    element_p.classList.add("mb-0");
-                    element_p.innerHTML = 'Start Time :';
+                    element_p = createTable_p_element('Session id :');
                     cell.appendChild(element_p);
-                    element_h6 = document.createElement("h6");
-                    element_h6.classList.add("text-sm");
-                    element_h6.classList.add("mb-0");
-                    element_h6.innerHTML = sessions[ses].Start_time;
+                    element_h6 = createTable_h6_element(sessions[ses].id);
                     cell.appendChild(element_h6);
 
-                    cell = row.insertCell(1);
-                    element_p = document.createElement("p");
-                    element_p.classList.add("text-xs");
-                    element_p.classList.add("font-weight-bold");
-                    element_p.classList.add("mb-0");
-                    element_p.innerHTML = 'Duration :';
-                    cell.appendChild(element_p);
-                    element_h6 = document.createElement("h6");
-                    element_h6.classList.add("text-sm");
-                    element_h6.classList.add("mb-0");
-                    element_h6.innerHTML = sessions[ses].Duration;
-                    cell.appendChild(element_h6);
+                    for(group in groups){
+                        if(sessions[ses].Ses_group == groups[group].id){
+                            cell = row.insertCell(1);
+                            element_p = createTable_p_element('Module :');
+                            cell.appendChild(element_p);
+                            element_h6 = createTable_h6_element(groups[group].Module);
+                            cell.appendChild(element_h6);
 
-                    cell = row.insertCell(2);
-                    element_p = document.createElement("p");
-                    element_p.classList.add("text-xs");
-                    element_p.classList.add("font-weight-bold");
-                    element_p.classList.add("mb-0");
-                    element_p.innerHTML = 'Method :';
-                    cell.appendChild(element_p);
-                    element_h6 = document.createElement("h6");
-                    element_h6.classList.add("text-sm");
-                    element_h6.classList.add("mb-0");
-                    if(sessions[ses].Method==0){
-                        element_h6.innerHTML = "Physical";
-                    }else{
-                        element_h6.innerHTML = "Online";
+                            cell = row.insertCell(2);
+                            element_p = createTable_p_element('Group :');
+                            cell.appendChild(element_p);
+                            element_h6 = createTable_h6_element(groups[group].Name);
+                            cell.appendChild(element_h6);
+
+                            row.setAttribute("data-group",groups[group].id);
+                        }
                     }
-                    cell.appendChild(element_h6);
 
                     cell = row.insertCell(3);
-                    element_p = document.createElement("p");
-                    element_p.classList.add("text-xs");
-                    element_p.classList.add("font-weight-bold");
-                    element_p.classList.add("mb-0");
-                    element_p.innerHTML = 'Session Type :';
+                    element_p = createTable_p_element('Start Time :');
                     cell.appendChild(element_p);
-                    element_h6 = document.createElement("h6");
-                    element_h6.classList.add("text-sm");
-                    element_h6.classList.add("mb-0");
+                    element_h6 = createTable_h6_element(sessions[ses].Start_time);
+                    cell.appendChild(element_h6);
+
+                    cell = row.insertCell(4);
+                    element_p = createTable_p_element('Session Type :');
+                    cell.appendChild(element_p);
+                    let innerHTML = ""
                     if(sessions[ses].Type==0){
-                        element_h6.innerHTML = "Lecture";
+                        innerHTML = 'Lecture';
                     }else if(sessions[ses].Type==1){
-                        element_h6.innerHTML = "Tutorial/Lab";
+                        innerHTML = 'Tutorial/Lab';
                     }else if(sessions[ses].Type==2){
-                        element_h6.innerHTML = "Assignment";
+                        innerHTML = 'Assignment';
                     }else{
-                        element_h6.innerHTML = "Examination";
+                        innerHTML = 'Examination';
                     }
+                    if(sessions[ses].Method==0){
+                        innerHTML += ' - Physical';
+                    }else{
+                        innerHTML += ' - Online';
+                    } 
+                    element_h6 = createTable_h6_element(innerHTML);
                     cell.appendChild(element_h6);
                 }
 
-                session_table_row.classList.remove("invisible");
+                let days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+                let date = new Date();
+                document.getElementById("day_of_week_text_sessions").innerHTML = (date.getFullYear() + '/' + (date.getMonth()+1).toString().padStart(2, "0") + '/' + date.getDate().toString().padStart(2, "0")) + ' (' + days[date.getDay()] + ") Time Table" 
+                sessions_table_row.classList.remove("invisible");
             }else{
-                session_table_row.classList.add("invisible");
-                student_table_row.classList.add("invisible");
-                window.alert('No sessions for this filter');
+                sessions_table_row.classList.add("invisible");
+                //window.alert('No sessions for this filter');
             }
-            
+
         }
 
+        // Load attendance for the selected session from the sessions table
         function onSessionSelectFromTable(row){
-            console.log(row.dataset.id);
-            
+            console.log('id : ' + row.dataset.id);
+            console.log('group : ' + row.dataset.group);
+            selectedSessionID = row.dataset.id
+            let selectedSessionGroup = row.dataset.group;
+
+            document.getElementById("degree_select_attendance").value = 0;
+
             $.ajax({
-                    type: 'GET',
-                    url: '/nac/past/getsessionattendance',
-                    //headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                    data: {
-                        session: row.dataset.id,
-                    },
-                    dataType: 'json',
-                    encode: true
+                type: 'GET',
+                url: '/nac/past/getsessionattendance',
+                //headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                data: {
+                    session: selectedSessionID,
+                    group: selectedSessionGroup,
+                },
+                dataType: 'json',
+                encode: true
                 }).done(function (response) {
                     console.log(response);
                     if(response.status=='200'){
                         console.log('success');
-                        let attendance = response.attendance;
-                        console.log(attendance);
-                        if(attendance.length==0){
+                        attendances = response.attendance;
+                        console.log(attendances);
+                        if(attendances.length==0){
                             window.alert("No students available for the selected session.");
                         }
-                        showAttendanceTable(attendance,row.dataset.id)  
-                        
+                        showAttendanceTable(attendances,row,0);  
+
 
                     }else{
                         console.log('error');
@@ -338,70 +435,119 @@ block content
                 });
         }
 
-        function showAttendanceTable(attendance,session){
-            var student_table_row = document.getElementById("student_row");
-            var student_table = document.getElementById("student_table_body");
-            let key = 'ses' + session;    
+        function filterStudentsWithDegree(degreeID){ // degreeID -> 0 - all degrees,  Else - Degree ID
+            if(attendances.length==0){
+                //document.getElementById("degree_select").value = 0;
+            }else{
+                showAttendanceTable(attendances,null,degreeID);
+            }
+        }
+
+        function showAttendanceTable(attendance,row, degree){
+            var student_table_row = document.getElementById("attendance_row");
+            var student_table = document.getElementById("attendance_table_body");
+
+            let key;
+            if(row!=null){
+                key = 'ses' + row.dataset.id; 
+                document.getElementById("attendance_title").innerText = 'Session : ' + row.dataset.date;
+            } else{
+                key = 'ses' + selectedSessionID;
+            }
 
             clearSelectOptions(student_table)
             if(attendance.length != 0){
                 let row,cell,element_p,element_h6,rowCount;
 
                 for(att in attendance){
+                    if(degree!=0 && attendance[att].Degree!=degree){
+                        continue;
+                    }
                     rowCount = student_table.rows.length;
                     row = student_table.insertRow(rowCount);
-                    row.classList.add("limited-rows-tr");
-                    row.classList.add("selection-row");
+                    row = styleTable_row(row);
                     row.setAttribute("data-id",attendance[att].Student);
                     //row.setAttribute("onclick","onSessionSelectFromTable(this)");
-                    
+
                     cell = row.insertCell(0);
-                    element_p = document.createElement("p");
-                    element_p.classList.add("text-xs");
-                    element_p.classList.add("font-weight-bold");
-                    element_p.classList.add("mb-0");
-                    element_p.innerHTML = 'Student :';
+                    element_p = createTable_p_element('Index :');
                     cell.appendChild(element_p);
-                    element_h6 = document.createElement("h6");
-                    element_h6.classList.add("text-sm");
-                    element_h6.classList.add("mb-0");
-                    element_h6.innerHTML = attendance[att].Student;
+                    element_h6 = createTable_h6_element(attendance[att].Student);
                     cell.appendChild(element_h6);
 
                     cell = row.insertCell(1);
-                    element_p = document.createElement("p");
-                    element_p.classList.add("text-xs");
-                    element_p.classList.add("font-weight-bold");
-                    element_p.classList.add("mb-0");
-                                
-                    element_h6 = document.createElement("h6");
-                    element_h6.classList.add("text-sm");
-                    element_h6.classList.add("mb-0");
-                                        
-                    if(checkValidTimeStamp(attendance[att][key])){
-                        element_p.innerHTML = 'Presence :'; 
-                        element_h6.innerHTML = attendance[att][key];
-                    }else if(attendance[att][key]==0){
-                        element_p.innerHTML = 'Presence :'; 
-                        element_h6.innerHTML = 'Absent'; 
-                    }else{
-                        element_p.innerHTML = 'Medical Form :'; 
-                        element_h6.innerHTML = attendance[att][key];
-                    }
+                    element_p = createTable_p_element('Name :');
                     cell.appendChild(element_p);
-                                
+                    element_h6 = createTable_h6_element(attendance[att].Name);
                     cell.appendChild(element_h6);
 
-                    
+                    if(degree==0){
+                        cell = row.insertCell(2);
+                        element_p = createTable_p_element('Degree :');
+                        cell.appendChild(element_p);
+                        element_h6 = createTable_h6_element(degrees.find(item => {
+                            return item.id == attendance[att].Degree;
+                        }).Degree);
+                        cell.appendChild(element_h6);
+                    }
+
+                    if(degree==0){
+                        cell = row.insertCell(3);
+                    }else{
+                        cell = row.insertCell(2);   
+                    }
+
+
+                    if(checkValidTimeStamp(attendance[att][key])){
+                        element_p = createTable_p_element('Presence :');
+                        element_h6 = createTable_h6_element(attendance[att][key]);
+                    }else if(attendance[att][key]==0){
+                        element_p = createTable_p_element('Presence :');
+                        element_h6 = createTable_h6_element('Absent');
+                    }else{
+                        element_p = createTable_p_element('Medical Form :');
+                        element_h6 = createTable_h6_element(attendance[att][key]);
+                    }
+                    cell.appendChild(element_p);
+
+                    cell.appendChild(element_h6);
+
+
                 }
 
                 student_table_row.classList.remove("invisible");
             }else{
                 session_table_row.classList.add("invisible");
                 student_table_row.classList.add("invisible");
-                window.alert('No sessions for this filter');
+                //window.alert('No sessions for this filter');
             }
-            
+
+        }
+
+        // Functions for styling dynamic tables - rows
+        function styleTable_row(row){
+            row.classList.add("limited-rows-tr");
+            row.classList.add("selection-row");
+            return row;
+        }
+
+        // Functions for styling dynamic tables - paragraph element
+        function createTable_p_element(innerHTML){
+            let element_p = document.createElement("p");
+            element_p.classList.add("text-xs");
+            element_p.classList.add("font-weight-bold");
+            element_p.classList.add("mb-0");
+            element_p.innerHTML = innerHTML;
+            return element_p;
+        }
+
+        // Functions for styling dynamic tables - h6 element
+        function createTable_h6_element(innerHTML){
+            let element_h6 = document.createElement("h6");
+            element_h6.classList.add("text-sm");
+            element_h6.classList.add("mb-0");
+            element_h6.innerHTML = innerHTML;
+            return element_h6;
         }
 
         function checkValidTimeStamp(timestamp){
@@ -414,7 +560,104 @@ block content
                 return false;
             }
         }
-        
+
+        function showAddSessionDialog(button){
+            let groupID = button.dataset.group;
+            let timetableID = button.dataset.id
+
+            $.ajax({
+                type: 'GET',
+                url: '/nac/today/loadEmployeesOfGroup',
+                //headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                data: {
+                    group_id: groupID,
+                },
+                dataType: 'json',
+                encode: true
+                }).done(function (response) {
+                    console.log(response);
+                    if(response.status=='200'){
+                        console.log('success');
+                        let employees = response.employees;
+                        console.log(employees);
+
+                        let emp_select = document.getElementById("employeeSelect");
+                        clearSelectOptions(emp_select);
+                        for(emp in employees){
+                            let option = document.createElement("option");
+                            option.value = employees[emp].id;
+                            option.text = employees[emp].Name;
+                            emp_select.add(option);
+                        }
+                        $('#selectEmployeeModal').attr('data-id' , timetableID);
+                        $('#selectEmployeeModal').attr('data-group' , groupID); 
+                        $('#selectEmployeeModal').modal('toggle');
+                    }else{
+                        console.log('error');
+                        alert("Session adding unsuccessful\nError : " + response.message);
+                    }
+                });
+        }
+
+        function addSession(){
+            let timetableID = document.getElementById("selectEmployeeModal").dataset.id;
+            let groupID = document.getElementById("selectEmployeeModal").dataset.group;
+            let employee = document.getElementById("employeeSelect").value;
+            let employeeName = document.getElementById("employeeSelect").options[document.getElementById("employeeSelect").selectedIndex].text;
+            console.log(employeeName);
+
+            $.ajax({
+                type: 'POST',
+                url: '/nac/today/addSessionUsingTimeTableID',
+                //headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                data: {
+                    timeTableID: timetableID,
+                    employeeID : employee,
+                    group: groupID,
+                },
+                dataType: 'json',
+                encode: true
+                }).done(function (response) {
+                    console.log(response);
+                    $('#selectEmployeeModal').modal('toggle');
+                    if(response.status=='200'){
+                        console.log('success');
+
+                        let session_id = response.session;
+                        let session_time = response.Start_time;
+                        let module = response.module[0].Code + '-' + response.module[0].Name;
+
+                        $('#sessionAdded_ID').html('Session ID - ' + session_id);
+                        $('#sessionAdded_Module').html(module);
+                        $('#sessionAdded_Time').html(session_time);
+                        $('#sessionAdded_Employee').html(employeeName);
+                        $('#sessionAddedModal').modal('toggle');
+                    } else if(response.status=='201'){
+                        console.log('success - partial');
+
+                        let session_id = reponse.session;
+                        $('#sessionAdded_ID').html('Session ID - ' + session_id);
+                        $('#sessionAdded_Module').html('');
+                        $('#sessionAdded_Time').html('');
+                        $('#sessionAdded_Employee').html('');
+                        $('#sessionAddedModal').modal('toggle');
+                    } else if(response.status=='501'){
+                        console.log('error 501');
+                        alert("Session adding unsuccessful\nError : " + response.message);
+                    }else{
+                        console.log('error');
+                        alert("Session adding unsuccessful\nError : " + response.error);
+                    }
+                });
+        }
+
         function clearSelectOptions(element){
             element.innerHTML = '';
         }
+
+
+
+
+
+
+
