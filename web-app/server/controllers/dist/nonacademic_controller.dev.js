@@ -1,5 +1,13 @@
 "use strict";
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
 var mysql = require('mysql2');
 
 var commonFunctions = require('./common_functions'); // MYSQL CONNECTION (CHANGE .env FILE WHEN TESTING. DON'T EDIT THESE PARAMETERS)
@@ -1091,7 +1099,8 @@ exports.past_get_groups = function _callee10(req, res) {
 
 
 exports.past_get_sessions = function _callee11(req, res) {
-  var group, groups, sessions;
+  var group, groups, sessions, lecturers, lec_id, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, _session2;
+
   return regeneratorRuntime.async(function _callee11$(_context12) {
     while (1) {
       switch (_context12.prev = _context12.next) {
@@ -1118,17 +1127,84 @@ exports.past_get_sessions = function _callee11(req, res) {
           });
 
         case 13:
+          lec_id = [];
+          _iteratorNormalCompletion = true;
+          _didIteratorError = false;
+          _iteratorError = undefined;
+          _context12.prev = 17;
+
+          for (_iterator = sessions[Symbol.iterator](); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            _session2 = _step.value;
+            lec_id.push(_session2.Lecturer);
+          }
+
+          _context12.next = 25;
+          break;
+
+        case 21:
+          _context12.prev = 21;
+          _context12.t1 = _context12["catch"](17);
+          _didIteratorError = true;
+          _iteratorError = _context12.t1;
+
+        case 25:
+          _context12.prev = 25;
+          _context12.prev = 26;
+
+          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+            _iterator["return"]();
+          }
+
+        case 28:
+          _context12.prev = 28;
+
+          if (!_didIteratorError) {
+            _context12.next = 31;
+            break;
+          }
+
+          throw _iteratorError;
+
+        case 31:
+          return _context12.finish(28);
+
+        case 32:
+          return _context12.finish(25);
+
+        case 33:
+          lec_id = _toConsumableArray(new Set(lec_id));
+          _context12.prev = 34;
+          _context12.next = 37;
+          return regeneratorRuntime.awrap(commonFunctions.getEmployeeDetails(conn, lec_id, ['id', 'Name']));
+
+        case 37:
+          lecturers = _context12.sent;
+          _context12.next = 44;
+          break;
+
+        case 40:
+          _context12.prev = 40;
+          _context12.t2 = _context12["catch"](34);
+          console.log('Error : ' + _context12.t2);
           res.send({
-            status: '200',
-            sessions: sessions
+            status: '500',
+            sessions: sessions,
+            lecturers: lecturers
           });
 
-        case 14:
+        case 44:
+          res.send({
+            status: '200',
+            sessions: sessions,
+            lecturers: lecturers
+          });
+
+        case 45:
         case "end":
           return _context12.stop();
       }
     }
-  }, null, null, [[2, 9]]);
+  }, null, null, [[2, 9], [17, 21, 25, 33], [26,, 28, 32], [34, 40]]);
 };
 
 exports.past_get_sessionattendance = function _callee12(req, res) {

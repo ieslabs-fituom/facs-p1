@@ -52,6 +52,7 @@ block content
                 .card
                     .card-header.pb-0.pt-3.bg-transparent
                         h6#session_details.text-capitalize Session
+                        p.text-sm#lecturer_name
                         .d-flex.align-items-center.mt-3
                             .d-flex.flex-column.w-90
                                 h6.text-dark.text-sm Degree
@@ -72,7 +73,7 @@ block content
 
     script.
 
-        var batches,modules,groups,degrees, attendances, selectedSessionID; // selectedSessionID - value is assigned for this when an user select a session from session
+        var batches,modules,groups,degrees, attendances, lecturers, selectedSessionID; // selectedSessionID - value is assigned for this when an user select a session from session
         $(document).ready(function() {
             batches = JSON.parse(JSON.stringify(!{JSON.stringify(batches)}));
             modules = JSON.parse(JSON.stringify(!{JSON.stringify(modules)}));
@@ -215,11 +216,13 @@ block content
                     if(response.status=='200'){
                         console.log('success');
                         sessions = response.sessions;
-                        
+                        lecturers = response.lecturers;
                         if(sessions.length==0){
                             window.alert("No sessions available for the selected module and group.");
+                        }else{
+                            showSessionsTable(sessions, lecturers); 
                         }
-                        showSessionsTable(sessions)  
+                         
                         console.log(sessions);
 
                     }else{
@@ -246,6 +249,7 @@ block content
                     row.classList.add("selection-row");
                     row.setAttribute("data-id",sessions[ses].id);
                     row.setAttribute("data-date",sessions[ses].Start_time);
+                    row.setAttribute("data-lecturer",sessions[ses].Lecturer);
                     row.setAttribute("onclick","onSessionSelectFromTable(this)");
                     
                     cell = row.insertCell(0);
@@ -325,7 +329,17 @@ block content
         function onSessionSelectFromTable(row){
             console.log(row.dataset.id);
             selectedSessionID = row.dataset.id
+            let lecturer = row.dataset.lecturer;
             
+            for(lec of lecturers){
+                if(lec.id == row.dataset.lecturer){
+                    lecturer = lec.Name;
+                    break;
+                }
+            }
+
+            document.getElementById("lecturer_name").innerHTML = 'Lecturer : ' + lecturer;
+
             $.ajax({
                     type: 'GET',
                     url: '/nac/past/getsessionattendance',
