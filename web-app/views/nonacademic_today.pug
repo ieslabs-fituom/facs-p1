@@ -8,7 +8,7 @@ block content
                 .card.mt-3
                     .card-header.pb-0.pt-3.bg-transparent
                         h6.text-capitalize Time table 
-                    .card-body.p-3
+                    .card-body.p-0
                         .row.justify-content-center
                             .col-lg-4.col-xs-0
                                 .d-flex.align-items-center
@@ -30,13 +30,14 @@ block content
 
                     .row#lectures_row.invisible
                         .col-lg-0.mb-xl-0.mb-4
-                            .card-header.pb-0.pt-3.bg-transparent
+                            .card-header.pb-0.bg-transparent
                                 h6.text-capitalize#day_of_week_text Lectures 
-                            .card-body.p-3
+                            .card-body.ps-3
                                 .table-responsive
                                     //Class limited-rows-table - used to specify the max height and make scrollbars visible
-                                    table#lectures_table.table.align-items-center  
+                                    table#lectures_table.table.align-items-center
                                         tbody#lectures_table_body
+
 
                 .card.mt-3
                     .card-header.pb-0.pt-3.bg-transparent
@@ -58,7 +59,7 @@ block content
                         .col-lg-0.mb-xl-0.mb-4
                             .card-header.pb-0.pt-3.bg-transparent
                                 h6.text-capitalize#day_of_week_text_sessions Sessions 
-                                p Click on each row to see attendance of the session
+                                p.text-sm Click on each row to see attendance of the session
                             .card-body.p-3
                                 .table-responsive
                                     //Class limited-rows-table - used to specify the max height and make scrollbars visible

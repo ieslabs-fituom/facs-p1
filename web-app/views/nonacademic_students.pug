@@ -78,11 +78,11 @@ block content
 
         var faculties,batches,degrees;
         $(document).ready(function() {
-            sideBarChange();
+            
             faculties = JSON.parse(JSON.stringify(!{JSON.stringify(faculties)}));
             batches = JSON.parse(JSON.stringify(!{JSON.stringify(batches)}));
             degrees = JSON.parse(JSON.stringify(!{JSON.stringify(degrees)}));
-            
+            sideBarChange();
             onFacultySelect();
         });
 
@@ -149,6 +149,7 @@ block content
         }
 
         function showStudentsTable(students){
+            console.log(faculties)
             var stu_table_row = document.getElementById("stu_table_row");
             var stu_table = document.getElementById("stu_table_body");
                 
