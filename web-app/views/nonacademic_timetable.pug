@@ -102,8 +102,10 @@ block content
                         groups = response.groups;
                         if(lectures.length==0){
                             window.alert("No lectures available for the selected day, batch and degree");
+                        }else{
+                            showLecturesTable(lectures, groups)  
                         }
-                        showLecturesTable(lectures, groups)  
+                        
                         console.log(lectures);
                         console.log(groups);
 

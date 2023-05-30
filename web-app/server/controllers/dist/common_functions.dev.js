@@ -132,7 +132,7 @@ exports.getDegreeDetails = function (conn, degrees) {
 
 exports.getEmployeeDetails = function (conn, params, columns) {
   return new Promise(function (resolve, reject) {
-    var sql = 'SELECT ' + columns.join() + ' FROM employees WHERE id IN (' + params.join() + ') ORDER BY id ASC';
+    var sql = 'SELECT ' + columns.join(',') + ' FROM employees WHERE id IN (' + params.join(',') + ') ORDER BY id ASC';
     console.log(sql);
     conn.query(sql, function (err, rows) {
       if (!err) {
