@@ -1,11 +1,4 @@
-const mysql = require('mysql2');
-
-/* 
-*   THIS CONTROLLER IS USED TO DEFINE COMMONLY USED FUNCTIONS
-*   EX : LOADING ALL DESTINATIONS, LOADING ALL FACULTIES, LOADING ALL DEPARTMENTS OF A PARTICULAR FACULTY
-*   ALWAYS SEND CONNECTION AS A PARAMETER TO THE COMMON FUNCTION FROM THE CONTROLLER
-*   CREATE FUNCTIONS AS MINIMIZING THE CODE (USE COLUMN LISTS TO RETRIEVE ONLY REQUIRED COLUMNS)
-*/
+ 
 
 
 // GET ALL DESIGNATIONS
@@ -130,10 +123,38 @@ exports.getDegreeDetails = (conn, degrees) => {
     })
 }
 
+// GET DETAILS OF A REQUIRED EMPLOYEE - GET COLUMNS WHICH ARE SPECIFIED IN COLUMNS PARAMETER USING THE IDs GIVEN IN PARAMS PARAMETER
+exports.getEmployeeDetails = (conn, params, columns) => {
+    return new Promise((resolve, reject) => {
+        let sql = 'SELECT ' + columns.join() + ' FROM employees WHERE id IN (' + params.join() + ') ORDER BY id ASC';
+        console.log(sql);
+        conn.query(sql, (err, rows) => {
+            if (!err) {
+                return resolve(rows);
+            } else {
+                return reject(err);
+            }
+        })
+    })
+}   
+
 // GET GROUPS OF EMPLOYEES USING EMPLOYEE ID
 exports.getGroupsofEmployee = (conn, employee_id) => {
     return new Promise((resolve, reject) => {
         conn.query('SELECT id,Emp_group FROM employees_of_groups WHERE Employee = ' + employee_id, (err, rows) => {
+            if (!err) {
+                return resolve(rows);
+            } else {
+                return reject(err);
+            }
+        })
+    })
+}
+
+// GET EMPLOYEES WHO ARE ASSIGNED TO A SPECIFIC GROUP AS id,Employee USING Emp_group from employees_of_groups
+exports.getEmployeesOfAGroup = (conn, group_id) => {
+    return new Promise((resolve, reject) => {
+        conn.query('SELECT id,Employee FROM employees_of_groups WHERE Emp_group = ' + group_id, (err, rows) => {
             if (!err) {
                 return resolve(rows);
             } else {
@@ -325,11 +346,77 @@ exports.getTimeTable = (conn, day, groups) => {
             sql = sql + element + ',';
         });
         sql = sql.substring(0, sql.length - 1);
-        sql = sql + ')';
+        sql = sql + ') ORDER BY Start_time ASC';
 
         conn.query(sql, (err, rows) => {
             if (!err) {
                 return resolve(rows);
+            } else {
+                return reject(err);
+            }
+        });
+    });
+}
+
+// GET ROW OF THE TIME TABLE USING ITS ID
+exports.getTimeTableUsingID = (conn, id) => {
+    return new Promise((resolve, reject) => {
+        let sql;
+        sql = 'SELECT id,T_group,Start_time,Duration,Method,Type,Session_repeat FROM timetable WHERE id=' + id;
+        
+        conn.query(sql, (err, rows) => {
+            if (!err) {
+                return resolve(rows);
+            } else {
+                return reject(err);
+            }
+        });
+    });
+}
+
+// INSERT INTO SESSIONS TO COLUMNS OF PARAMETER KEYS AND VALUES AS PARAMETER VALUES
+exports.addNewSession = (conn, keys, values) => {
+    return new Promise((resolve, reject) => {
+        let sql;
+        sql = 'INSERT INTO sessions (' + keys.join(',') + ') VALUES (' + values.join(',') + ')';
+        console.log(sql)
+
+        conn.query(sql, (err, result) => {
+            if (!err) {
+                return resolve(result);
+            } else {
+                return reject(err);
+            }
+        });
+    });
+}
+
+// ALTER ATTENDANCE TABLE ACCORDING TO GROUP (attendance_groupno) AND ADD COLUMN FOR SESSION (ses_sessionno)
+exports.addNewSessionToAttendance = (conn, group, session) => {
+    return new Promise((resolve, reject) => {
+        let sql;
+        sql = 'ALTER TABLE attendance_' + group + ' ADD ses' + session + ' varchar(20) NOT NULL DEFAULT "0" COMMENT "0 - absent, Timestamp - present, other(filename) - medical form"';
+        console.log(sql);
+
+        conn.query(sql, (err, result) => {
+            if (!err) {
+                return resolve(result);
+            } else {
+                return reject(err);
+            }
+        });
+    });
+}
+
+// DELETE ROW FROM TABLE SESSIONS WHERE ID = PARAMETER SESSION_ID
+exports.deleteSession = (conn, session_id) => {
+    return new Promise((resolve, reject) => {
+        let sql;
+        sql = 'DELETE FROM sessions WHERE id=' + session_id;
+
+        conn.query(sql, (err, result) => {
+            if (!err) {
+                return resolve(result);
             } else {
                 return reject(err);
             }

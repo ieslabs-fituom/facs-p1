@@ -18,4 +18,6 @@ router.get('/timetable', nonacademic_controller.timetable_view);
 router.get('/timetable/getlectures', nonacademic_controller.timetable_getlectures);
 router.get('/today/', nonacademic_controller.today_view);
 router.get('/today/getSessions/', nonacademic_controller.today_getsessions);
+router.get('/today/loadEmployeesOfGroup/', nonacademic_controller.today_loadEmployeesOfGroup);
+router.post('/today/addSessionUsingTimeTableID/', nonacademic_controller.today_addSession);
 module.exports = router;

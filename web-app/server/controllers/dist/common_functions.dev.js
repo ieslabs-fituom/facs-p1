@@ -1,15 +1,6 @@
 "use strict";
 
-var mysql = require('mysql2');
-/* 
-*   THIS CONTROLLER IS USED TO DEFINE COMMONLY USED FUNCTIONS
-*   EX : LOADING ALL DESTINATIONS, LOADING ALL FACULTIES, LOADING ALL DEPARTMENTS OF A PARTICULAR FACULTY
-*   ALWAYS SEND CONNECTION AS A PARAMETER TO THE COMMON FUNCTION FROM THE CONTROLLER
-*   CREATE FUNCTIONS AS MINIMIZING THE CODE (USE COLUMN LISTS TO RETRIEVE ONLY REQUIRED COLUMNS)
-*/
 // GET ALL DESIGNATIONS
-
-
 exports.getDesignations = function (conn) {
   return new Promise(function (resolve, reject) {
     conn.query('SELECT * FROM designations ORDER BY id ASC', function (err, rows) {
@@ -136,12 +127,40 @@ exports.getDegreeDetails = function (conn, degrees) {
       }
     });
   });
+}; // GET DETAILS OF A REQUIRED EMPLOYEE - GET COLUMNS WHICH ARE SPECIFIED IN COLUMNS PARAMETER USING THE IDs GIVEN IN PARAMS PARAMETER
+
+
+exports.getEmployeeDetails = function (conn, params, columns) {
+  return new Promise(function (resolve, reject) {
+    var sql = 'SELECT ' + columns.join() + ' FROM employees WHERE id IN (' + params.join() + ') ORDER BY id ASC';
+    console.log(sql);
+    conn.query(sql, function (err, rows) {
+      if (!err) {
+        return resolve(rows);
+      } else {
+        return reject(err);
+      }
+    });
+  });
 }; // GET GROUPS OF EMPLOYEES USING EMPLOYEE ID
 
 
 exports.getGroupsofEmployee = function (conn, employee_id) {
   return new Promise(function (resolve, reject) {
     conn.query('SELECT id,Emp_group FROM employees_of_groups WHERE Employee = ' + employee_id, function (err, rows) {
+      if (!err) {
+        return resolve(rows);
+      } else {
+        return reject(err);
+      }
+    });
+  });
+}; // GET EMPLOYEES WHO ARE ASSIGNED TO A SPECIFIC GROUP AS id,Employee USING Emp_group from employees_of_groups
+
+
+exports.getEmployeesOfAGroup = function (conn, group_id) {
+  return new Promise(function (resolve, reject) {
+    conn.query('SELECT id,Employee FROM employees_of_groups WHERE Emp_group = ' + group_id, function (err, rows) {
       if (!err) {
         return resolve(rows);
       } else {
@@ -339,10 +358,72 @@ exports.getTimeTable = function (conn, day, groups) {
       sql = sql + element + ',';
     });
     sql = sql.substring(0, sql.length - 1);
-    sql = sql + ')';
+    sql = sql + ') ORDER BY Start_time ASC';
     conn.query(sql, function (err, rows) {
       if (!err) {
         return resolve(rows);
+      } else {
+        return reject(err);
+      }
+    });
+  });
+}; // GET ROW OF THE TIME TABLE USING ITS ID
+
+
+exports.getTimeTableUsingID = function (conn, id) {
+  return new Promise(function (resolve, reject) {
+    var sql;
+    sql = 'SELECT id,T_group,Start_time,Duration,Method,Type,Session_repeat FROM timetable WHERE id=' + id;
+    conn.query(sql, function (err, rows) {
+      if (!err) {
+        return resolve(rows);
+      } else {
+        return reject(err);
+      }
+    });
+  });
+}; // INSERT INTO SESSIONS TO COLUMNS OF PARAMETER KEYS AND VALUES AS PARAMETER VALUES
+
+
+exports.addNewSession = function (conn, keys, values) {
+  return new Promise(function (resolve, reject) {
+    var sql;
+    sql = 'INSERT INTO sessions (' + keys.join(',') + ') VALUES (' + values.join(',') + ')';
+    console.log(sql);
+    conn.query(sql, function (err, result) {
+      if (!err) {
+        return resolve(result);
+      } else {
+        return reject(err);
+      }
+    });
+  });
+}; // ALTER ATTENDANCE TABLE ACCORDING TO GROUP (attendance_groupno) AND ADD COLUMN FOR SESSION (ses_sessionno)
+
+
+exports.addNewSessionToAttendance = function (conn, group, session) {
+  return new Promise(function (resolve, reject) {
+    var sql;
+    sql = 'ALTER TABLE attendance_' + group + ' ADD ses' + session + ' varchar(20) NOT NULL DEFAULT "0" COMMENT "0 - absent, Timestamp - present, other(filename) - medical form"';
+    console.log(sql);
+    conn.query(sql, function (err, result) {
+      if (!err) {
+        return resolve(result);
+      } else {
+        return reject(err);
+      }
+    });
+  });
+}; // DELETE ROW FROM TABLE SESSIONS WHERE ID = PARAMETER SESSION_ID
+
+
+exports.deleteSession = function (conn, session_id) {
+  return new Promise(function (resolve, reject) {
+    var sql;
+    sql = 'DELETE FROM sessions WHERE id=' + session_id;
+    conn.query(sql, function (err, result) {
+      if (!err) {
+        return resolve(result);
       } else {
         return reject(err);
       }
