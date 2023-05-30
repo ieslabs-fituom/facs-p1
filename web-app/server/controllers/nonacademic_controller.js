@@ -584,7 +584,7 @@ exports.past_get_groups = async (req, res) => {
 exports.past_get_sessions = async (req, res) => {
     let group = req.query.group;
 
-    let groups = [group], sessions;
+    let groups = [group], sessions, lecturers;
 
     try {
         sessions = await commonFunctions.getSessions(conn, groups, 1);
@@ -594,7 +594,20 @@ exports.past_get_sessions = async (req, res) => {
         res.send({ status: '500', sessions: sessions });
     }
 
-    res.send({ status: '200', sessions: sessions });
+    let lec_id = [];
+    for(let session of sessions){
+        lec_id.push(session.Lecturer);
+    }
+
+    lec_id = [...new Set(lec_id)];
+    try{
+        lecturers = await commonFunctions.getEmployeeDetails(conn, lec_id, ['id','Name']);
+    } catch(e){
+        console.log('Error : ' + e);
+        res.send({ status: '500', sessions: sessions, lecturers: lecturers });
+    }
+
+    res.send({ status: '200', sessions: sessions, lecturers: lecturers });
 
 }
 

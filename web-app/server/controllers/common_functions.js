@@ -126,7 +126,7 @@ exports.getDegreeDetails = (conn, degrees) => {
 // GET DETAILS OF A REQUIRED EMPLOYEE - GET COLUMNS WHICH ARE SPECIFIED IN COLUMNS PARAMETER USING THE IDs GIVEN IN PARAMS PARAMETER
 exports.getEmployeeDetails = (conn, params, columns) => {
     return new Promise((resolve, reject) => {
-        let sql = 'SELECT ' + columns.join() + ' FROM employees WHERE id IN (' + params.join() + ') ORDER BY id ASC';
+        let sql = 'SELECT ' + columns.join(',') + ' FROM employees WHERE id IN (' + params.join(',') + ') ORDER BY id ASC';
         console.log(sql);
         conn.query(sql, (err, rows) => {
             if (!err) {
