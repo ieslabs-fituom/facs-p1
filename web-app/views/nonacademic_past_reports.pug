@@ -74,14 +74,15 @@ block content
 
         var batches,modules,groups,degrees, attendances, selectedSessionID; // selectedSessionID - value is assigned for this when an user select a session from session
         $(document).ready(function() {
-            sideBarChange();
             batches = JSON.parse(JSON.stringify(!{JSON.stringify(batches)}));
             modules = JSON.parse(JSON.stringify(!{JSON.stringify(modules)}));
             degrees = JSON.parse(JSON.stringify(!{JSON.stringify(degrees)}));
+            sideBarChange();
         });
 
         // HIGHLIGHTING RELATED OPTION IN SIDEBAR
         function sideBarChange(){
+            //console.log(modules);
             document.getElementById("students-nav-link").classList.remove('active');
             document.getElementById("today-nav-link").classList.remove('active');
             document.getElementById("pastreports-nav-link").classList.add('active');
@@ -99,6 +100,7 @@ block content
 
         // SEARCH GROUPS AFTER CHANGING THE MODULE IN MODULE SELECT 
         function searchGroups(){
+            console.log(modules);
             let selectedModule = document.getElementById("module_select").value;
             let selectedBatch = document.getElementById("batch_select").value;
             var groupDatalist = document.getElementById("group_datalist");
@@ -116,7 +118,7 @@ block content
                     break;
                 }
             }
-
+            
             if(!validModule){
                 clearSelectOptions(groupDatalist);
                 window.alert("Invalid module code");
