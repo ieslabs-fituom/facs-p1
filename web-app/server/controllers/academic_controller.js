@@ -54,7 +54,7 @@ exports.view = async (req, res) => {
 
     // RETRIEVING DETAILS OF LOADED GROUPS
     try{
-        groups_of_employee = await commonFunctions.getStudentGroupDetails(conn,group_ids,1);
+        groups_of_employee = await commonFunctions.getStudentGroupDetails(conn,group_ids,null,1);
         console.log(groups_of_employee);
     }catch(e){
         console.log('Error : ' + e);
