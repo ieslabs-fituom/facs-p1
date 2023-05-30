@@ -1,31 +1,31 @@
 doctype html
 
 head
-  meta(charset='utf-8')
-  meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
-  link(rel='apple-touch-icon' sizes='76x76' href='../static/assets/img/apple-icon.png')
-  link(rel='icon' type='image/png' href='../static/assets/img/logos/university/uom.png')
-  script(src='../static/assets/js/core/popper.min.js')
-  script(src='../static/assets/js/core/bootstrap.min.js')
-  script(src='../static/assets/js/plugins/perfect-scrollbar.min.js')
-  script(src='../static/assets/js/plugins/smooth-scrollbar.min.js')
-  script(src='../static/assets/js/core/jquery-3.6.3.min.js')
-  // Github buttons
-  script(async='' defer='' src='https://buttons.github.io/buttons.js')
-  script(src='../static/assets/js/plugins/chartjs.min.js')
-  title
-    | Academic - Faculty Access Control System
-  // Fonts and icons
-  link(href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet')
-  // Nucleo Icons
-  link(href='../static/assets/css/nucleo-icons.css' rel='stylesheet')
-  link(href='../static/assets/css/nucleo-svg.css' rel='stylesheet')
-  // Font Awesome Icons
-  script(src='https://kit.fontawesome.com/42d5adcbca.js' crossorigin='anonymous')
-  link(href='../static/assets/css/nucleo-svg.css' rel='stylesheet')
-  // CSS Files
-  link#pagestyle(href='../static/assets/css/argon-dashboard.css?v=2.0.4' rel='stylesheet')
-  link#pagestyle(href='../static/assets/css/navbar-custom.css' rel='stylesheet')
+    meta(charset='utf-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    link(rel='apple-touch-icon' sizes='76x76' href='../static/assets/img/apple-icon.png')
+    link(rel='icon' type='image/png' href='../static/assets/img/logos/university/uom.png')
+    script(src='../static/assets/js/core/jquery-3.6.3.min.js')
+    script(src='../static/assets/js/core/popper.min.js')
+    script(src='../static/assets/js/core/bootstrap.min.js')
+    script(src='../static/assets/js/plugins/perfect-scrollbar.min.js')
+    script(src='../static/assets/js/plugins/smooth-scrollbar.min.js')
+    // Github buttons
+    script(async='' defer='' src='https://buttons.github.io/buttons.js')
+    script(src='../static/assets/js/plugins/chartjs.min.js')
+    title
+      | Academic - Faculty Access Control System
+    // Fonts and icons
+    link(href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet')
+    // Nucleo Icons
+    link(href='../static/assets/css/nucleo-icons.css' rel='stylesheet')
+    link(href='../static/assets/css/nucleo-svg.css' rel='stylesheet')
+    // Font Awesome Icons
+    script(src='https://kit.fontawesome.com/42d5adcbca.js' crossorigin='anonymous')
+    link(href='../static/assets/css/nucleo-svg.css' rel='stylesheet')
+    // CSS Files
+    link#pagestyle(href='../static/assets/css/argon-dashboard.css?v=2.0.4' rel='stylesheet')
+    link#pagestyle(href='../static/assets/css/navbar-custom.css' rel='stylesheet')
 
 
 body.g-sidenav-show.bg-gray-100
@@ -131,62 +131,7 @@ body.g-sidenav-show.bg-gray-100
               li.nav-item
                 a.nav-link.text-muted(href='https://uom.lk' target='_blank') UOM
     // Footer End
-  .fixed-plugin
-    a.fixed-plugin-button.text-dark.position-fixed.px-3.py-2
-      i.fa.fa-cog.py-2  
-    .card.shadow-lg
-      .card-header.pb-0.pt-3
-        .float-start
-          h5.mt-3.mb-0 Argon Configurator
-          p See our dashboard options.
-        .float-end.mt-4
-          button.btn.btn-link.text-dark.p-0.fixed-plugin-close-button
-            i.fa.fa-close
-        // End Toggle Button
-      hr.horizontal.dark.my-1
-      .card-body.pt-sm-3.pt-0.overflow-auto
-        // Sidebar Backgrounds
-        div
-          h6.mb-0 Sidebar Colors
-        a.switch-trigger.background-color(href='javascript:void(0)')
-          .badge-colors.my-2.text-start
-            span.badge.filter.bg-gradient-primary.active(data-color='primary' onclick='sidebarColor(this)')
-            span.badge.filter.bg-gradient-dark(data-color='dark' onclick='sidebarColor(this)')
-            span.badge.filter.bg-gradient-info(data-color='info' onclick='sidebarColor(this)')
-            span.badge.filter.bg-gradient-success(data-color='success' onclick='sidebarColor(this)')
-            span.badge.filter.bg-gradient-warning(data-color='warning' onclick='sidebarColor(this)')
-            span.badge.filter.bg-gradient-danger(data-color='danger' onclick='sidebarColor(this)')
-        // Sidenav Type
-        .mt-3
-          h6.mb-0 Sidenav Type
-          p.text-sm Choose between 2 different sidenav types.
-        .d-flex
-          button.btn.bg-gradient-primary.w-100.px-3.mb-2.active.me-2(data-class='bg-white' onclick='sidebarType(this)') White
-          button.btn.bg-gradient-primary.w-100.px-3.mb-2(data-class='bg-default' onclick='sidebarType(this)') Dark
-        p.text-sm.d-xl-none.d-block.mt-2 You can change the sidenav type just on desktop view.
-        // Navbar Fixed
-        .d-flex.my-3
-          h6.mb-0 Navbar Fixed
-          .form-check.form-switch.ps-0.ms-auto.my-auto
-            input#navbarFixed.form-check-input.mt-1.ms-auto(type='checkbox' onclick='navbarFixed(this)')
-        hr.horizontal.dark.my-sm-4
-        .mt-2.mb-5.d-flex
-          h6.mb-0 Light / Dark
-          .form-check.form-switch.ps-0.ms-auto.my-auto
-            input#dark-version.form-check-input.mt-1.ms-auto(type='checkbox' onclick='darkMode(this)')
-        a.btn.bg-gradient-dark.w-100(href='https://www.creative-tim.com/product/argon-dashboard')
-          | Free
-          | Download
-        a.btn.btn-outline-dark.w-100(href='https://www.creative-tim.com/learning-lab/bootstrap/license/argon-dashboard') View documentation
-        .w-100.text-center
-          a.github-button(href='https://github.com/creativetimofficial/argon-dashboard' data-icon='octicon-star' data-size='large' data-show-count='true' aria-label='Star creativetimofficial/argon-dashboard on GitHub') Star
-          h6.mt-3 Thank you for sharing!
-          a.btn.btn-dark.mb-0.me-2(href='https://twitter.com/intent/tweet?text=Check%20Argon%20Dashboard%20made%20by%20%40CreativeTim%20%23webdesign%20%23dashboard%20%23bootstrap5&url=https%3A%2F%2Fwww.creative-tim.com%2Fproduct%2Fargon-dashboard' target='_blank')
-            i.fab.fa-twitter.me-1(aria-hidden='true')
-            |  Tweet
-          a.btn.btn-dark.mb-0.me-2(href='https://www.facebook.com/sharer/sharer.php?u=https://www.creative-tim.com/product/argon-dashboard' target='_blank')
-            i.fab.fa-facebook-square.me-1(aria-hidden='true')
-            |  Share
+  
 
 // Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc
 script(src='../static/assets/js/argon-dashboard.min.js?v=2.0.4')

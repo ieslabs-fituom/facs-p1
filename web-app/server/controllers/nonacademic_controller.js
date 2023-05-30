@@ -64,7 +64,7 @@ exports.today_getsessions = async (req, res) => {
     }
 
     let group_ids = []
-    for (session in sessions) {
+    for (let session in sessions) {
         group_ids.push(sessions[session].Ses_group);
     }
 
@@ -120,6 +120,138 @@ exports.today_getsessions = async (req, res) => {
     }
 
     res.send({ status: '200', sessions: finalSessions, groups: groups });
+}
+
+// LOAD EMPLOYEES (LECTURERS) WHO ARE ASSIGNED TO SPECIFIC GROUP
+exports.today_loadEmployeesOfGroup = async (req, res) => {
+    let group_id = req.query.group_id;
+
+    let employees = [];
+
+    try {
+        employees = await commonFunctions.getEmployeesOfAGroup(conn, group_id);
+        console.log('employees of group');
+        console.log(employees);
+    } catch (e) {
+        console.log(e);
+        res.send({ status: '500', employees: [] });
+        return;
+    }
+
+    let emp_ids = [];
+    for(emp in employees){
+        emp_ids.push(employees[emp].Employee);
+    }
+
+    try{
+        employees = await commonFunctions.getEmployeeDetails(conn, emp_ids,['id','Name']);
+        console.log('employee details');
+        console.log(employees);
+    } catch(e){
+        console.log(e);
+        res.send({ status: '500', employees: [] });
+        return;
+    }
+
+    res.send({ status: '200', employees: employees });
+}
+
+// ADD SESSION USING TIMETABLE ID AND EMPLOYEE ID
+exports.today_addSession = async (req, res) => {
+    let timeTableID = req.body.timeTableID;
+    let employeeID = req.body.employeeID;
+    let group = [];
+    group.push(req.body.group);
+
+    let timeTableRow;
+    try{
+        timeTableRow = await commonFunctions.getTimeTableUsingID(conn, timeTableID);
+        console.log('timeTableRow');
+        console.log(timeTableRow);
+    } catch(e){
+        console.log(e);
+        res.send({ status: '500', error: e });
+        return;
+    }
+
+    //let date = new Date().getDate().toLocaleString("en-UK", {timeZone: 'Asia/Kolkata'});
+    //let d = date.getDate();
+    let date = new Date();
+    let dateString = date.getFullYear() + '-' + (date.getMonth()+1).toString().padStart(2, "0") + '-' + date.getDate().toString().padStart(2, "0");
+    timeTableRow[0].Start_time = dateString + ' ' + timeTableRow[0].Start_time;
+    let Session = {
+        Ses_group: timeTableRow[0].T_group,
+        Start_time: '"' + timeTableRow[0].Start_time + '"',
+        Duration: timeTableRow[0].Duration,
+        Method: timeTableRow[0].Method,
+        Type: timeTableRow[0].Type,
+        Lecturer: employeeID,
+    }
+
+    let keys = Object.keys(Session);
+    let values = Object.values(Session);
+    console.log(keys);
+    console.log(values);
+    console.log(dateString);
+
+    let result;
+    try{
+        result = await commonFunctions.addNewSession(conn,keys,values);
+        console.log(result);
+        result = result.insertId;
+    } catch(e){
+        console.log(e);
+        res.send({ status: '500', error: e });
+        return;
+    }
+
+    let result2;
+    try{
+        result2 = await commonFunctions.addNewSessionToAttendance(conn, group[0], result);
+        console.log(result2);
+    } catch(e){
+        console.log('yes 1');
+        try{
+            console.log('yes 2');
+            result2 = await commonFunctions.deleteSession(conn, result);
+        } catch(e){
+            console.log('yes 4');
+            console.log(e);
+            res.send({ status: '501', error: e });
+            return;
+        }
+        console.log('yes 3')
+        console.log(e);
+        res.send({ status: '500', error: e });
+        return;
+    }
+
+    console.log('yes 5');
+    try{
+        group = await commonFunctions.getStudentGroupDetails(conn, group, null, 1);
+        console.log('group');
+        console.log(group);
+    } catch(e){
+        console.log(e);
+        res.send({ status: '201', session: result });
+        return;
+    }
+
+
+    let modules = [];
+    modules.push(group[0].Module);
+    try{
+        modules = await commonFunctions.getModuleDetails(conn, modules);
+        console.log('module');
+        console.log(modules);
+    } catch(e){
+        console.log(e);
+        res.send({ status: '201', session: result });
+        return;
+    }
+
+    res.send({status: '200', session: result, Start_time: values[1], module: modules});
+    
 }
 
 exports.sem_view = async (req, res) => {
