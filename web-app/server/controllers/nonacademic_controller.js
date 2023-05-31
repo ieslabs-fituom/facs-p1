@@ -256,30 +256,12 @@ exports.today_addSession = async (req, res) => {
 
 exports.sem_view = async (req, res) => {
     console.log('Starting controller...');
-    var employee_details, modules = [], batches = [], departments = [];
+    var employee_details;
 
     employee_details = await loadInitialDetails();
 
-    // RETRIEVING ALL MODULES
-    try {
-        modules = await commonFunctions.getModuleDetails(conn, null);
-        console.log(modules);
-    } catch (e) {
-        console.log('Error : ' + e);
-    }
-
-    // RETRIEVING ALL DEPARTMENTS
-    try {
-        departments = await commonFunctions.getDepartments(conn, null);
-        console.log(departments);
-    } catch (e) {
-        console.log('Error : ' + e);
-    }
-
-    console.log('finishing...');
-
     // RENDERING THE VIEW
-    res.render('nonacademic_semester', { employee: employee_details, modules: modules, departments: departments });
+    res.render('nonacademic_semester', { employee: employee_details});
 }
 
 exports.stu_view = async (req, res) => {
@@ -594,6 +576,11 @@ exports.past_get_sessions = async (req, res) => {
         res.send({ status: '500', sessions: sessions });
     }
 
+    if(sessions.length == 0){
+        res.send({ status: '200', sessions: sessions });
+        return;
+    }
+
     let lec_id = [];
     for(let session of sessions){
         lec_id.push(session.Lecturer);
@@ -855,7 +842,7 @@ async function load_attendance_of_a_student(groups) {
 // GET EMPLOYEE DETAILS, MATCHING DESIGNATIONS
 async function loadInitialDetails() {
     var employee_details, designations;
-
+    console.log(process.env.CURRENT_ID);
     // RETRIEVING ID AND THE DESIGNATION OF THE EMPLOYEE
     try {
         employee_details = await getEmployeeDetails(process.env.CURRENT_ID, ['Name', 'Designation']);

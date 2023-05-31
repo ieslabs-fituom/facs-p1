@@ -33,20 +33,10 @@ app.set('view engine', 'pug');
 
 const academic_route = require('./server/routes/academic_route');
 const nonacademic_route = require('./server/routes/nonacademic_route');
+const common_route = require('./server/routes/common_route');
 app.use('/ac/', academic_route);
 app.use('/nac/', nonacademic_route);
-
-// Common Routes
-// Sign In route
-app.get('/', (req, res) => {
-  res.render('sign-in');
-});
-app.get('/signin', (req, res) => {
-  res.render('sign-in');
-});
-app.get('/signup', (req, res) => {
-  res.render('sign-in');
-});
+app.use('/', common_route);
 
 // UNCOMENT FOLLOWING BLOCK TO CHANGE LOADING SCREEN TO REQUIRED VIEW : CHANGE 'sample_view' TO REQUIRED VIEW
 /*app.get('/', (req, res) => {
