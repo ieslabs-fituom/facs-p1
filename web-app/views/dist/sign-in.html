@@ -12,7 +12,7 @@
   <!-- Github buttons-->
   <script async="" defer="" src="https://buttons.github.io/buttons.js"></script>
   <script src="../static/assets/js/plugins/chartjs.min.js"></script>
-  <title>Academic - Faculty Access Control System</title>
+  <title>Sign In - Faculty Access Control System</title>
   <!-- Fonts and icons-->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet"/>
   <!-- Nucleo Icons-->
@@ -25,52 +25,85 @@
   <link id="pagestyle" href="../static/assets/css/argon-dashboard.css?v=2.0.4" rel="stylesheet"/>
   <link id="pagestyle" href="../static/assets/css/navbar-custom.css" rel="stylesheet"/>
 </head>
-<body class="g-sidenav-show bg-gray-100" style="background-image: url(../static/assets/img/banners/fit_banner.jpg);              background-size: cover;"><span class="mask bg-gray-900 opacity-8"></span>
-  <main class="main-content mt-0">
-    <section>
-      <div class="page-header min-vh-100">
-        <div class="container">
-          <div class="row">
-            <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
-              <div class="card card-plain">
-                <div class="card-header pb-0 text-start bg-transparent">
-                  <h4 class="font-weight-bolder text-white">Sign In</h4>
-                  <p class="mb-0 text-white">Enter your email and password to sign in</p>
-                </div>
-                <div class="card-body">
-                  <form role="form">
-                    <div class="mb-3">
-                      <input class="form-control form-control-lg" type="email" placeholder="Email" aria-label="Email" id="email"/>
-                    </div>
-                    <div class="mb-3">
-                      <input class="form-control form-control-lg" type="email" placeholder="Password" aria-label="Password" id="password"/>
-                    </div>
-                    <div class="text-center">
-                      <button class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0" type="button" onclick="continueLogin()">Sign in</button>
-                    </div>
-                  </form>
-                </div>
+<body class="g-sidenav-show bg-gray-100" style="background-image: url(../static/assets/img/banners/fit_banner.jpg);  background-size: cover;"></body><span class="mask bg-gray-900 opacity-8"></span>
+<main class="main-content mt-0">
+  <section>
+    <div class="page-header min-vh-100">
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
+            <div class="card card-plain">
+              <div class="card-header pb-0 text-start bg-transparent">
+                <h4 class="font-weight-bolder text-white">Sign In</h4>
+                <p class="mb-0 text-white">Enter your email and password to sign in</p>
+              </div>
+              <div class="card-body">
+                <form role="form">
+                  <div class="mb-3">
+                    <input class="form-control form-control-lg" type="email" placeholder="Email" aria-label="Email" required="required" id="email"/>
+                  </div>
+                  <div class="mb-3">
+                    <input class="form-control form-control-lg" type="password" placeholder="Password" aria-label="Password" required="required" id="password"/>
+                  </div>
+                  <div class="text-center">
+                    <button class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0" type="button" onclick="continueLogin()">Sign in</button>
+                  </div>
+                </form>
               </div>
             </div>
-            <div class="col-6 d-lg-flex d-none h-50 my-auto pe-0 position-absolute end-0 text-center justify-content-center flex-column border-start-sm">
-              <div class="position-relative h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden"><img class="ms-auto me-auto position-relative" src="../static/assets/img/logos/university/uom.png" alt="logo" style="width: 150px;"/>
-                <h4 class="mt-5 text-white font-weight-bolder position-relative">Faculty of Information Technology</h4>
-                <p class="text-white position-relative">Student Attendance Portal</p>
-              </div>
+          </div>
+          <div class="col-6 d-lg-flex d-none h-50 my-auto pe-0 position-absolute end-0 text-center justify-content-center flex-column border-start-sm">
+            <div class="position-relative h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden"><img class="ms-auto me-auto position-relative" src="../static/assets/img/logos/university/uom.png" alt="logo" style="width: 150px;"/>
+              <h4 class="mt-5 text-white font-weight-bolder position-relative">Faculty of Information Technology</h4>
+              <p class="text-white position-relative">Student Attendance Portal</p>
             </div>
           </div>
         </div>
       </div>
-    </section>
-  </main>
-</body>
+    </div>
+  </section>
+</main>
 <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc-->
-<script src="../static/assets/js/argon-dashboard.min.js?v=2.0.4">
-  <script>
-    function continueLogin(){
-      let email = document.getElementById("email");
-      console.log(email);
-    
-    } 
-  </script>
+<script src="../static/assets/js/argon-dashboard.min.js?v=2.0.4"></script>
+<script>
+  function continueLogin(){
+    let email = document.getElementById("email").value;
+    let pword = document.getElementById("password").value;
+  
+    if(email=='' || pword==''){
+      window.alert("Please fill all the fields");
+      return;
+    }
+  
+    email = email.toLowerCase();
+    email = email.trim();
+  
+    $.ajax({
+      type: 'POST',
+      url: '/signin/contdsign',
+      data: {
+        email: email,
+      },
+      dataType: 'json',
+      encode: true
+        }).always(function (response) {
+          if(response.status=='200'){
+            if(response.type == '5'){
+              window.location.href = "/nac/today";
+            }else{
+              window.alert('Academic staffs are not allowed to sign in here yet')
+            }
+            
+          }else if(response.status=='201'){
+            window.alert("User not found");   
+            console.log('error 201');
+          }else if(response.status=='500'){
+            window.alert("Error occured while sign in (500)");   
+            console.log('error 500');
+          }else{
+            window.alert("Error occured while sign in");   
+            console.log('error');
+          }
+        });
+  } 
 </script>
