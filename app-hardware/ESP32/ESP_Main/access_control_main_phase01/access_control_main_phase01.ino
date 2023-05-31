@@ -24,15 +24,15 @@
 
 
 //PIN DEFINITIONS HERE
-#define RC522_RST_PIN        22
+#define RC522_RST_PIN        5
 #define RC522_SS_PIN          21 
-#define RDM6300_RX_PIN        5
+#define RDM6300_RX_PIN        13
 
 //VARIABLES AND CONSTANTS DEFINITION HERE
 unsigned long uid = 0;
-const char* ssid     = "Among_Us";
-const char* password = "lakmina2055176";
-const char* serverName = "http://192.168.115.177:80/post-esp-data.php";
+const char* ssid     = "TCK Wifi Portable";
+const char* password = "nothingtosay";
+const char* serverName = "http://192.168.8.203:80/post-esp-data.php";
 String apiKeyValue = "testapikey";
 String time_string;
 
@@ -49,7 +49,7 @@ LiquidCrystal_I2C lcd(0x3F,16,2);
 void setup() {
 
   //LIBRARY INITIALTIONS
-  Serial.begin(115200);
+  Serial.begin(9600);
   SPI.begin();
   mfrc522.PCD_Init();
   delay(4); //added this delay cus mc is slower than we expected. It takes some time to start the initiation
