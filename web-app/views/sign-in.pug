@@ -1,0 +1,67 @@
+head
+    meta(charset='utf-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    link(rel='apple-touch-icon' sizes='76x76' href='../static/assets/img/apple-icon.png')
+    link(rel='icon' type='image/png' href='../static/assets/img/logos/university/uom.png')
+    script(src='../static/assets/js/core/jquery-3.6.3.min.js')
+    script(src='../static/assets/js/core/popper.min.js')
+    script(src='../static/assets/js/core/bootstrap.min.js')
+    script(src='../static/assets/js/plugins/perfect-scrollbar.min.js')
+    script(src='../static/assets/js/plugins/smooth-scrollbar.min.js')
+    // Github buttons
+    script(async='' defer='' src='https://buttons.github.io/buttons.js')
+    script(src='../static/assets/js/plugins/chartjs.min.js')
+    title
+      | Academic - Faculty Access Control System
+    // Fonts and icons
+    link(href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet')
+    // Nucleo Icons
+    link(href='../static/assets/css/nucleo-icons.css' rel='stylesheet')
+    link(href='../static/assets/css/nucleo-svg.css' rel='stylesheet')
+    // Font Awesome Icons
+    script(src='https://kit.fontawesome.com/42d5adcbca.js' crossorigin='anonymous')
+    link(href='../static/assets/css/nucleo-svg.css' rel='stylesheet')
+    // CSS Files
+    link#pagestyle(href='../static/assets/css/argon-dashboard.css?v=2.0.4' rel='stylesheet')
+    link#pagestyle(href='../static/assets/css/navbar-custom.css' rel='stylesheet')
+
+
+body.g-sidenav-show.bg-gray-100(style="background-image: url(../static/assets/img/banners/fit_banner.jpg);\
+              background-size: cover;")
+  span.mask.bg-gray-900.opacity-8
+  main.main-content.mt-0
+    section
+      .page-header.min-vh-100
+        .container
+          .row
+            .col-xl-4.col-lg-5.col-md-7.d-flex.flex-column.mx-lg-0.mx-auto
+              .card.card-plain
+                .card-header.pb-0.text-start.bg-transparent
+                  h4.font-weight-bolder.text-white Sign In
+                  p.mb-0.text-white Enter your email and password to sign in
+                .card-body
+                  form(role='form')
+                    .mb-3
+                      input.form-control.form-control-lg(type='email' placeholder='Email' aria-label='Email')#email
+                    .mb-3
+                      input.form-control.form-control-lg(type='email' placeholder='Password' aria-label='Password')#password
+                    .text-center
+                      button.btn.btn-lg.btn-primary.btn-lg.w-100.mt-4.mb-0(type='button' onclick="continueLogin()") Sign in
+            .col-6.d-lg-flex.d-none.h-50.my-auto.pe-0.position-absolute.end-0.text-center.justify-content-center.flex-column.border-start-sm
+              .position-relative.h-100.m-3.px-7.border-radius-lg.d-flex.flex-column.justify-content-center.overflow-hidden
+                
+                img.ms-auto.me-auto.position-relative(src='../static/assets/img/logos/university/uom.png' alt='logo' style='width: 150px;')
+                h4.mt-5.text-white.font-weight-bolder.position-relative Faculty of Information Technology
+                p.text-white.position-relative Student Attendance Portal
+
+  
+
+// Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc
+script(src='../static/assets/js/argon-dashboard.min.js?v=2.0.4')
+
+  script.
+    function continueLogin(){
+      let email = document.getElementById("email");
+      console.log(email);
+
+    } 
