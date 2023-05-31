@@ -44,6 +44,9 @@ app.get('/', (req, res) => {
 app.get('/signin', (req, res) => {
   res.render('sign-in');
 });
+app.get('/signup', (req, res) => {
+  res.render('sign-in');
+});
 
 // UNCOMENT FOLLOWING BLOCK TO CHANGE LOADING SCREEN TO REQUIRED VIEW : CHANGE 'sample_view' TO REQUIRED VIEW
 /*app.get('/', (req, res) => {
