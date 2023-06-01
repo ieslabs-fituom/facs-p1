@@ -20,4 +20,5 @@ router.get('/today/', nonacademic_controller.today_view);
 router.get('/today/getSessions/', nonacademic_controller.today_getsessions);
 router.get('/today/loadEmployeesOfGroup/', nonacademic_controller.today_loadEmployeesOfGroup);
 router.post('/today/addSessionUsingTimeTableID/', nonacademic_controller.today_addSession);
+router.get('/semester/', nonacademic_controller.sem_view);
 module.exports = router;

@@ -3,6 +3,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const pug = require('pug');
 const mysql = require('mysql2');
+const crypto = require('crypto');
 
 
 // DOTENV LOAD ENVIRONMENT VARIABLES IN .ENV FILE AS PROCESS.ENV.<PROPERTY_NAME>
@@ -32,8 +33,10 @@ app.set('view engine', 'pug');
 
 const academic_route = require('./server/routes/academic_route');
 const nonacademic_route = require('./server/routes/nonacademic_route');
+const common_route = require('./server/routes/common_route');
 app.use('/ac/', academic_route);
 app.use('/nac/', nonacademic_route);
+app.use('/', common_route);
 
 // UNCOMENT FOLLOWING BLOCK TO CHANGE LOADING SCREEN TO REQUIRED VIEW : CHANGE 'sample_view' TO REQUIRED VIEW
 /*app.get('/', (req, res) => {
