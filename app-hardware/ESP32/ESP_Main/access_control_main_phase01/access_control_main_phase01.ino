@@ -14,25 +14,23 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <Wire.h>
-#include "RTClib.h"
+#include <RTClib.h>
 #include <LiquidCrystal_I2C.h>
 
 
 
 
 
-
-
 //PIN DEFINITIONS HERE
-#define RC522_RST_PIN        5
-#define RC522_SS_PIN          21 
+#define RC522_RST_PIN        15
+#define RC522_SS_PIN          5 
 #define RDM6300_RX_PIN        13
 
 //VARIABLES AND CONSTANTS DEFINITION HERE
 unsigned long uid = 0;
-const char* ssid     = "TCK Wifi Portable";
-const char* password = "nothingtosay";
-const char* serverName = "http://192.168.8.203:80/post-esp-data.php";
+const char* ssid     = "Iman_WIFI";
+const char* password = "12345678";
+const char* serverName = "http://192.168.8.142:80/post-esp-data.php";
 String apiKeyValue = "testapikey";
 String time_string;
 
@@ -40,8 +38,8 @@ String time_string;
 //PIN DEFINITIONS
 MFRC522 mfrc522(RC522_SS_PIN, RC522_RST_PIN);
 Rdm6300 rdm6300;
-RTC_DS1307 rtc;
-LiquidCrystal_I2C lcd(0x3F,16,2);
+RTC_DS3231 rtc;
+LiquidCrystal_I2C lcd(0x27,16,2);
 
 
 
@@ -49,13 +47,25 @@ LiquidCrystal_I2C lcd(0x3F,16,2);
 void setup() {
 
   //LIBRARY INITIALTIONS
-  Serial.begin(9600);
+  Serial.begin(115200);
   SPI.begin();
   mfrc522.PCD_Init();
   delay(4); //added this delay cus mc is slower than we expected. It takes some time to start the initiation
   rdm6300.begin(RDM6300_RX_PIN);
-  //DS3231 RTC
+
+
+  // DS3231 RTC setup
+  Wire.begin();
   rtc.begin();
+  if (! rtc.begin()) {
+    Serial.println("Couldn't find RTC");
+  }
+  if (rtc.lostPower()) {
+    Serial.println("RTC lost power. Please Set Time!");
+    rtc.adjust(DateTime(2023, 4, 11, 12, 25, 0));
+  }
+
+
   //LCD DISPLAY
   lcd.init();
   lcd.clear();
@@ -96,17 +106,17 @@ unsigned long getID522(){
 
 void loop() {
   
-  if (!rdm6300.get_new_tag_id()){
-      delay(1000);
+  if (rdm6300.get_new_tag_id()){
+      delay(100);
       uid = rdm6300.get_tag_id();
-      delay(1000);
+      delay(100);
     }
   delay(30);
 
-  if(mfrc522.PICC_IsNewCardPresent()) {
+ if(mfrc522.PICC_IsNewCardPresent()) {
       uid = getID522();
   
-  }
+  } 
   delay(30);
   
 
