@@ -5183,6 +5183,15 @@ fieldset:disabled .btn {
   border-radius: var(--bs-card-border-radius);
 }
 
+.card-hover{
+  transition: all 0.3s ease-in-out;
+  background-color: #dee2e6 !important;
+}
+
+.card-hover:hover{
+  background-color: #e9ecef !important;
+}
+
 .card > hr {
   margin-right: 0;
   margin-left: 0;
