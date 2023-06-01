@@ -7,7 +7,9 @@ var jwt = require('jsonwebtoken');
 
 var pug = require('pug');
 
-var mysql = require('mysql2'); // DOTENV LOAD ENVIRONMENT VARIABLES IN .ENV FILE AS PROCESS.ENV.<PROPERTY_NAME>
+var mysql = require('mysql2');
+
+var crypto = require('crypto'); // DOTENV LOAD ENVIRONMENT VARIABLES IN .ENV FILE AS PROCESS.ENV.<PROPERTY_NAME>
 
 
 require('dotenv').config(); // CREATE EXPRESS APP
@@ -36,8 +38,11 @@ var academic_route = require('./server/routes/academic_route');
 
 var nonacademic_route = require('./server/routes/nonacademic_route');
 
+var common_route = require('./server/routes/common_route');
+
 app.use('/ac/', academic_route);
-app.use('/nac/', nonacademic_route); // UNCOMENT FOLLOWING BLOCK TO CHANGE LOADING SCREEN TO REQUIRED VIEW : CHANGE 'sample_view' TO REQUIRED VIEW
+app.use('/nac/', nonacademic_route);
+app.use('/', common_route); // UNCOMENT FOLLOWING BLOCK TO CHANGE LOADING SCREEN TO REQUIRED VIEW : CHANGE 'sample_view' TO REQUIRED VIEW
 
 /*app.get('/', (req, res) => {
   res.render('sample_view_2', { title: 'Hey', message: [1,2,3,4,5,6,7,8,9] });

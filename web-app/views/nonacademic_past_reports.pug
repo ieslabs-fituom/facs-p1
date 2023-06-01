@@ -3,6 +3,28 @@ extends main_nonacademic
 block content
     .container-fluid.py-4
         .row
+            .col-xl-0.col-sm-0.mb-xl-0.mb-4
+                .card.px-3.pb-3
+                    .card-header.pb-0.pt-3.bg-transparent
+                        h6.text-capitalize.text-center Attendance Reports
+                    .row.mt-2.px-2.justify-content-center
+                        .col-xl-3.col-xs-0
+                            .card.bg-gray-300.py-2.rounded-2
+                                .row.align-items-center.justify-content-between.px-3
+                                    .col
+                                        span.my-auto.text-sm.font-weight-bold.text-dark Attendance of A Module
+                                    .col
+                                        .icon.icon-shape.icon-sm.border-radius-md.text-center.d-flex.align-items-center.justify-content-center.ms-auto.me-0
+                                            i.fa.fa-book.text-secondary.text-xlg.opacity-10
+                        .col-xl-3.col-xs-0
+                            .card.bg-gray-300.py-2.rounded-2
+                                .row.align-items-center.justify-content-between.px-3
+                                    .col
+                                        span.my-auto.text-sm.font-weight-bold.text-dark Attendance of A Degree
+                                    .col
+                                        .icon.icon-shape.icon-sm.border-radius-md.text-center.d-flex.align-items-center.justify-content-center.ms-auto.me-0
+                                            i.fa.fa-graduation-cap.text-secondary.text-xlg.opacity-10
+        .row.mt-3
             .col-lg-0.mb-xl-0.mb-4
                 .card
                     .card-header.pb-0.pt-3.bg-transparent
@@ -87,7 +109,7 @@ block content
             document.getElementById("students-nav-link").classList.remove('active');
             document.getElementById("today-nav-link").classList.remove('active');
             document.getElementById("pastreports-nav-link").classList.add('active');
-            document.getElementById("employees-nav-link").classList.remove('active');
+            document.getElementById("students-nav-link").classList.remove('active');
             document.getElementById("semester-nav-link").classList.remove('active');
         }
 
