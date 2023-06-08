@@ -15,21 +15,24 @@
 #include <HTTPClient.h>
 #include <Wire.h>
 #include "RTClib.h"
+#include <LiquidCrystal_I2C.h>
+
+
 
 
 
 
 
 //PIN DEFINITIONS HERE
-#define RC522_RST_PIN        22
+#define RC522_RST_PIN        5
 #define RC522_SS_PIN          21 
-#define RDM6300_RX_PIN        5
+#define RDM6300_RX_PIN        13
 
 //VARIABLES AND CONSTANTS DEFINITION HERE
 unsigned long uid = 0;
-const char* ssid     = "Dialog 4G 578";
-const char* password = "467EF9d1";
-const char* serverName = "http://192.168.8.142:80/post-esp-data.php";
+const char* ssid     = "TCK Wifi Portable";
+const char* password = "nothingtosay";
+const char* serverName = "http://192.168.8.203:80/post-esp-data.php";
 String apiKeyValue = "testapikey";
 String time_string;
 
@@ -38,6 +41,7 @@ String time_string;
 MFRC522 mfrc522(RC522_SS_PIN, RC522_RST_PIN);
 Rdm6300 rdm6300;
 RTC_DS1307 rtc;
+LiquidCrystal_I2C lcd(0x3F,16,2);
 
 
 
@@ -50,9 +54,15 @@ void setup() {
   mfrc522.PCD_Init();
   delay(4); //added this delay cus mc is slower than we expected. It takes some time to start the initiation
   rdm6300.begin(RDM6300_RX_PIN);
+  //DS3231 RTC
   rtc.begin();
+  //LCD DISPLAY
+  lcd.init();
+  lcd.clear();
+  lcd.backlight();
+  lcd.setCursor(2,0); 
 
-  //wifi
+  //WIFI
   WiFi.begin(ssid, password);
   while(WiFi.status() != WL_CONNECTED) { 
     delay(500);
@@ -101,11 +111,14 @@ void loop() {
   
 
   if(uid != 0){
+      lcd.clear();
       //CREATING A DATETIME OBJECT TO RTC
       DateTime time = rtc.now();
       time_string = time.timestamp(DateTime::TIMESTAMP_FULL);
       Serial.print(time_string);
       Serial.println(uid);
+      lcd.print(uid);
+      lcd.println(" Lakmina Pramodya Gamage ");
       if(WiFi.status()== WL_CONNECTED){
       WiFiClient client;
       HTTPClient http;
@@ -132,14 +145,11 @@ void loop() {
       Serial.println("WiFi Disconnected");
     }
     uid = 0;
-    delay(30);
+    delay(1000);
+    lcd.clear();
   }
   
       
-
-
-
-
 
 
 
