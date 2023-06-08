@@ -10,8 +10,8 @@ char keys[4][4] = {
   {'*', '0', '#', ' '}
 };
 
-byte pin_rows[4] = {32, 13, 12, 14};
-byte pin_column[4] = {27, 26, 25, 33};
+byte pin_rows[4] = {13, 12, 14, 27};
+byte pin_column[4] = {26, 25, 33, 32};
 
 Keypad keypad = Keypad( makeKeymap(keys), pin_rows, pin_column, ROW_NUM, COLUMN_NUM );
 
@@ -33,6 +33,7 @@ void loop() {
       inputString += key;               // append new character to input string
     
     }else {
+      Serial.print(inputString);
       inputString = "";
     
     }
