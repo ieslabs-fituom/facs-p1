@@ -72,7 +72,7 @@ void setup() {
   Serial.begin(115200);
   SPI.begin();
   mfrc522.PCD_Init();
-  delay(4);  //added this delay cus mc is slower than we expected. It takes some time to start the initiation
+  delay(4);  // Optional delay. Some board do need more time after init to be ready
   rdm6300.begin(RDM6300_RX_PIN);
 
 
