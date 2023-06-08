@@ -22,6 +22,11 @@
 #include <ArduinoJson.hpp>
 #include <Keypad.h>
 
+#include "FS.h"
+#include "SD.h"
+
+
+
 
 
 
@@ -74,6 +79,15 @@ void setup() {
   mfrc522.PCD_Init();
   delay(4);  // Optional delay. Some board do need more time after init to be ready
   rdm6300.begin(RDM6300_RX_PIN);
+
+  delay(3000);
+
+  if(!SD.begin()){
+      Serial.println("Card Mount Failed");
+      return;
+  }else {
+      Serial.println("Passed mount");
+  }
 
 
   // DS3231 RTC setup
@@ -189,6 +203,20 @@ String createJSON() {
   return json;
 }
 
+void SdTest(){
+  Serial.print("SD Card Type: ");
+    if(cardType == CARD_MMC){
+        Serial.println("MMC");
+    } else if(cardType == CARD_SD){
+        Serial.println("SDSC");
+    } else if(cardType == CARD_SDHC){
+        Serial.println("SDHC");
+    } else {
+        Serial.println("UNKNOWN");
+    }
+}
+
+
 void loop() {
 
   if (uidInputEnabled == true) {
@@ -212,10 +240,11 @@ void loop() {
     char key = keypad.getKey();
     while (key) {
       if (key) {
-        Serial.print(key);
         if (key != ' ') {
           keypadInputString += key;
           key = keypad.getKey();
+          Serial.print(key);
+
         } else {
           Serial.print(keypadInputString);
           printLCD(0, 0, NULL, "Session Assigned");
