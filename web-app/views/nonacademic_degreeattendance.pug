@@ -19,15 +19,14 @@ block content
                             .col-lg-4.col-xs-0 
                                 .d-flex.align-items-center
                                     .d-flex.flex-column.w-90
-                                        h6.text-dark.text-sm Module Code
-                                        input#module_select.form-control.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg(type='text' value='' placeholder='Select module' name='module' list="modules")
-                                        datalist(id="modules")
-                                            each module in modules 
-                                                option(value=module.Code) #{module.Name}        
+                                        h6.text-dark.text-sm Degree
+                                        select#degree_select.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4
+                                            each degree in degrees 
+                                                option(value=degree.id) #{degree.Degree}    
                                             
                         .row   
                             .col-lg-0.text-center
-                                button.btn.btn-primary.btn-sm.mt-3.ps-7.pe-7(onclick="searchSessions()") Search
+                                button.btn.btn-primary.btn-sm.mt-3.ps-7.pe-7(onclick="searchAttendance()") Search
         .row#attendance_row.mt-3.invisible
             .col-lg-0.mb-xl-0.mb-4
                 .card
@@ -42,10 +41,10 @@ block content
 
     script.
 
-        var batches,modules; // selectedSessionID - value is assigned for this when an user select a session from session
+        var batches,degrees; // selectedSessionID - value is assigned for this when an user select a session from session
         $(document).ready(function() {
             batches = JSON.parse(JSON.stringify(!{JSON.stringify(batches)}));
-            modules = JSON.parse(JSON.stringify(!{JSON.stringify(modules)}));
+            degrees = JSON.parse(JSON.stringify(!{JSON.stringify(degrees)}));
             sideBarChange();
         });
 
@@ -68,19 +67,11 @@ block content
         }
 
         // SEARCH SESSIONS AFTER CLICKING SEARCH
-        function searchSessions(){
-            let selectedModule = document.getElementById("module_select").value;
+        function searchAttendance(){
             let selectedBatch = document.getElementById("batch_select").value;
+            let selectedDegree = document.getElementById("degree_select").value;
             
             let validModule = false;
-
-            for(module of modules){
-                if(module.Code == selectedModule){
-                    validModule = true;
-                    selectedModule = module.id;
-                    break;
-                }
-            }
 
             for(batch of batches){
                 if(batch.Batch == selectedBatch){
@@ -89,10 +80,11 @@ block content
                 }
             }
 
-            if(!validModule){
-                window.alert("Please select valid module");
-                document.getElementById("module_select").innerText = "";
-                return;
+            for(degree of degrees){
+                if(degree.Degree == selectedDegree){
+                    selectedDegree = degree.id;
+                    break;
+                }
             }
 
             $.ajax({
@@ -101,7 +93,7 @@ block content
                     //headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     data: {
                         batch: selectedBatch,
-                        module: selectedModule,
+                        degree: selectedDegree,
                     },
                     dataType: 'json',
                     encode: true
@@ -179,7 +171,7 @@ block content
             }else{
                 attendance_table_row.classList.add("invisible");
                 attendance_table_row.classList.add("invisible");
-                window.alert('No attendance reports for this filter');
+                window.alert('No sessions for this filter');
             }
         }
         

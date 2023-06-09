@@ -10860,7 +10860,7 @@ fieldset:disabled .btn {
 }
 
 .invisible {
-  visibility: hidden !important;
+  display: none !important;
 }
 
 .transform-scale-5 {
