@@ -256,12 +256,78 @@ exports.today_addSession = async (req, res) => {
 
 exports.sem_view = async (req, res) => {
     console.log('Starting controller...');
-    var employee_details;
+    var employee_details, batches = [], modules = [];
 
     employee_details = await loadInitialDetails();
+    
+    // RETRIEVING ALL BATCHES
+    try {
+        batches = await commonFunctions.getBatchDetails(conn, null);
+        console.log(batches);
+    } catch (e) {
+        console.log('Error : ' + e);
+        // Set error page
+    }
+
+    // RETRIEVING ALL MODULES
+    try {
+        modules = await commonFunctions.getModuleDetails(conn, null);
+        console.log(modules);
+    } catch (e) {
+        console.log('Error : ' + e);
+        // Set error page
+    }
 
     // RENDERING THE VIEW
-    res.render('nonacademic_semester', { employee: employee_details });
+    res.render('nonacademic_semester', { employee: employee_details, batches: batches, modules: modules });
+}
+
+// ADD A STUDENT GROUP
+exports.add_group_view = async (req, res) => {
+    var employee_details, batches = [], modules = [];
+    employee_details = await loadInitialDetails();
+    
+    // RETRIEVING ALL BATCHES
+    try {
+        batches = await commonFunctions.getBatchDetails(conn, null);
+        console.log(batches);
+    } catch (e) {
+        console.log('Error : ' + e);
+        // Set error page
+    }
+
+    // RETRIEVING ALL MODULES
+    try {
+        modules = await commonFunctions.getModuleDetails(conn, null);
+        console.log(modules);
+    } catch (e) {
+        console.log('Error : ' + e);
+        // Set error page
+    }
+
+    // RETRIEVING ALL DEGREES
+    try {
+        degrees = await commonFunctions.getDegreeDetails(conn, null);
+        console.log(degrees);
+    } catch (e) {
+        console.log('Error : ' + e);
+        // Set error page
+    }
+
+    res.render('nonacademic_add_group', { employee: employee_details, batches: batches, modules: modules, degrees: degrees });
+}
+
+// VERIFY ADDING STUDENT GROUP
+exports.add_group_verifygroup = async (req, res) => {
+    let batch = req.body.batch;
+    let module = req.body.module;
+    let degrees = req.body.degrees;
+    let group_name = req.body.group_name;
+    let filter_type = req.body.filter_type;
+
+    console.log(batch, module, degrees, group_name, filter_type);
+
+    res.send({ status: '200' });
 }
 
 exports.stu_view = async (req, res) => {
@@ -762,6 +828,60 @@ exports.past_moduleattendance = async (req, res) => {
     }
 
     res.send({ status: '200', attendance: finalAttendance });
+}
+
+// GET PAGE FOR THE ATTENDANCE REPORT OF A SPECIFIC BATCH AND A DEGREE
+exports.past_degreeattendance_view = async (req, res) => {
+    console.log('Function starting... get past degree attendance');
+    var employee_details, degrees, batches;
+
+    employee_details = await loadInitialDetails();
+
+    try {
+        batches = await commonFunctions.getBatchDetails(conn, null);
+        console.log(batches);
+    } catch (e) {
+        console.log('Error : ' + e);
+    }
+
+    try {
+        degrees = await commonFunctions.getDegreeDetails(conn, null);
+        console.log(degrees);
+    } catch (e) {
+        console.log('Error : ' + e);
+    }
+
+    res.render('nonacademic_degreeattendance', { employee: employee_details, batches: batches, degrees: degrees });
+}
+
+// GET ATTENDANCE REPORT OF A SPECIFIC BATCH AND A DEGREE
+exports.past_degreeattendance = async (req, res) => {
+    let degree = req.query.degree;
+    let batch = req.query.batch;
+
+    let matchingGroups;
+
+    const getGroups = (degree, batch) => {
+        return new Promise((resolve, reject) => {
+            let sql = 'SELECT g.id,g.Module FROM student_groups INNER JOIN degree_of_groups d ON d.Stu_group = g.id where d.Degree = ' + degree + ' AND d.Batch = ' + batch;
+            conn.query(sql, [degree, batch], (err, result) => {
+                if (err) {
+                    console.log('Error : ' + err);
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    }
+
+    try{
+        matchingGroups = await getGroups(degree, batch);
+        console.log(matchingGroups);
+    } catch (e) {
+        console.log('Error : ' + e);
+        res.send({ status: '500' });
+    }
 }
 
 // GET REQUIRED DETAILS TO LOAD TIME TABLE SCREEN
