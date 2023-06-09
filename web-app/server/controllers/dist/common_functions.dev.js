@@ -130,9 +130,17 @@ exports.getDegreeDetails = function (conn, degrees) {
 }; // GET DETAILS OF A REQUIRED EMPLOYEE - GET COLUMNS WHICH ARE SPECIFIED IN COLUMNS PARAMETER USING THE IDs GIVEN IN PARAMS PARAMETER
 
 
-exports.getEmployeeDetails = function (conn, params, columns) {
+exports.getEmployeeDetails = function (conn, params, columns, type) {
+  // type -> 0 - using ID, 1 - using IndexNo
   return new Promise(function (resolve, reject) {
-    var sql = 'SELECT ' + columns.join(',') + ' FROM employees WHERE id IN (' + params.join(',') + ') ORDER BY id ASC';
+    var sql;
+
+    if (type == 0) {
+      sql = 'SELECT ' + columns.join(',') + ' FROM employees WHERE id IN (' + params.join(',') + ') ORDER BY IndexNo ASC';
+    } else if (type == 1) {
+      sql = 'SELECT ' + columns.join(',') + ' FROM employees WHERE IndexNo IN (' + params.join(',') + ') ORDER BY IndexNo ASC';
+    }
+
     console.log(sql);
     conn.query(sql, function (err, rows) {
       if (!err) {

@@ -27,6 +27,7 @@ router.get('/semester/',nonacademic_controller.sem_view);
 router.get('/addgroup/',nonacademic_controller.add_group_view);
 router.get('/addgroup/verifygroup',nonacademic_controller.add_group_verifygroup);
 router.get('/addgroup/getstudent',nonacademic_controller.add_group_getstudent);
+router.get('/addgroup/getemployee',nonacademic_controller.add_group_getemployee);
 module.exports = router;
 
 
