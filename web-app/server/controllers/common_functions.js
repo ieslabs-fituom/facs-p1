@@ -288,7 +288,7 @@ exports.getStudentsFiltered = (conn, params, index) => { //index -> 0 - id, 1 - 
         }
 
         params.forEach(element => {
-            sql = sql + element + ',';
+            sql = sql + '"' + element + '",';
         });
         sql = sql.substring(0, sql.length - 1);
         sql = sql + ')';

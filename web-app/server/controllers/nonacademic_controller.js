@@ -259,7 +259,7 @@ exports.sem_view = async (req, res) => {
     var employee_details, batches = [], modules = [];
 
     employee_details = await loadInitialDetails();
-    
+
     // RETRIEVING ALL BATCHES
     try {
         batches = await commonFunctions.getBatchDetails(conn, null);
@@ -286,7 +286,7 @@ exports.sem_view = async (req, res) => {
 exports.add_group_view = async (req, res) => {
     var employee_details, batches = [], modules = [];
     employee_details = await loadInitialDetails();
-    
+
     // RETRIEVING ALL BATCHES
     try {
         batches = await commonFunctions.getBatchDetails(conn, null);
@@ -339,9 +339,8 @@ exports.add_group_verifygroup = async (req, res) => {
 
     const getStudents = (batch, degrees) => {
         return new Promise((resolve, reject) => {
-            let query = 'SELECT * FROM students WHERE Batch = ? AND Degree IN (?) ORDER BY IndexNo';
+            let query = 'SELECT id,IndexNo,Name,Degree,Batch FROM students WHERE Batch = ? AND Degree IN (?) ORDER BY IndexNo';
             conn.query(query, [batch, degrees], (err, result) => {
-                console.log(query);
                 if (err) reject(err);
                 else resolve(result);
             });
@@ -349,14 +348,14 @@ exports.add_group_verifygroup = async (req, res) => {
     }
 
     let result;
-    try{
+    try {
         result = await checkGroupName(group_name);
     } catch (e) {
         console.log(e);
         res.send({ status: '500', error: e });
         return;
     }
-    
+
     if (result.length > 0) {
         res.send({ status: '201' });
         return;
@@ -365,8 +364,9 @@ exports.add_group_verifygroup = async (req, res) => {
     let students = [];
     if (filter_type == 1) {
         res.send({ status: '200', students: students });
-    }else{
-        try{
+        return;
+    } else {
+        try {
             students = await getStudents(batch, degrees);
         } catch (e) {
             console.log(e);
@@ -376,6 +376,43 @@ exports.add_group_verifygroup = async (req, res) => {
     }
 
     res.send({ status: '200', students: students });
+}
+
+// GET STUDENT DETAILS TO ADD TO A GROUP
+exports.add_group_getstudent = async (req, res) => {
+    let indexNo = req.query.index;
+    let batch = req.query.batch;
+    let degrees = req.query.degrees;
+
+    let student;
+    try {
+        student = await commonFunctions.getStudentsFiltered(conn, [indexNo], 1);
+        console.log(student)
+    } catch (e) {
+        console.log(e);
+        res.send({ status: '500', error: e });
+        return;
+    }
+
+    if (student.length == 0) {
+        res.send({ status: '201' });
+        return;
+    } else {
+        for(let degree of degrees){
+            if(student[0].Degree != Number(degree)){
+                res.send({ status: '202' });
+                return;
+            }
+        }
+        if (student[0].Batch != batch) {
+            res.send({ status: '202' });
+            return;
+        } else {
+            res.send({ status: '200', students: student });
+            return;
+        }
+
+    }
 }
 
 exports.stu_view = async (req, res) => {
@@ -864,7 +901,7 @@ exports.past_moduleattendance = async (req, res) => {
                     }
                 }
                 (session_count == 0) ? percentage = 100 : percentage = (present / session_count) * 100;
-                studentAttendance = { 
+                studentAttendance = {
                     index: student.IndexNo,
                     name: student.Name,
                     degree: student.Degree,
@@ -923,7 +960,7 @@ exports.past_degreeattendance = async (req, res) => {
         });
     }
 
-    try{
+    try {
         matchingGroups = await getGroups(degree, batch);
         console.log(matchingGroups);
     } catch (e) {

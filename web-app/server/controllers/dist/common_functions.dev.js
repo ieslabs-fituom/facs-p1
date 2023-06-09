@@ -300,7 +300,7 @@ exports.getStudentsFiltered = function (conn, params, index) {
     }
 
     params.forEach(function (element) {
-      sql = sql + element + ',';
+      sql = sql + '"' + element + '",';
     });
     sql = sql.substring(0, sql.length - 1);
     sql = sql + ')';

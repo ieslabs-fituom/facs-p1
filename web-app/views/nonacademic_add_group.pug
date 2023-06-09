@@ -8,7 +8,7 @@ block content
                     .card-header.pb-0.pt-3.bg-dark.mb-2
                         h6.text-capitalize.text-center.text-light.font-weight-bolder Add Student Groups
 
-                    .row.px-3
+                    .row.px-3#group_details_panel
                         .row.mt-2.px-2.justify-content-center
                             .col-xl-4.col-xs-0.my-1
                                 h6.text-dark.text-sm.text-center Batch
@@ -42,28 +42,26 @@ block content
                             .col-lg-0.text-center
                                     button.btn.btn-primary.btn-sm.ps-7.pe-7(onclick="verifyGroupDetails()") Next
                         
-                    .row.px-3.invisible
+                    .row.px-3#group_students_panel.invisible
                         .row#add_students_area.mt-2.px-2.justify-content-center
                             .col-xl-4.col-xs-0.my-1
                                 h6.text-dark.text-sm.text-center Index Number of The Student
                                     input#index_no.form-control.text-xs.me-8.ms-0.mt-1.mb-3.lh-lg.text-center(type='text' value="" placeholder='Enter Index Number' name='index_no')
                         .row.mt-1.px-2.justify-content-center
                             .col-lg-0.text-center
-                                button.btn.btn-primary.btn-sm.ps-7.pe-7(onclick="") Add Student
+                                button.btn.btn-primary.btn-sm.ps-7.pe-7(onclick="addNewStudent()") Add Student
 
-                        .row#students_row.mt-3
+                        .row#students_row.mt-3.mx-4
                             .col-lg-0.mb-xl-0.mb-4
+                                h6.text-dark.text-md Added Students
                                 .table-responsive
                                     //Class limited-rows-table - used to specify the max height and make scrollbars visible
                                     table#students_table.table.align-items-center
                                         tbody#students_table_body
 
-                        // Add hr
-                        .row.mt-3.px-2.justify-content-center
-                            .d-flex.flex-row.my-3.justify-content-center
-                                hr.horizontal.dark.mt-3.w-50
-
                         .row.mt-1.px-2.justify-content-center
+                            .col-lg-3.text-center.mx-2
+                                button.btn.btn-primary.btn-sm.ps-7.pe-7(onclick="clearStudents()") Clear Students
                             .col-lg-3.text-center.mx-2
                                 button.btn.btn-primary.btn-sm.ps-7.pe-7(onclick="") Back
                             .col-lg-3.text-center.mx-2
@@ -75,6 +73,7 @@ block content
     script.
 
         var batches,modules,groups,degrees, attendances, lecturers, selectedSessionID; // selectedSessionID - value is assigned for this when an user select a session from session
+        let batch, module, group_name, selectedDegrees, filter_type, students = [];
         $(document).ready(function() {
             batches = JSON.parse(JSON.stringify(!{JSON.stringify(batches)}));
             modules = JSON.parse(JSON.stringify(!{JSON.stringify(modules)}));
@@ -101,18 +100,17 @@ block content
         }
         
         function verifyGroupDetails(){
-            let batch = document.getElementById("batch_select").value;
-            let module = document.getElementById("module_select").value;
-            let group_name = document.getElementById("group_name").value;
+            batch = document.getElementById("batch_select").value;
+            module = document.getElementById("module_select").value;
+            group_name = document.getElementById("group_name").value;
 
-            let selectedDegrees = [];
+            selectedDegrees = [];
             for(degree of degrees){
                 if(document.getElementById("degree-"+degree.id).checked){
                     selectedDegrees.push(degree.id);
                 }
             }
 
-            let filter_type;
             if(document.getElementById("filter_student_0").checked){
                 filter_type = 0;
             }else if(document.getElementById("filter_student_1").checked){
@@ -154,11 +152,124 @@ block content
                     if(response.status=='200'){
                         console.log('success');
                         console.log(response.students);
+                        document.getElementById("group_students_panel").classList.remove("invisible");
+                        document.getElementById("group_details_panel").classList.add("invisible");
+                        students = response.students;
+                        addStudentsToTable(response.students, true);
                     }else if(response.status=='201'){
                         window.alert("This group name is already used");
+                    } else{
+                        window.alert("Something went wrong");
                     }
                 });
         }
+        
+        function addStudentsToTable(students, isClearNeeded){
+            var students_table_row = document.getElementById("students_row");
+            var students_table = document.getElementById("students_table_body");
+            
+            if(isClearNeeded){
+                clearSelectOptions(students_table)
+            }
+
+            if(students.length != 0){
+                let row,cell,element_p,element_h6,rowCount;
+
+                for(stu in students){
+                    rowCount = students_table.rows.length;
+                    row = students_table.insertRow(rowCount);
+                    row.classList.add("limited-rows-tr");
+                    row.classList.add("selection-row");
+                    row.setAttribute("data-id",students[stu].id);
+                    row.setAttribute("data-date",students[stu].IndexNo);
+                    
+                    cell = row.insertCell(0);
+                    element_p = createTable_p_element('IndexNo :');
+                    cell.appendChild(element_p);
+                    element_h6 = createTable_h6_element(students[stu].IndexNo);
+                    cell.appendChild(element_h6);
+
+                    cell = row.insertCell(1);
+                    element_p = createTable_p_element('Name :');
+                    cell.appendChild(element_p);
+                    element_h6 = createTable_h6_element(students[stu].Name);
+                    cell.appendChild(element_h6);
+
+                    cell = row.insertCell(2);
+                    element_p = createTable_p_element('Batch :');
+                    cell.appendChild(element_p);
+                    element_h6 = createTable_h6_element('Batch ' + batches.find(item => {
+                        return item.id == students[stu].Batch
+                    }).Batch);
+                    cell.appendChild(element_h6);
+
+                    cell = row.insertCell(3);
+                    element_p = createTable_p_element('Degree :');
+                    cell.appendChild(element_p);
+                    element_h6 = createTable_h6_element(degrees.find(item => {
+                        return item.id == students[stu].Degree
+                    }).Degree);
+                    cell.appendChild(element_h6);
+
+                    cell = row.insertCell(4);
+                    innerHTML = "<button class='btn btn-primary text-xs' data-id='" + students[stu].id + "' + onClick = ''>Remove</button>"
+                    element_h6 = createTable_h6_element(innerHTML);
+                    cell.appendChild(element_h6);
+                }
+            }
+        }
+
+        function addNewStudent(){
+            let new_index = document.getElementById("index_no").value;
+
+            if(new_index.trim()==''){
+                window.alert("Please enter an index number");
+                return;
+            }
+            
+            console.log(students);
+            for(stu of students){
+                if(stu.IndexNo == new_index){
+                    window.alert("This index number is already added");
+                    return;
+                }
+            }
+            console.log(new_index, batch, selectedDegrees);
+            $.ajax({
+                    type: 'GET',
+                    url: '/nac/addgroup/getstudent',
+                    //headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    data: {
+                        index: new_index,
+                        batch: batch,
+                        degrees: selectedDegrees,
+                    },
+                    dataType: 'json',
+                    encode: true
+                }).done(function (response) {
+                    console.log(response);
+                    if(response.status=='200'){
+                        console.log('success');
+                        console.log(response.students);
+                        students.push(response.students[0]);
+                        addStudentsToTable(response.students, false);
+                    }else if(response.status=='201'){
+                        window.alert("Index number seems to be not valid");
+                    } else if(response.status=='202'){
+                        window.alert("This student is not in the selected degree or batch");
+                    }else{
+                        window.alert("Something went wrong");
+                    }
+                    document.getElementById("index_no").value = '';
+                });
+        }
+
+        function clearStudents(){
+            students = [];
+            var students_table = document.getElementById("students_table_body");
+            clearSelectOptions(students_table);
+        }
+        
 
         function autoGenerateGroupName(){
             let auto_generate_group_name = document.getElementById("auto_generate_group_name").checked;
@@ -183,6 +294,25 @@ block content
             }else{
                 group_name.value = "";
             }
+        }
+
+        // Functions for styling dynamic tables - paragraph element
+        function createTable_p_element(innerHTML){
+            let element_p = document.createElement("p");
+            element_p.classList.add("text-xs");
+            element_p.classList.add("font-weight-bold");
+            element_p.classList.add("mb-0");
+            element_p.innerHTML = innerHTML;
+            return element_p;
+        }
+
+        // Functions for styling dynamic tables - h6 element
+        function createTable_h6_element(innerHTML){
+            let element_h6 = document.createElement("h6");
+            element_h6.classList.add("text-sm");
+            element_h6.classList.add("mb-0");
+            element_h6.innerHTML = innerHTML;
+            return element_h6;
         }
 
         function clearSelectOptions(element){
