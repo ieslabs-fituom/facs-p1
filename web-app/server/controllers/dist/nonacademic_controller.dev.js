@@ -626,27 +626,114 @@ exports.add_group_view = function _callee6(req, res) {
 
 
 exports.add_group_verifygroup = function _callee7(req, res) {
-  var batch, module, degrees, group_name, filter_type;
+  var batch, module, degrees, group_name, filter_type, checkGroupName, getStudents, result, students;
   return regeneratorRuntime.async(function _callee7$(_context7) {
     while (1) {
       switch (_context7.prev = _context7.next) {
         case 0:
-          batch = req.body.batch;
-          module = req.body.module;
-          degrees = req.body.degrees;
-          group_name = req.body.group_name;
-          filter_type = req.body.filter_type;
+          batch = req.query.batch;
+          module = req.query.module;
+          degrees = req.query.degrees;
+          group_name = req.query.group_name;
+          filter_type = req.query.filter_type;
           console.log(batch, module, degrees, group_name, filter_type);
+
+          checkGroupName = function checkGroupName(group_name) {
+            return new Promise(function (resolve, reject) {
+              var query = 'SELECT * FROM student_groups WHERE Name = ?';
+              conn.query(query, group_name, function (err, result) {
+                if (err) reject(err);else resolve(result);
+              });
+            });
+          };
+
+          getStudents = function getStudents(batch, degrees) {
+            return new Promise(function (resolve, reject) {
+              var query = 'SELECT * FROM students WHERE Batch = ? AND Degree IN (?) ORDER BY IndexNo';
+              conn.query(query, [batch, degrees], function (err, result) {
+                console.log(query);
+                if (err) reject(err);else resolve(result);
+              });
+            });
+          };
+
+          _context7.prev = 8;
+          _context7.next = 11;
+          return regeneratorRuntime.awrap(checkGroupName(group_name));
+
+        case 11:
+          result = _context7.sent;
+          _context7.next = 19;
+          break;
+
+        case 14:
+          _context7.prev = 14;
+          _context7.t0 = _context7["catch"](8);
+          console.log(_context7.t0);
           res.send({
-            status: '200'
+            status: '500',
+            error: _context7.t0
+          });
+          return _context7.abrupt("return");
+
+        case 19:
+          if (!(result.length > 0)) {
+            _context7.next = 22;
+            break;
+          }
+
+          res.send({
+            status: '201'
+          });
+          return _context7.abrupt("return");
+
+        case 22:
+          students = [];
+
+          if (!(filter_type == 1)) {
+            _context7.next = 27;
+            break;
+          }
+
+          res.send({
+            status: '200',
+            students: students
+          });
+          _context7.next = 38;
+          break;
+
+        case 27:
+          _context7.prev = 27;
+          _context7.next = 30;
+          return regeneratorRuntime.awrap(getStudents(batch, degrees));
+
+        case 30:
+          students = _context7.sent;
+          _context7.next = 38;
+          break;
+
+        case 33:
+          _context7.prev = 33;
+          _context7.t1 = _context7["catch"](27);
+          console.log(_context7.t1);
+          res.send({
+            status: '500',
+            error: _context7.t1
+          });
+          return _context7.abrupt("return");
+
+        case 38:
+          res.send({
+            status: '200',
+            students: students
           });
 
-        case 7:
+        case 39:
         case "end":
           return _context7.stop();
       }
     }
-  });
+  }, null, null, [[8, 14], [27, 33]]);
 };
 
 exports.stu_view = function _callee8(req, res) {

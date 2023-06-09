@@ -119,7 +119,22 @@ block content
                 filter_type = 1;
             }
 
-            console.log(batch, module, group_name, selectedDegrees, filter_type);
+            if(group_name.trim()==''){
+                window.alert("Please enter a group name");
+                return;
+            }
+            
+            if(selectedDegrees.length==0){
+                window.alert("Please select at least one degree");
+                return;
+            }
+
+            if(filter_type==undefined){
+                window.alert("Please select a filter type");
+                return;
+            }
+
+            //console.log(batch, module, group_name, selectedDegrees, filter_type);
 
             $.ajax({
                     type: 'GET',
@@ -129,7 +144,7 @@ block content
                         batch: batch,
                         module: module,
                         group_name: group_name,
-                        selectedDegrees: selectedDegrees,
+                        degrees: selectedDegrees,
                         filter_type: filter_type
                     },
                     dataType: 'json',
@@ -138,9 +153,9 @@ block content
                     console.log(response);
                     if(response.status=='200'){
                         console.log('success');
-                    }else{
-                        console.log('error');
-                        window.alert("Error occured while loading attendance")
+                        console.log(response.students);
+                    }else if(response.status=='201'){
+                        window.alert("This group name is already used");
                     }
                 });
         }
