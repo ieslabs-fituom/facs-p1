@@ -319,15 +319,63 @@ exports.add_group_view = async (req, res) => {
 
 // VERIFY ADDING STUDENT GROUP
 exports.add_group_verifygroup = async (req, res) => {
-    let batch = req.body.batch;
-    let module = req.body.module;
-    let degrees = req.body.degrees;
-    let group_name = req.body.group_name;
-    let filter_type = req.body.filter_type;
+    let batch = req.query.batch;
+    let module = req.query.module;
+    let degrees = req.query.degrees;
+    let group_name = req.query.group_name;
+    let filter_type = req.query.filter_type;
 
     console.log(batch, module, degrees, group_name, filter_type);
 
-    res.send({ status: '200' });
+    const checkGroupName = (group_name) => {
+        return new Promise((resolve, reject) => {
+            let query = 'SELECT * FROM student_groups WHERE Name = ?';
+            conn.query(query, group_name, (err, result) => {
+                if (err) reject(err);
+                else resolve(result);
+            });
+        });
+    }
+
+    const getStudents = (batch, degrees) => {
+        return new Promise((resolve, reject) => {
+            let query = 'SELECT * FROM students WHERE Batch = ? AND Degree IN (?) ORDER BY IndexNo';
+            conn.query(query, [batch, degrees], (err, result) => {
+                console.log(query);
+                if (err) reject(err);
+                else resolve(result);
+            });
+        });
+    }
+
+    let result;
+    try{
+        result = await checkGroupName(group_name);
+    } catch (e) {
+        console.log(e);
+        res.send({ status: '500', error: e });
+        return;
+    }
+    
+    if (result.length > 0) {
+        res.send({ status: '201' });
+        return;
+    }
+
+    let students = [];
+    if (filter_type == 1) {
+        res.send({ status: '200', students: students });
+    }else{
+        try{
+            students = await getStudents(batch, degrees);
+        } catch (e) {
+            console.log(e);
+            res.send({ status: '500', error: e });
+            return;
+        }
+    }
+
+    res.send({ status: '200', students: students });
 }
 
 exports.stu_view = async (req, res) => {
