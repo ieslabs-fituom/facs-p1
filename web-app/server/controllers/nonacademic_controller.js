@@ -144,7 +144,7 @@ exports.today_loadEmployeesOfGroup = async (req, res) => {
     }
 
     try {
-        employees = await commonFunctions.getEmployeeDetails(conn, emp_ids, ['id', 'Name']);
+        employees = await commonFunctions.getEmployeeDetails(conn, emp_ids, ['id', 'Name'],0);
         console.log('employee details');
         console.log(employees);
     } catch (e) {
@@ -412,6 +412,30 @@ exports.add_group_getstudent = async (req, res) => {
             return;
         }
 
+    }
+}
+
+// GET EMPLOYEE DETAILS TO ADD TO A GROUP
+exports.add_group_getemployee = async (req, res) => {
+    let indexNo = '"' + req.query.index + '"';
+    
+    let employee = [];
+
+    try {
+        employee = await commonFunctions.getEmployeeDetails(conn, [indexNo], ['id,IndexNo,Name'],1);
+        console.log(employee)
+    } catch (e) {
+        res.send({ status: '500', error: e });
+        console.log(e);
+        return;
+    }
+
+    if (employee.length == 0) {
+        res.send({ status: '201' });
+        return;
+    } else {
+        res.send({ status: '200', employees: employee });
+        return;
     }
 }
 
@@ -739,7 +763,7 @@ exports.past_get_sessions = async (req, res) => {
 
     lec_id = [...new Set(lec_id)];
     try {
-        lecturers = await commonFunctions.getEmployeeDetails(conn, lec_id, ['id', 'Name']);
+        lecturers = await commonFunctions.getEmployeeDetails(conn, lec_id, ['id', 'Name'],0);
     } catch (e) {
         console.log('Error : ' + e);
         res.send({ status: '500', sessions: sessions, lecturers: lecturers });
