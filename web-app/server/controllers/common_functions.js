@@ -193,7 +193,7 @@ exports.getStudentGroupDetails = (conn, filterArray, filterArray2, type) => {
         } else if (type == 4) {
             sql = 'SELECT id,Name,Module FROM student_groups WHERE Batch IN ( ' + filterArray.join(',') + ') AND id IN (' + filterArray2.join(',') + ')';
         } else if (type == 5){
-            sql = 'SELECT id FROM student_groups WHERE Module IN ( ' + filterArray.join(',') + ') AND Batch IN (' + filterArray2.join(',') + ')';
+            sql = 'SELECT id,Name FROM student_groups WHERE Module IN ( ' + filterArray.join(',') + ') AND Batch IN (' + filterArray2.join(',') + ')';
         }
         console.log(sql);
         conn.query(sql, (err, rows) => {

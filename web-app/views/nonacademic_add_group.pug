@@ -20,17 +20,19 @@ block content
                                     select#module_select.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="")
                                         each module in modules 
                                             option(value=module.id) #{module.Code} - #{module.Name}
+                        .row.mt-2.px-2.justify-content-center 
+                            each degree, index in degrees
+                                .col-xl-2.col-xs-0.my-1.text-center.align-items-center.my-2
+                                    input.text-xs.lh-lg(type='checkbox' value=degree.id placeholder='' name='degree' id='degree-' + degree.id)
+                                    label.form-check-label.text-dark.text-sm(for='degree-' + degree.id) #{degree.Degree}
+
                         .row.mt-2.px-2.justify-content-center
                             .col-xl-4.col-xs-0.my-1.text-center
                                 h6.text-dark.text-sm.text-center Group Name
                                     input#group_name.form-control.text-xs.me-8.ms-0.mt-1.mb-3.lh-lg.text-center(type='text' value="" placeholder='Enter group name' name='group_name')
                                 input(type='checkbox' value='0' name='auto_generate_group_name' id='auto_generate_group_name' onchange="autoGenerateGroupName()")
                                 label.form-check-label.text-dark.text-sm(for='auto_generate_group_name') Auto generate group name
-                        .row.mt-2.px-2.justify-content-center 
-                            each degree, index in degrees
-                                .col-xl-2.col-xs-0.my-1.text-center.align-items-center.my-2
-                                    input.text-xs.lh-lg(type='checkbox' value=degree.id placeholder='' name='degree' id='degree-' + degree.id)
-                                    label.form-check-label.text-dark.text-sm(for='degree-' + degree.id) #{degree.Degree}
+                        
                         .row.mt-1.px-2.justify-content-center
                             .col-xl-3.col-xs-0.my-1.text-center
                                 input.text-xs.lh-lg(type='radio' value='0' name='filter_student_radio')#filter_student_0
@@ -517,6 +519,15 @@ block content
         function autoGenerateGroupName(){
             let auto_generate_group_name = document.getElementById("auto_generate_group_name").checked;
             let group_name = document.getElementById("group_name");
+
+            let selectedDegrees2 = '';
+            for(degree of degrees){
+                if(document.getElementById("degree-"+degree.id).checked){
+                    selectedDegrees2+=degree.Degree+'-';
+                }
+            }
+            selectedDegrees2 = selectedDegrees2.substring(0,selectedDegrees2.length-1);
+
             if(auto_generate_group_name){
                 let selectedBatch = document.getElementById("batch_select").value;
                 let selectedModule = document.getElementById("module_select").value;
@@ -533,6 +544,10 @@ block content
                         break;
                     }
                 }
+                if(selectedDegrees2 != ''){
+                    new_name += '-' + selectedDegrees2;
+                }
+               
                 group_name.value = new_name;
             }else{
                 group_name.value = "";

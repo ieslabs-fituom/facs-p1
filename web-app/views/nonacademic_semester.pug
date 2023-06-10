@@ -61,14 +61,14 @@ block content
                                             i.fa.fa-table.text-secondary.text-lg.opacity-10
                         .col-xl-4.col-xs-0.my-1
                             .card.bg-gray-300.py-2.rounded-2.card-hover
-                                .row.align-items-center.justify-content-between.px-3
+                                .row.align-items-center.justify-content-between.px-3(onclick="toggleExpands('timetable_expand_1')")
                                     .col
                                         span.my-auto.text-sm.font-weight-bold.text-dark Set-up Time Table
                                     .col
                                         .icon.icon-shape.icon-sm.border-radius-md.text-center.d-flex.align-items-center.justify-content-center.ms-auto.me-0
                                             i.fa.fa-cog.text-secondary.text-lg.opacity-10
 
-                    .row#timetable_expand_1
+                    .row#timetable_expand_1.invisible
                         .d-flex.flex-row.my-3.justify-content-center
                             hr.horizontal.dark.mt-3.w-50
 
@@ -95,9 +95,9 @@ block content
                                             option(value=module.id) #{module.Code} - #{module.Name}
                         .row.mt-1.px-2.justify-content-center
                             .col-lg-0.text-center
-                                    button.btn.btn-primary.btn-sm.ps-7.pe-7(onclick="searchSessions()") View Groups and Set-up
+                                    button.btn.btn-primary.btn-sm.ps-7.pe-7(onclick="getGroups_for_timetable_Setup()") View Groups and Set-up
 
-                    .row#timetable_expand_2.bg-gray-200.rounded-3.pb-2.my-4.mx-2
+                    .row#timetable_expand_2.bg-gray-200.rounded-3.pb-2.my-4.mx-2.invisible
                         .card-header.pb-1.pt-3.bg-dark
                             h6.text-capitalize.text-center.text-light.font-weight-bolder Set-up Session
 
@@ -132,13 +132,14 @@ block content
                                         option(value='1') Every Other Week
                         .row.mt-1.px-2.justify-content-center
                             .col-lg-0.text-center
-                                    button.btn.btn-primary.btn-sm.ps-7.pe-7(onclick="searchSessions()") Add Session To Time Table
+                                    button.btn.btn-primary.btn-sm.ps-7.pe-7(onclick="setUpSession()") Add Session To Time Table
 
                     
 
     script.
 
         var batches,modules,groups,degrees, attendances, lecturers, selectedSessionID; // selectedSessionID - value is assigned for this when an user select a session from session
+        var day_timetable, batch_timetable, module_timetable;;
         $(document).ready(function() {
             //batches = JSON.parse(JSON.stringify(!{JSON.stringify(batches)}));
             //modules = JSON.parse(JSON.stringify(!{JSON.stringify(modules)}));
@@ -161,7 +162,93 @@ block content
                 document.getElementById(expandingPanel).classList.remove('invisible');
             else
                 document.getElementById(expandingPanel).classList.add('invisible');
+        }
 
+        function getGroups_for_timetable_Setup(){
+            day_timetable = document.getElementById("day_select").value;
+            batch_timetable = document.getElementById("batch_select_timetable").value;
+            module_timetable = document.getElementById("module_select_timetable").value;
+
+            document.getElementById("timetable_expand_2").classList.add('invisible');
+
+            $.ajax({
+                    type: 'get',
+                    url: '/nac/semester/getgroups',
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    data: {
+                        batch: batch_timetable,
+                        module: module_timetable,
+                    },
+                    dataType: 'json',
+                    encode: true
+                }).done(function (response) {
+                    if(response.status=='200'){
+                        console.log('success');
+                        document.getElementById("timetable_expand_2").classList.remove('invisible');
+                        let group_select = document.getElementById("group_select_timetable");
+                        clearSelectOptions(group_select);
+                        for(group of response.groups){
+                            let option = document.createElement("option");
+                            option.value = group.id;
+                            option.text = group.Name;
+                            group_select.add(option);
+                        }
+                        document.getElementById("duration_timetable").value = '2.00';
+
+                    }else if(response.status=='201'){
+                        window.alert("No groups found for this filter");
+                    } else{
+                        window.alert("Something went wrong");
+                    }
+                });   
+        }
+
+        function setUpSession(){
+            let selectedGroup = document.getElementById("group_select_timetable").value;
+            let startTime = document.getElementById("start_time_timetable").value;
+            let duration = document.getElementById("duration_timetable").value; 
+            let method = document.getElementById("method_select_timetable").value;
+            let type = document.getElementById("type_select_timetable").value;
+            let repeat = document.getElementById("repeat_select_timetable").value;
+
+            if(selectedGroup=='' || startTime=='' || duration=='' || method=='' || type=='' || repeat==''){
+                window.alert("Please fill all the fields");
+                return;
+            }
+
+            if(Number(duration)==0){
+                window.alert("Duration cannot be zero");
+                return;
+            }
+
+            $.ajax({
+                    type: 'POST',
+                    url: '/nac/semester/setupsession',
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    data: {
+                        group: selectedGroup,
+                        day: day_timetable,
+                        startTime: startTime,
+                        duration: duration,
+                        method: method,
+                        type: type,
+                        repeat: repeat,
+                    },
+                    dataType: 'json',
+                    encode: true
+                }).done(function (response) {
+                    if(response.status=='200'){
+                        console.log('success');
+                        window.alert("Session added successfully");
+                        document.getElementById("start_time_timetable").value = '';
+                        document.getElementById("duration_timetable").value = '2.00';
+                        toggleExpands('timetable_expand_2');
+                    }else if(response.status=='201'){
+                        window.alert("There is a session already added with this details (Day, Batch, Module, Group, Start Time)");
+                    } else{
+                        window.alert("Something went wrong");
+                    }
+                });
         }
 
         var win = navigator.platform.indexOf('Win') > -1;
@@ -170,4 +257,9 @@ block content
                 damping: '0.5'
             }
             Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+        }
+
+        
+        function clearSelectOptions(element){
+            element.innerHTML = '';
         }
