@@ -580,6 +580,85 @@ exports.add_group_savegroup = async (req, res) => {
     
 }
 
+// GET GROUPS OF SELECTED MODULE AND BATCH FOR TIMETABLE SETUP
+exports.get_groups_timetable_setup = async (req, res) => {
+    let batch = req.query.batch;
+    let module = req.query.module;
+
+    let groups;
+    try{
+        groups = await commonFunctions.getStudentGroupDetails(conn, [module],[batch],5);
+    } catch(e){
+        console.log(e);
+        res.send({ status: '500', error: e });
+        return;
+    }
+
+    if(groups.length == 0){
+        res.send({ status: '201' });
+        return;
+    }else{
+        res.send({ status: '200', groups: groups });
+    }
+}
+
+// SAVE SESSION FOR TIMETABLE SETUP
+exports.save_session_timetable_setup = async (req, res) => {
+    let group = req.body.group;
+    let day = req.body.day;
+    let startTime = req.body.startTime;
+    let duration = req.body.duration;
+    let type = req.body.type;
+    let method = req.body.method;
+    let repeat = req.body.repeat;
+
+    let sessions_in_timetable = [];
+    try{
+        sessions_in_timetable = await commonFunctions.getTimeTable(conn, day, [group]);
+    } catch(e){
+        console.log(e);
+        res.send({ status: '500', error: e });
+        return;
+    }   
+
+    if(sessions_in_timetable.length > 0){
+        for(let session of sessions_in_timetable){
+            if(session.Start_time == startTime){
+                res.send({ status: '201' });
+                return;
+            }
+        }
+    }
+
+    // INSERT SESSION TO TIMETABLE
+    const insertSession = async (group, day, startTime, duration, type, method, repeat) => {
+        return new Promise((resolve, reject) => {
+            let query = 'INSERT INTO timetable(T_group,Day,Start_time,Duration,Type,Method,Session_repeat) VALUES (' + group + ',' + day + ',"' + startTime + '",' + duration + ',' + type + ',' + method + ',' + repeat + ')';
+            conn.query(query, (err, result) => {
+                if (err) reject(err);
+                else resolve(result);
+            });
+        });
+    }
+
+    let result;
+    try{
+        result = await insertSession(group, day, startTime, duration, type, method, repeat);
+    } catch(e){
+        console.log(e);
+        res.send({ status: '500', error: e });
+        return;
+    }
+
+    if(result.affectedRows == 0){
+        res.send({ status: '500' });
+        return;
+    } else{
+        res.send({ status: '200' });
+        return;
+    }
+}
+
 exports.stu_view = async (req, res) => {
     console.log('Starting controller...');
     var employee_details, faculties = [], batches = [], degrees = [], students = [];

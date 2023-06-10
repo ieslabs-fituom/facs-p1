@@ -29,4 +29,6 @@ router.get('/addgroup/verifygroup', nonacademic_controller.add_group_verifygroup
 router.get('/addgroup/getstudent', nonacademic_controller.add_group_getstudent);
 router.get('/addgroup/getemployee', nonacademic_controller.add_group_getemployee);
 router.post('/addgroup/savestudentgroup', nonacademic_controller.add_group_savegroup);
+router.get('/semester/getgroups', nonacademic_controller.get_groups_timetable_setup);
+router.post('/semester/setupsession', nonacademic_controller.save_session_timetable_setup);
 module.exports = router;
