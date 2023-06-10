@@ -88,9 +88,9 @@ block content
                             .col-lg-3.text-center.mx-2
                                 button.btn.btn-primary.btn-sm.ps-7.pe-7(onclick="backPressed_employees()") Back
                             .col-lg-3.text-center.mx-2
-                                button.btn.btn-primary.btn-sm.ps-7.pe-7(onclick="") Next
+                                button.btn.btn-primary.btn-sm.ps-7.pe-7(onclick="confirmStudentGroup()") Next
                         
-    #groupConfirm.modal.fade(tabindex='-1' role='dialog' aria-labelledby='groupConfirmModalLabel' aria-hidden='true' data-id="none")
+    #groupConfirmModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='groupConfirmModalLabel' aria-hidden='true' data-id="none")
         .modal-dialog(role='document')
             .modal-content.bg-white
                 .modal-header
@@ -100,12 +100,15 @@ block content
                 .modal-body
                     h5#confirm_groupname Group Name - 
                     br
-                    h6#confirm_module.text-secondary 
-                    h6#confirm_batch.text-secondary 
-                    p#confirm_degree.text-secondary 
+                    h6#confirm_module.text-dark.text-sm
+                    h6#confirm_batch.text-dark.text-sm 
+                    h6#confirm_degree.text-dark.text-sm 
+                    br
+                    p#student_count.text-secondary.text-xs
+                    p#employee_count.text-secondary.text-xs
 
                 .modal-footer
-                    button.btn.btn-primary(type='button' data-bs-dismiss='modal') Confirm                
+                    button.btn.btn-primary(type='button' data-bs-dismiss='modal' onClick='saveStudentGroup()') Confirm                
                                                         
 
     script.
@@ -338,9 +341,15 @@ block content
         }
 
         function gotoAddEmployees(){
-            document.getElementById("group_students_panel").classList.add("invisible");
-            document.getElementById("group_employees_panel").classList.remove("invisible");
-            document.getElementById("panel_heading").innerHTML = 'Add Employees';
+            if(students.length == 0){
+                window.alert("Please add at least one student");
+                return;
+            }else{
+                document.getElementById("group_students_panel").classList.add("invisible");
+                document.getElementById("group_employees_panel").classList.remove("invisible");
+                document.getElementById("panel_heading").innerHTML = 'Add Employees';
+            }
+            
         }
 
         function backPressed_employees(){
@@ -436,6 +445,74 @@ block content
             employees_table.removeChild(row);
         }
 
+        function confirmStudentGroup(){
+            if(employees.length == 0){
+                window.alert("Please add at least one employee");
+                return;
+            }
+
+            document.getElementById("confirm_groupname").innerHTML = 'Group Name : ' + group_name;
+            for(batch2 of batches){
+                if(batch2.id == batch){
+                    document.getElementById("confirm_batch").innerHTML = 'Batch ' + batch2.Batch;
+                }
+            }
+            for(mod of modules){
+                if(mod.id == module){
+                    document.getElementById("confirm_module").innerHTML = mod.Code + ' - ' + mod.Name;
+                }
+            }
+            
+            let degreeString = '';
+            for(deg of selectedDegrees){
+                for(deg2 of degrees){
+                    if(deg == deg2.id){
+                        degreeString += deg2.Degree + ', ';
+                    }
+                }
+            }
+            degreeString = degreeString.substring(0,degreeString.length-2);
+            document.getElementById("confirm_degree").innerHTML = 'Degrees : ' + degreeString;
+            document.getElementById("student_count").innerHTML = 'No. of Students : ' + students.length;
+            document.getElementById("employee_count").innerHTML = 'No. of employees : ' + employees.length;
+            $('#groupConfirmModal').modal('toggle');
+        }
+
+        function saveStudentGroup(){
+            let studentIDs = [];
+            for(student of students){
+                studentIDs.push(student.id);
+            }
+            let employeeIDs = [];
+            for(employee of employees){
+                employeeIDs.push(employee.id);
+            }
+
+            $.ajax({
+                    type: 'POST',
+                    url: '/nac/addgroup/savestudentgroup',
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    data: {
+                        group_name: group_name,
+                        batch: batch,
+                        module: module,
+                        degrees: selectedDegrees,
+                        students: studentIDs,
+                        employees: employeeIDs,
+                    },
+                    dataType: 'json',
+                    encode: true
+                }).done(function (response) {
+                    console.log(response);
+                    if(response.status=='200'){
+                        console.log('success');
+                        window.alert("Group saved successfully");
+                        window.location.href = '/nac/semester';
+                    }else{
+                        window.alert("Something went wrong");
+                    }
+                });
+        }
 
         function autoGenerateGroupName(){
             let auto_generate_group_name = document.getElementById("auto_generate_group_name").checked;

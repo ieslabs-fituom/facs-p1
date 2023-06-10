@@ -327,7 +327,7 @@ exports.add_group_verifygroup = async (req, res) => {
 
     console.log(batch, module, degrees, group_name, filter_type);
 
-    const checkGroupName = (group_name) => {
+    const checkGroupName = async (group_name) => {
         return new Promise((resolve, reject) => {
             let query = 'SELECT * FROM student_groups WHERE Name = ?';
             conn.query(query, group_name, (err, result) => {
@@ -337,7 +337,7 @@ exports.add_group_verifygroup = async (req, res) => {
         });
     }
 
-    const getStudents = (batch, degrees) => {
+    const getStudents = async (batch, degrees) => {
         return new Promise((resolve, reject) => {
             let query = 'SELECT id,IndexNo,Name,Degree,Batch FROM students WHERE Batch = ? AND Degree IN (?) ORDER BY IndexNo';
             conn.query(query, [batch, degrees], (err, result) => {
@@ -423,7 +423,6 @@ exports.add_group_getemployee = async (req, res) => {
 
     try {
         employee = await commonFunctions.getEmployeeDetails(conn, [indexNo], ['id,IndexNo,Name'],1);
-        console.log(employee)
     } catch (e) {
         res.send({ status: '500', error: e });
         console.log(e);
@@ -437,6 +436,148 @@ exports.add_group_getemployee = async (req, res) => {
         res.send({ status: '200', employees: employee });
         return;
     }
+}
+
+// SAVE GROUP DETAILS AFTER FINALIZING
+exports.add_group_savegroup = async (req, res) => {
+    let group_name = req.body.group_name;
+    let batch = req.body.batch;
+    let module = req.body.module;
+    let degrees = req.body.degrees;
+    let students = req.body.students;
+    let employees = req.body.employees;
+
+    const addGroup = async (group_name, batch, module) => {
+        return new Promise((resolve, reject) => {
+            let query = 'INSERT INTO student_groups(Name,Batch,Module) VALUES(?,?,?)';
+            conn.query(query, [group_name, batch, module], (err, result) => {
+                if (err) reject(err);
+                else resolve(result);
+            });
+        });
+    }
+
+    let group_id, result;
+    try{
+        result = await addGroup(group_name, batch, module);
+        group_id = result.insertId;
+    } catch(e){
+        console.log(e);
+        res.send({ status: '500', error: e });
+        return;
+    }
+
+    const addDegrees_of_group = async (group_id, degrees) => {
+        return new Promise((resolve, reject) => {
+            let query = 'INSERT INTO degree_of_groups(Stu_group,Degree) VALUES ';
+            for(let degree of degrees){
+                query += '(' + group_id + ',' + Number(degree) + '),';
+            }
+            query = query.substring(0, query.length - 1);
+            
+            conn.query(query, (err, result) => {
+                if (err) reject(err);
+                else resolve(result);
+            });
+        });
+    }
+    
+    try{
+        result = await addDegrees_of_group(group_id, degrees);
+    } catch(e){
+        // Rollback code
+        console.log(e);
+        res.send({ status: '500', error: e });
+        return;
+    }
+
+    if(result.affectedRows == 0){
+        // Rollback code
+        res.send({ status: '500', error: e });
+        return;
+    }
+
+    const addStudents_of_group = async (group_id, students) => {
+        return new Promise((resolve, reject) => {
+            let query = 'INSERT INTO groups_for_students(Stu_group,Student) VALUES ';
+            for(let student of students){
+                query += '(' + group_id + ',"' + student + '"),';
+            }
+            query = query.substring(0, query.length - 1);
+            
+            conn.query(query, (err, result) => {
+                if (err) reject(err);
+                else resolve(result);
+            });
+        });
+    }
+
+    try{
+        result = await addStudents_of_group(group_id, students);
+    } catch(e){
+        // Rollback code
+        console.log(e);
+        res.send({ status: '500', error: e });
+        return;
+    }
+
+    if(result.affectedRows == 0){
+        // Rollback code
+        res.send({ status: '500', error: e });
+        return;
+    }
+
+    const addEmployees_of_group = async (group_id, employees) => {
+        return new Promise((resolve, reject) => {
+            let query = 'INSERT INTO employees_of_groups(Emp_group,Employee) VALUES ';
+            for(let employee of employees){
+                query += '(' + group_id + ',"' + employee + '"),';
+            }
+            query = query.substring(0, query.length - 1);
+            
+            conn.query(query, (err, result) => {
+                if (err) reject(err);
+                else resolve(result);
+            });
+        });
+    }
+
+    try{
+        result = await addEmployees_of_group(group_id, employees);
+    } catch(e){
+        // Rollback code
+        console.log(e);
+        res.send({ status: '500', error: e });
+        return;
+    }
+
+    if(result.affectedRows == 0){
+        // Rollback code
+        res.send({ status: '500', error: e });
+        return;
+    }
+    
+    const addAttendanceTable = async (group_id) => {
+        return new Promise((resolve, reject) => {
+            let query = 'CREATE TABLE IF NOT EXISTS attendance_' + group_id + ' (`id` int NOT NULL AUTO_INCREMENT PRIMARY KEY, `Student` int NOT NULL)';
+            conn.query(query, (err, result) => {
+                if (err) reject(err);
+                else resolve(result);
+            });
+        });
+    }
+
+    try{
+        result = await addAttendanceTable(group_id);
+    } catch(e){
+        // Rollback code
+        console.log(e);
+        res.send({ status: '500', error: e });
+        return;
+    }
+
+    res.send({ status: '200' });
+    
 }
 
 exports.stu_view = async (req, res) => {
