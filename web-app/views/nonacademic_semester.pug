@@ -10,7 +10,7 @@ block content
                     .row.mt-2.px-2.justify-content-center
                         .col-xl-4.col-xs-0.my-1
                             .card.bg-gray-300.py-2.rounded-2.card-hover
-                                .row.align-items-center.justify-content-between.px-3
+                                .row.align-items-center.justify-content-between.px-3(onclick="toggleExpands('groups_expand')")
                                     .col
                                         span.my-auto.text-sm.font-weight-bold.text-dark View Student Groups
                                     .col
@@ -26,7 +26,7 @@ block content
                                             .icon.icon-shape.icon-sm.border-radius-md.text-center.d-flex.align-items-center.justify-content-center.ms-auto.me-0
                                                 i.fa.fa-plus.text-secondary.text-lg.opacity-10
 
-                    .row#groups_expand
+                    .row#groups_expand.invisible
                         .d-flex.flex-row.my-3.justify-content-center
                             hr.horizontal.dark.mt-3.w-50
 
@@ -134,7 +134,6 @@ block content
                             .col-lg-0.text-center
                                     button.btn.btn-primary.btn-sm.ps-7.pe-7(onclick="searchSessions()") Add Session To Time Table
 
-
                     
 
     script.
@@ -155,6 +154,14 @@ block content
             document.getElementById("pastreports-nav-link").classList.remove('active');
             document.getElementById("students-nav-link").classList.remove('active');
             document.getElementById("semester-nav-link").classList.add('active');
+        }
+
+        function toggleExpands(expandingPanel){
+            if(document.getElementById(expandingPanel).classList.contains('invisible'))
+                document.getElementById(expandingPanel).classList.remove('invisible');
+            else
+                document.getElementById(expandingPanel).classList.add('invisible');
+
         }
 
         var win = navigator.platform.indexOf('Win') > -1;
