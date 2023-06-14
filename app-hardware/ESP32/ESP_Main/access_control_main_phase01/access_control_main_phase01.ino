@@ -81,6 +81,7 @@ void setup() {
   pinMode(16, INPUT);
   //digitalWrite(16,HIGH);
 
+
   // DS3231 RTC setup
   Wire.begin();
   rtc.begin();
@@ -215,7 +216,6 @@ String createJSON() {
   return json;
 }
 
-
 void loop() {
   if (uidInputEnabled == true) {
     if (digitalRead(16) == HIGH) {
@@ -256,6 +256,7 @@ void loop() {
           key = keypad.getKey();
           lcd.setCursor(0, 1);
           lcd.print(keypadInputString);
+
         } else {
           if (currentSessionID == "NULL") {
             // Get keys for session ID
