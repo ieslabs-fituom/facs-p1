@@ -130,9 +130,17 @@ exports.getDegreeDetails = function (conn, degrees) {
 }; // GET DETAILS OF A REQUIRED EMPLOYEE - GET COLUMNS WHICH ARE SPECIFIED IN COLUMNS PARAMETER USING THE IDs GIVEN IN PARAMS PARAMETER
 
 
-exports.getEmployeeDetails = function (conn, params, columns) {
+exports.getEmployeeDetails = function (conn, params, columns, type) {
+  // type -> 0 - using ID, 1 - using IndexNo
   return new Promise(function (resolve, reject) {
-    var sql = 'SELECT ' + columns.join(',') + ' FROM employees WHERE id IN (' + params.join(',') + ') ORDER BY id ASC';
+    var sql;
+
+    if (type == 0) {
+      sql = 'SELECT ' + columns.join(',') + ' FROM employees WHERE id IN (' + params.join(',') + ') ORDER BY IndexNo ASC';
+    } else if (type == 1) {
+      sql = 'SELECT ' + columns.join(',') + ' FROM employees WHERE IndexNo IN (' + params.join(',') + ') ORDER BY IndexNo ASC';
+    }
+
     console.log(sql);
     conn.query(sql, function (err, rows) {
       if (!err) {
@@ -178,6 +186,7 @@ exports.getStudentGroupDetails = function (conn, filterArray, filterArray2, type
   type = 2 -> get according to module
   type = 3 -> get according to batch
   TYPE = 4 -> get according to batch (filter array 1) and id (filter array 2)
+  TYPE = 5 -> get according to module (filter array 1) and batch (filter array 2)
   */
   return new Promise(function (resolve, reject) {
     var sql;
@@ -185,30 +194,15 @@ exports.getStudentGroupDetails = function (conn, filterArray, filterArray2, type
     if (type == 0) {
       sql = 'SELECT id,Name,Module,Batch FROM student_groups';
     } else if (type == 1) {
-      sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE id IN (';
+      sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE id IN (' + filterArray.join(',') + ')';
     } else if (type == 2) {
-      sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE Module IN (';
+      sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE Module IN ( ' + filterArray.join(',') + ')';
     } else if (type == 3) {
-      sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE Batch IN (';
-    } else if (type = 4) {
-      sql = 'SELECT id,Name,Module FROM student_groups WHERE Batch IN (';
-    }
-
-    if (type != 0) {
-      filterArray.forEach(function (element) {
-        sql = sql + element + ',';
-      });
-      sql = sql.substring(0, sql.length - 1);
-      sql = sql + ')';
-    }
-
-    if (type == 4) {
-      sql += ' AND id IN (';
-      filterArray2.forEach(function (element) {
-        sql = sql + element + ',';
-      });
-      sql = sql.substring(0, sql.length - 1);
-      sql = sql + ')';
+      sql = 'SELECT id,Name,Module,Batch FROM student_groups WHERE Batch IN ( ' + filterArray.join(',') + ')';
+    } else if (type == 4) {
+      sql = 'SELECT id,Name,Module FROM student_groups WHERE Batch IN ( ' + filterArray.join(',') + ') AND id IN (' + filterArray2.join(',') + ')';
+    } else if (type == 5) {
+      sql = 'SELECT id,Name FROM student_groups WHERE Module IN ( ' + filterArray.join(',') + ') AND Batch IN (' + filterArray2.join(',') + ')';
     }
 
     console.log(sql);
@@ -314,7 +308,7 @@ exports.getStudentsFiltered = function (conn, params, index) {
     }
 
     params.forEach(function (element) {
-      sql = sql + element + ',';
+      sql = sql + '"' + element + '",';
     });
     sql = sql.substring(0, sql.length - 1);
     sql = sql + ')';

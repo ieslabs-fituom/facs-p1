@@ -1,0 +1,188 @@
+extends main_nonacademic
+
+block content
+    .container-fluid.py-4
+        .row
+            .col-lg-0.mb-xl-0.mb-4
+                .card
+                    .card-header.pb-0.bg-transparent
+                        h6.text-capitalize Search Attendance
+                    .card-body.p-3.text-center
+                        .row.justify-content-center
+                            .col-lg-4.col-xs-0 
+                                .d-flex.align-items-center
+                                    .d-flex.flex-column.w-90
+                                        h6.text-dark.text-sm Batch
+                                        select#batch_select.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4
+                                            each batch in batches 
+                                                option(value=batch.id) Batch #{batch.Batch}
+                            .col-lg-4.col-xs-0 
+                                .d-flex.align-items-center
+                                    .d-flex.flex-column.w-90
+                                        h6.text-dark.text-sm Module Code
+                                        input#module_select.form-control.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg(type='text' value='' placeholder='Select module' name='module' list="modules")
+                                        datalist(id="modules")
+                                            each module in modules 
+                                                option(value=module.Code) #{module.Name}        
+                                            
+                        .row   
+                            .col-lg-0.text-center
+                                button.btn.btn-primary.btn-sm.mt-3.ps-7.pe-7(onclick="searchSessions()") Search
+        .row#attendance_row.mt-3.invisible
+            .col-lg-0.mb-xl-0.mb-4
+                .card
+                    .card-header.pb-0.pt-3.bg-transparent
+                        h6.text-capitalize Attendance
+                    .card-body.p-3
+                        .table-responsive
+                            //Class limited-rows-table - used to specify the max height and make scrollbars visible
+                            table#attendance_table.table.align-items-center
+                                tbody#attendance_table_body
+                                                        
+
+    script.
+
+        var batches,modules; // selectedSessionID - value is assigned for this when an user select a session from session
+        $(document).ready(function() {
+            batches = JSON.parse(JSON.stringify(!{JSON.stringify(batches)}));
+            modules = JSON.parse(JSON.stringify(!{JSON.stringify(modules)}));
+            sideBarChange();
+        });
+
+        // HIGHLIGHTING RELATED OPTION IN SIDEBAR
+        function sideBarChange(){
+            //console.log(modules);
+            document.getElementById("students-nav-link").classList.remove('active');
+            document.getElementById("today-nav-link").classList.remove('active');
+            document.getElementById("pastreports-nav-link").classList.add('active');
+            document.getElementById("students-nav-link").classList.remove('active');
+            document.getElementById("semester-nav-link").classList.remove('active');
+        }
+
+        var win = navigator.platform.indexOf('Win') > -1;
+        if (win && document.querySelector('#sidenav-scrollbar')) {
+            var options = {
+                damping: '0.5'
+            }
+            Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+        }
+
+        // SEARCH SESSIONS AFTER CLICKING SEARCH
+        function searchSessions(){
+            let selectedModule = document.getElementById("module_select").value;
+            let selectedBatch = document.getElementById("batch_select").value;
+            
+            let validModule = false;
+
+            for(module of modules){
+                if(module.Code == selectedModule){
+                    validModule = true;
+                    selectedModule = module.id;
+                    break;
+                }
+            }
+
+            for(batch of batches){
+                if(batch.Batch == selectedBatch){
+                    selectedBatch = batch.id;
+                    break;
+                }
+            }
+
+            if(!validModule){
+                window.alert("Please select valid module");
+                document.getElementById("module_select").innerText = "";
+                return;
+            }
+
+            $.ajax({
+                    type: 'GET',
+                    url: '/nac/moduleattendance/get',
+                    //headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    data: {
+                        batch: selectedBatch,
+                        module: selectedModule,
+                    },
+                    dataType: 'json',
+                    encode: true
+                }).done(function (response) {
+                    console.log(response);
+                    if(response.status=='200'){
+                        console.log('success');
+                        console.log(response.attendance);
+                        showAttendance(selectedModule,selectedBatch,response.attendance);
+                    }else{
+                        console.log('error');
+                        window.alert("Error occured while loading attendance")
+                    }
+                });
+
+        }
+
+        function showAttendance(module,batch,attendance){
+            var attendance_table_row = document.getElementById("attendance_row");
+            var attendance_table = document.getElementById("attendance_table_body");
+
+            clearSelectOptions(attendance_table)
+
+            if(attendance.length != 0){
+                let row,cell,element_p,element_h6,rowCount;
+
+                for(attendance_row of attendance){
+                    rowCount = attendance_table.rows.length;
+                    row = attendance_table.insertRow(rowCount);
+                    row.classList.add("limited-rows-tr");
+                    row.classList.add("selection-row");
+                    row.setAttribute("data-id",attendance_row.index);
+                    
+                    cell = row.insertCell(0);
+                    element_p = document.createElement("p");
+                    element_p.classList.add("text-xs");
+                    element_p.classList.add("font-weight-bold");
+                    element_p.classList.add("mb-0");
+                    element_p.innerHTML = 'Index No :';
+                    cell.appendChild(element_p);
+                    element_h6 = document.createElement("h6");
+                    element_h6.classList.add("text-sm");
+                    element_h6.classList.add("mb-0");
+                    element_h6.innerHTML = attendance_row.index;
+                    cell.appendChild(element_h6);
+
+                    cell = row.insertCell(1);
+                    element_p = document.createElement("p");
+                    element_p.classList.add("text-xs");
+                    element_p.classList.add("font-weight-bold");
+                    element_p.classList.add("mb-0");
+                    element_p.innerHTML = 'Name :';
+                    cell.appendChild(element_p);
+                    element_h6 = document.createElement("h6");
+                    element_h6.classList.add("text-sm");
+                    element_h6.classList.add("mb-0");
+                    element_h6.innerHTML = attendance_row.name;
+                    cell.appendChild(element_h6);
+
+                    cell = row.insertCell(2);
+                    element_p = document.createElement("p");
+                    element_p.classList.add("text-xs");
+                    element_p.classList.add("font-weight-bold");
+                    element_p.classList.add("mb-0");
+                    element_p.innerHTML = 'Percentage :';
+                    cell.appendChild(element_p);
+                    element_h6 = document.createElement("h6");
+                    element_h6.classList.add("text-sm");
+                    element_h6.classList.add("mb-0");
+                    element_h6.innerHTML = attendance_row.percentage + '%';
+                    cell.appendChild(element_h6);
+                }
+
+                attendance_table_row.classList.remove("invisible");
+            }else{
+                attendance_table_row.classList.add("invisible");
+                attendance_table_row.classList.add("invisible");
+                window.alert('No attendance reports for this filter');
+            }
+        }
+        
+        function clearSelectOptions(element){
+            element.innerHTML = '';
+        }

@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const nonacademic_controller = require('../controllers/nonacademic_controller');
 
-router.get('/sem/',nonacademic_controller.sem_view);
 router.get('/stu/',nonacademic_controller.stu_view);
 router.get('/stu/getfiltered',nonacademic_controller.stu_get_filtered);
 router.get('/stuprofile',nonacademic_controller.stu_get_profile);
@@ -11,6 +10,10 @@ router.get('/past',nonacademic_controller.past_reports_view);
 router.get('/past/getgroups',nonacademic_controller.past_get_groups);
 router.get('/past/getsessions',nonacademic_controller.past_get_sessions);
 router.get('/past/getsessionattendance',nonacademic_controller.past_get_sessionattendance);
+router.get('/moduleattendance',nonacademic_controller.past_moduleattendance_view);
+router.get('/moduleattendance/get',nonacademic_controller.past_moduleattendance);
+router.get('/degreeattendance',nonacademic_controller.past_degreeattendance_view);
+router.get('/degreeattendance/get',nonacademic_controller.past_degreeattendance);
 
 router.get('/timetable',nonacademic_controller.timetable_view);
 router.get('/timetable/getlectures',nonacademic_controller.timetable_getlectures);
@@ -21,7 +24,13 @@ router.get('/today/loadEmployeesOfGroup/',nonacademic_controller.today_loadEmplo
 router.post('/today/addSessionUsingTimeTableID/',nonacademic_controller.today_addSession);
 
 router.get('/semester/',nonacademic_controller.sem_view);
-
+router.get('/addgroup/',nonacademic_controller.add_group_view);
+router.get('/addgroup/verifygroup',nonacademic_controller.add_group_verifygroup);
+router.get('/addgroup/getstudent',nonacademic_controller.add_group_getstudent);
+router.get('/addgroup/getemployee',nonacademic_controller.add_group_getemployee);
+router.post('/addgroup/savestudentgroup',nonacademic_controller.add_group_savegroup);
+router.get('/semester/getgroups',nonacademic_controller.get_groups_timetable_setup);
+router.post('/semester/setupsession',nonacademic_controller.save_session_timetable_setup);
 module.exports = router;
 
 

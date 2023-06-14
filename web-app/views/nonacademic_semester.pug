@@ -4,31 +4,262 @@ block content
     .container-fluid.py-4
         .row
             .col-xl-0.col-sm-0.mb-xl-0.mb-4
-                .card.px-3.pb-3
+                .card.px-3.pb-4
                     .card-header.pb-0.pt-3.bg-transparent
                         h6.text-capitalize.text-center Student Groups
-                    .row.mt-2.px-2.justify-content-evenly
-                        .col-xl-5.col-xs-0
-                            .card.bg-gray-300.py-2.rounded-2
-                                .row.align-items-center.justify-content-between.px-3
+                    .row.mt-2.px-2.justify-content-center
+                        .col-xl-4.col-xs-0.my-1
+                            .card.bg-gray-300.py-2.rounded-2.card-hover
+                                .row.align-items-center.justify-content-between.px-3(onclick="toggleExpands('groups_expand')")
                                     .col
-                                        span.my-auto.text-sm.font-weight-bold.text-dark View Groups
-                                    .col
-                                        .icon.icon-shape.icon-sm.border-radius-md.text-center.d-flex.align-items-center.justify-content-center.ms-auto.me-0
-                                            i.fa.fa-users.text-secondary.text-lg.opacity-10
-                        .col-xl-5.col-xs-0
-                            .card.bg-gray-300.py-2.rounded-2
-                                .row.align-items-center.justify-content-between.px-3
-                                    .col
-                                        span.my-auto.text-sm.font-weight-bold.text-dark View Groups
+                                        span.my-auto.text-sm.font-weight-bold.text-dark View Student Groups
                                     .col
                                         .icon.icon-shape.icon-sm.border-radius-md.text-center.d-flex.align-items-center.justify-content-center.ms-auto.me-0
                                             i.fa.fa-users.text-secondary.text-lg.opacity-10
+                        .col-xl-4.col-xs-0.my-1
+                            .card.bg-gray-300.py-2.rounded-2.card-hover
+                                a(href='/nac/addgroup')
+                                    .row.align-items-center.justify-content-between.px-3
+                                        .col
+                                            span.my-auto.text-sm.font-weight-bold.text-dark Add Student Group
+                                        .col
+                                            .icon.icon-shape.icon-sm.border-radius-md.text-center.d-flex.align-items-center.justify-content-center.ms-auto.me-0
+                                                i.fa.fa-plus.text-secondary.text-lg.opacity-10
+
+                    .row#groups_expand.invisible
+                        .d-flex.flex-row.my-3.justify-content-center
+                            hr.horizontal.dark.mt-3.w-50
+
+                        .row.mt-2.px-2.justify-content-center
+                            .col-xl-4.col-xs-0.my-1
+                                h6.text-dark.text-sm Batch
+                                    select#batch_select_groups.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="")
+                                        each batch in batches 
+                                            option(value=batch.id) Batch #{batch.Batch}
+                            .col-xl-4.col-xs-0.my-1
+                                h6.text-dark.text-sm Module
+                                    select#module_select_groups.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="")
+                                        each module in modules 
+                                            option(value=module.id) #{module.Code} - #{module.Name}
+                        .row.mt-1.px-2.justify-content-center
+                            .col-lg-0.text-center
+                                    button.btn.btn-primary.btn-sm.ps-7.pe-7(onclick="") Search
+
+        .row.mt-4
+            .col-xl-0.col-sm-0.mb-xl-0.mb-4
+                .card.px-3.pb-4
+                    .card-header.pb-0.pt-3.bg-transparent
+                        h6.text-capitalize.text-center Time Table
+                    .row.mt-2.px-2.justify-content-center
+                        .col-xl-4.col-xs-0.my-1
+                            .card.bg-gray-300.py-2.rounded-2.card-hover
+                                .row.align-items-center.justify-content-between.px-3
+                                    .col
+                                        span.my-auto.text-sm.font-weight-bold.text-dark View Time Table
+                                    .col
+                                        .icon.icon-shape.icon-sm.border-radius-md.text-center.d-flex.align-items-center.justify-content-center.ms-auto.me-0
+                                            i.fa.fa-table.text-secondary.text-lg.opacity-10
+                        .col-xl-4.col-xs-0.my-1
+                            .card.bg-gray-300.py-2.rounded-2.card-hover
+                                .row.align-items-center.justify-content-between.px-3(onclick="toggleExpands('timetable_expand_1')")
+                                    .col
+                                        span.my-auto.text-sm.font-weight-bold.text-dark Set-up Time Table
+                                    .col
+                                        .icon.icon-shape.icon-sm.border-radius-md.text-center.d-flex.align-items-center.justify-content-center.ms-auto.me-0
+                                            i.fa.fa-cog.text-secondary.text-lg.opacity-10
+
+                    .row#timetable_expand_1.invisible
+                        .d-flex.flex-row.my-3.justify-content-center
+                            hr.horizontal.dark.mt-3.w-50
+
+                        .row.mt-2.px-2.justify-content-center
+                            .col-xl-3.col-xs-0.my-1
+                                h6.text-dark.text-sm Day
+                                    select#day_select.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="")
+                                        option(value='1') Monday
+                                        option(value='2') Tuesday
+                                        option(value='3') Wednesday
+                                        option(value='4') Thursday
+                                        option(value='5') Friday
+                                        option(value='6') Saturday
+                                        option(value='7') Sunday
+                            .col-xl-3.col-xs-0.my-1
+                                h6.text-dark.text-sm Batch
+                                    select#batch_select_timetable.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="")
+                                        each batch in batches 
+                                            option(value=batch.id) Batch #{batch.Batch}
+                            .col-xl-4.col-xs-0.my-1
+                                h6.text-dark.text-sm Module
+                                    select#module_select_timetable.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="")
+                                        each module in modules 
+                                            option(value=module.id) #{module.Code} - #{module.Name}
+                        .row.mt-1.px-2.justify-content-center
+                            .col-lg-0.text-center
+                                    button.btn.btn-primary.btn-sm.ps-7.pe-7(onclick="getGroups_for_timetable_Setup()") View Groups and Set-up
+
+                    .row#timetable_expand_2.bg-gray-200.rounded-3.pb-2.my-4.mx-2.invisible
+                        .card-header.pb-1.pt-3.bg-dark
+                            h6.text-capitalize.text-center.text-light.font-weight-bolder Set-up Session
+
+                        .row.mt-2.px-2.justify-content-center
+                            .col-xl-6.col-xs-0.my-1
+                                h6.text-dark.text-sm.text-center Select Group
+                                    select#group_select_timetable.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="")
+                        .row.px-2.justify-content-center
+                            .col-xl-3.col-xs-0.my-1
+                                h6.text-dark.text-sm Start Time
+                                    input#start_time_timetable.form-control.text-xs.me-8.ms-0.mt-1.mb-3.lh-lg(type='time' value='' placeholder='Select Start Time' name='start_time_timetable')
+                            .col-xl-3.col-xs-0.my-1
+                                h6.text-dark.text-sm Duration (In hours)
+                                    input#duration_timetable.form-control.text-xs.me-8.ms-0.mt-1.mb-3.lh-lg(type='number' step="0.25" value="0.00" placeholder='Session Duration' name='duration_timetable')
+                        .row.px-2.justify-content-center
+                            .col-xl-3.col-xs-0.my-1
+                                h6.text-dark.text-sm Start Time
+                                    select#method_select_timetable.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="")
+                                        option(value='0') Physical
+                                        option(value='1') Online
+                            .col-xl-3.col-xs-0.my-1
+                                h6.text-dark.text-sm Duration (In hours)
+                                    select#type_select_timetable.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="")
+                                        option(value='0') Lecture
+                                        option(value='1') Lab
+                                        option(value='2') Assignment
+                                        option(value='3') Examination
+                            .col-xl-3.col-xs-0.my-1
+                                h6.text-dark.text-sm Start Time
+                                    select#repeat_select_timetable.form-select.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg4(onchange="")
+                                        option(value='0') Every Week
+                                        option(value='1') Every Other Week
+                        .row.mt-1.px-2.justify-content-center
+                            .col-lg-0.text-center
+                                    button.btn.btn-primary.btn-sm.ps-7.pe-7(onclick="setUpSession()") Add Session To Time Table
+
+                    
+
     script.
+
+        var batches,modules,groups,degrees, attendances, lecturers, selectedSessionID; // selectedSessionID - value is assigned for this when an user select a session from session
+        var day_timetable, batch_timetable, module_timetable;;
+        $(document).ready(function() {
+            //batches = JSON.parse(JSON.stringify(!{JSON.stringify(batches)}));
+            //modules = JSON.parse(JSON.stringify(!{JSON.stringify(modules)}));
+            //degrees = JSON.parse(JSON.stringify(!{JSON.stringify(degrees)}));
+            sideBarChange();
+        });
+
+        // HIGHLIGHTING RELATED OPTION IN SIDEBAR
+        function sideBarChange(){
+            //console.log(modules);
+            document.getElementById("students-nav-link").classList.remove('active');
+            document.getElementById("today-nav-link").classList.remove('active');
+            document.getElementById("pastreports-nav-link").classList.remove('active');
+            document.getElementById("students-nav-link").classList.remove('active');
+            document.getElementById("semester-nav-link").classList.add('active');
+        }
+
+        function toggleExpands(expandingPanel){
+            if(document.getElementById(expandingPanel).classList.contains('invisible'))
+                document.getElementById(expandingPanel).classList.remove('invisible');
+            else
+                document.getElementById(expandingPanel).classList.add('invisible');
+        }
+
+        function getGroups_for_timetable_Setup(){
+            day_timetable = document.getElementById("day_select").value;
+            batch_timetable = document.getElementById("batch_select_timetable").value;
+            module_timetable = document.getElementById("module_select_timetable").value;
+
+            document.getElementById("timetable_expand_2").classList.add('invisible');
+
+            $.ajax({
+                    type: 'get',
+                    url: '/nac/semester/getgroups',
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    data: {
+                        batch: batch_timetable,
+                        module: module_timetable,
+                    },
+                    dataType: 'json',
+                    encode: true
+                }).done(function (response) {
+                    if(response.status=='200'){
+                        console.log('success');
+                        document.getElementById("timetable_expand_2").classList.remove('invisible');
+                        let group_select = document.getElementById("group_select_timetable");
+                        clearSelectOptions(group_select);
+                        for(group of response.groups){
+                            let option = document.createElement("option");
+                            option.value = group.id;
+                            option.text = group.Name;
+                            group_select.add(option);
+                        }
+                        document.getElementById("duration_timetable").value = '2.00';
+
+                    }else if(response.status=='201'){
+                        window.alert("No groups found for this filter");
+                    } else{
+                        window.alert("Something went wrong");
+                    }
+                });   
+        }
+
+        function setUpSession(){
+            let selectedGroup = document.getElementById("group_select_timetable").value;
+            let startTime = document.getElementById("start_time_timetable").value;
+            let duration = document.getElementById("duration_timetable").value; 
+            let method = document.getElementById("method_select_timetable").value;
+            let type = document.getElementById("type_select_timetable").value;
+            let repeat = document.getElementById("repeat_select_timetable").value;
+
+            if(selectedGroup=='' || startTime=='' || duration=='' || method=='' || type=='' || repeat==''){
+                window.alert("Please fill all the fields");
+                return;
+            }
+
+            if(Number(duration)==0){
+                window.alert("Duration cannot be zero");
+                return;
+            }
+
+            $.ajax({
+                    type: 'POST',
+                    url: '/nac/semester/setupsession',
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    data: {
+                        group: selectedGroup,
+                        day: day_timetable,
+                        startTime: startTime,
+                        duration: duration,
+                        method: method,
+                        type: type,
+                        repeat: repeat,
+                    },
+                    dataType: 'json',
+                    encode: true
+                }).done(function (response) {
+                    if(response.status=='200'){
+                        console.log('success');
+                        window.alert("Session added successfully");
+                        document.getElementById("start_time_timetable").value = '';
+                        document.getElementById("duration_timetable").value = '2.00';
+                        toggleExpands('timetable_expand_2');
+                    }else if(response.status=='201'){
+                        window.alert("There is a session already added with this details (Day, Batch, Module, Group, Start Time)");
+                    } else{
+                        window.alert("Something went wrong");
+                    }
+                });
+        }
+
         var win = navigator.platform.indexOf('Win') > -1;
         if (win && document.querySelector('#sidenav-scrollbar')) {
             var options = {
                 damping: '0.5'
             }
             Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+        }
+
+        
+        function clearSelectOptions(element){
+            element.innerHTML = '';
         }
