@@ -38,19 +38,11 @@ var academic_route = require('./server/routes/academic_route');
 
 var nonacademic_route = require('./server/routes/nonacademic_route');
 
-app.use('/ac/', academic_route);
-app.use('/nac/', nonacademic_route); // Common Routes
-// Sign In route
+var common_route = require('./server/routes/common_route');
 
-app.get('/', function (req, res) {
-  res.render('sign-in');
-});
-app.get('/signin', function (req, res) {
-  res.render('sign-in');
-});
-app.get('/signup', function (req, res) {
-  res.render('sign-in');
-}); // UNCOMENT FOLLOWING BLOCK TO CHANGE LOADING SCREEN TO REQUIRED VIEW : CHANGE 'sample_view' TO REQUIRED VIEW
+app.use('/ac/', academic_route);
+app.use('/nac/', nonacademic_route);
+app.use('/', common_route); // UNCOMENT FOLLOWING BLOCK TO CHANGE LOADING SCREEN TO REQUIRED VIEW : CHANGE 'sample_view' TO REQUIRED VIEW
 
 /*app.get('/', (req, res) => {
   res.render('sample_view_2', { title: 'Hey', message: [1,2,3,4,5,6,7,8,9] });

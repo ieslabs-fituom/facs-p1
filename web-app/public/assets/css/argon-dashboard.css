@@ -2768,7 +2768,7 @@ progress {
 }
 
 .form-control::placeholder {
-  color: #adb5bd;
+  color: #7f8c8d;
   opacity: 1;
 }
 
@@ -5181,6 +5181,15 @@ fieldset:disabled .btn {
   background-clip: border-box;
   border: var(--bs-card-border-width) solid var(--bs-card-border-color);
   border-radius: var(--bs-card-border-radius);
+}
+
+.card-hover{
+  transition: all 0.3s ease-in-out;
+  background-color: #dee2e6 !important;
+}
+
+.card-hover:hover{
+  background-color: #e9ecef !important;
 }
 
 .card > hr {
@@ -10851,7 +10860,7 @@ fieldset:disabled .btn {
 }
 
 .invisible {
-  visibility: hidden !important;
+  display: none !important;
 }
 
 .transform-scale-5 {
