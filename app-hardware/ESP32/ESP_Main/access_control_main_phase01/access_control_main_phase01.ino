@@ -27,10 +27,6 @@
 
 
 
-
-
-
-
 //PIN DEFINITIONS HERE
 #define RC522_RST_PIN 15
 #define RC522_SS_PIN 5
@@ -40,9 +36,9 @@
 
 //VARIABLES AND CONSTANTS DEFINITION HERE
 unsigned long uid = 0;
-const char* ssid = "Iman_WIFI";
-const char* password = "12345678";
-const char* serverName = "http://192.168.8.142:80/api.php";
+const char* ssid = "Among_Us";
+const char* password = "lakmina2055176";
+const char* serverName = "http://192.168.1.3:80/api.php";
 String apiKeyValue = "tPmAT5Ab3j7F9";
 String time_string;
 
@@ -67,12 +63,14 @@ Keypad keypad = Keypad(makeKeymap(keys), pin_rows, pin_column, ROW_NUM, COLUMN_N
 String keypadInputString = "";
 long keyPadInputInt;
 int uidInputEnabled = false;
-String currentSessionID = "";
+String currentSessionID = "NULL";
+String dataSendCode = "ABC";
+String resetCode = "CBA";
+
+DynamicJsonDocument doc(2048);
+JsonArray array;
 
 void setup() {
-
-
-  delay(5000);
   //LIBRARY INITIALTIONS
   Serial.begin(115200);
   SPI.begin();
@@ -80,14 +78,8 @@ void setup() {
   delay(4);  // Optional delay. Some board do need more time after init to be ready
   rdm6300.begin(RDM6300_RX_PIN);
 
-  delay(3000);
-
-  if(!SD.begin()){
-      Serial.println("Card Mount Failed");
-      return;
-  }else {
-      Serial.println("Passed mount");
-  }
+  pinMode(16, INPUT);
+  //digitalWrite(16,HIGH);
 
 
   // DS3231 RTC setup
@@ -108,20 +100,19 @@ void setup() {
   lcd.backlight();
   lcd.setCursor(2, 0);
 
-  //WIFI
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("");
-  Serial.print("Connected. IP Address: ");
-  Serial.println(WiFi.localIP());
-
-
   boolean multipleRead = false;
 
   uidInputEnabled = false;
+
+  doc["api_key"] = "tPmAT5Ab3j7F9";
+  doc["session_id"] = "NULL";
+  array = doc.createNestedArray("attendance");
+  printLCD(0, 0, NULL, "System Starting");
+
+  connectWifi();
+
+  printLCD(0, 0, NULL, "Enter Session ID");
+  lcd.setCursor(0, 1);
 }
 
 unsigned long readCard() {
@@ -160,70 +151,90 @@ void printLCD(int cursorX, int cursorY, unsigned long uid, String data) {
   } else {
     lcd.print(uid);
   }
+}
 
-  delay(5000);
-  lcd.noBacklight();
+void connectWifi() {
+  if (WiFi.status() != WL_CONNECTED) {
+    printLCD(0, 0, NULL, "Wifi Connecting...");
+    WiFi.begin(ssid, password);
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      Serial.print(".");
+    }
+    Serial.print("Connected. IP Address: ");
+    Serial.println(WiFi.localIP());
+    printLCD(0, 0, NULL, "Wifi Connected");
+    delay(2000);
+    lcd.clear();
+  }
 }
 
 int sendToServer() {  // return -> >0 - success, <0 - failure, 0 - wifi disconnected
+
   if (WiFi.status() == WL_CONNECTED) {
+    printLCD(0, 0, NULL, "Sending Data...");
     WiFiClient client;
     HTTPClient http;
     http.begin(client, serverName);
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
     String json = createJSON();
-    Serial.print(json);
+    Serial.println(json);
     int httpResponseCode = http.POST(json);
 
     if (httpResponseCode > 0) {
       Serial.print("HTTP Response code: ");
       Serial.println(httpResponseCode);
+      printLCD(0, 0, NULL, "Successful");
     } else {
       Serial.print("Error code: ");
       Serial.println(httpResponseCode);
+      printLCD(0, 0, NULL, "Error");
     }
     http.end();
     return httpResponseCode;
   } else {
+    printLCD(0, 0, NULL, "Wifi Connection Failed");
     Serial.println("WiFi Disconnected");
     return 0;
   }
 }
 
 String createJSON() {
-  DynamicJsonDocument doc(2048);
+  /*DynamicJsonDocument doc(2048);
   doc["api_key"] = "tPmAT5Ab3j7F9";
   doc["session_id"] = 34;
   JsonArray array = doc.createNestedArray("attendance");
-  array.add(1);
-  array.add(3);
+  int size_attendanceList = sizeof(attendanceList) / sizeof(attendanceList[0]);
+  if (size_attendanceList > 0) {
+    for (int arrayCount = 0; arrayCount < size_attendanceList; arrayCount++) {
+      array.add(attendanceList[arrayCount]);
+    }
+  }*/
   String json;
   serializeJson(doc, json);
   return json;
 }
 
-void SdTest(){
-  Serial.print("SD Card Type: ");
-    if(cardType == CARD_MMC){
-        Serial.println("MMC");
-    } else if(cardType == CARD_SD){
-        Serial.println("SDSC");
-    } else if(cardType == CARD_SDHC){
-        Serial.println("SDHC");
-    } else {
-        Serial.println("UNKNOWN");
-    }
-}
-
-
 void loop() {
+  if (uidInputEnabled == true) {
+    if (digitalRead(16) == HIGH) {
+      uidInputEnabled = false;
+      if (currentSessionID != "NULL") {
+        printLCD(0, 0, NULL, "Enter Password");
+        lcd.setCursor(0, 1);
+      }
+    }
+  }
+
+  //Serial.println(digitalRead(16));
 
   if (uidInputEnabled == true) {
     uid = readCard();
     delay(30);
 
     if (uid != 0) {
+      array.add(String(uid));
       lcd.clear();
       //CREATING A DATETIME OBJECT TO RTC
       DateTime time = rtc.now();
@@ -231,27 +242,65 @@ void loop() {
       Serial.print(time_string);
       Serial.println(uid);
       printLCD(0, 0, uid, "");
-      sendToServer();
       uid = 0;
-      delay(1000);
-      lcd.clear();
+      delay(1500);
+      lcd.noBacklight();
     }
   } else {
     char key = keypad.getKey();
     while (key) {
       if (key) {
         if (key != ' ') {
+          Serial.print(String(key));
           keypadInputString += key;
           key = keypad.getKey();
-          Serial.print(key);
+          lcd.setCursor(0, 1);
+          lcd.print(keypadInputString);
 
         } else {
-          Serial.print(keypadInputString);
-          printLCD(0, 0, NULL, "Session Assigned");
-          uidInputEnabled = true;
-          currentSessionID = keypadInputString;
-          keypadInputString = "";
-          break;
+          if (currentSessionID == "NULL") {
+            // Get keys for session ID
+            if (keypadInputString != "") {
+              Serial.print(keypadInputString);
+              printLCD(0, 0, NULL, "Session Assigned");
+              uidInputEnabled = true;
+              currentSessionID = keypadInputString;
+              doc["session_id"] = currentSessionID;
+              keypadInputString = "";
+              break;
+            }
+
+          } else {
+            // Get keys for datasend secret code or reset code
+            if (keypadInputString == dataSendCode) {
+              // Data sending
+              Serial.println("Data sending");
+              int result = sendToServer();
+              if (result > 0) {
+                printLCD(0, 0, NULL, "Successful");
+                currentSessionID = "NULL";
+                uidInputEnabled = false;
+                array.clear();
+                doc["session_id"] = "";
+                delay(2000);
+                printLCD(0, 0, NULL, "Enter Session ID");
+                lcd.setCursor(0, 1);
+              } else if (result < 0) {
+                printLCD(0, 0, NULL, "Error");
+              }
+              keypadInputString = "";
+            } else if (keypadInputString == resetCode) {
+              // Reset session
+              Serial.println("Resetting Session");
+              keypadInputString = "";
+            } else {
+              keypadInputString = "";
+              uidInputEnabled = true;
+              printLCD(0, 0, NULL, "Incorrect PW");
+              delay(2000);
+              printLCD(0, 0, NULL, "Produce ID Card");
+            }
+          }
         }
       }
     }
