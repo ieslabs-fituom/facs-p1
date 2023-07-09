@@ -5,7 +5,6 @@ const pug = require('pug');
 const mysql = require('mysql2');
 const crypto = require('crypto');
 
-
 // DOTENV LOAD ENVIRONMENT VARIABLES IN .ENV FILE AS PROCESS.ENV.<PROPERTY_NAME>
 require('dotenv').config();
 
@@ -13,7 +12,7 @@ require('dotenv').config();
 const app = express();
 
 // RUNTIME PORT - LOAD FROM .ENV FILE OR USE 5000
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 
 /*
 *   PARSING MIDDLEWARES
