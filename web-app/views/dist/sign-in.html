@@ -88,11 +88,12 @@
       encode: true
         }).always(function (response) {
           if(response.status=='200'){
-            if(response.type == '5'){
-              window.location.href = "/nac/today";
+            window.location.href = "/nac/today";
+            /*if(response.type == '5'){
+              
             }else{
               window.alert('Academic staffs are not allowed to sign in here yet')
-            }
+            }*/
             
           }else if(response.status=='201'){
             window.alert("User not found");   

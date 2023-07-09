@@ -1737,7 +1737,7 @@ exports.stu_get_profile = function _callee15(req, res) {
       switch (_context25.prev = _context25.next) {
         case 0:
           console.log('Function starting... stu profile');
-          search_index = req.query.searchoption;
+          search_index = req.query.index;
           search_keyword = req.query.keyword;
           _context25.next = 5;
           return regeneratorRuntime.awrap(loadInitialDetails());
@@ -1786,8 +1786,9 @@ exports.stu_get_profile = function _callee15(req, res) {
             break;
           }
 
-          res.status(201).send({
-            res: 'No such students'
+          res.send({
+            status: '201',
+            message: 'No such students'
           });
           return _context25.abrupt("return");
 
