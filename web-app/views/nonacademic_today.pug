@@ -551,10 +551,10 @@ block content
         }
 
         function checkValidTimeStamp(timestamp){
-            if(timestamp.length!=19){
+            if(timestamp.length!=8){
                 return false;
             }
-            if(timestamp.substring(4,5) == '-' && timestamp.substring(7,8) == '-' && timestamp.substring(13,14) == ':' && timestamp.substring(16,17) == ':'){
+            if(timestamp.substring(2,3) == ':' && timestamp.substring(5,6) == ':'){
                 return true;
             }else{
                 return false;
