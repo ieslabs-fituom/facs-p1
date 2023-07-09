@@ -17,11 +17,12 @@ exports.sign_in_view = async (req, res) => {
 
 exports.continue_sign_in = async (req, res) => {
     let email = req.body.email;
+    let password = req.body.password;
 
-    
+
     let loadUserDetails = (email) => {
         return new Promise((resolve, reject) => {
-            let sql = 'SELECT id,Designation FROM employees WHERE Email = "' + email + '"';
+            let sql = 'SELECT id,Designation,Password FROM employees WHERE Email = "' + email + '"';
             conn.query(sql, (err, rows) => {
                 if (!err) {
                     return resolve(rows);
@@ -35,17 +36,22 @@ exports.continue_sign_in = async (req, res) => {
     loadUserDetails(email)
         .then((rows) => {
             if (rows.length == 0) {
-                res.send({status: '201', message: 'User not found'});
-            }else{
-                process.env.CURRENT_ID = rows[0].id;
-                process.env.CURRENT_TYPE = rows[0].Designation;
+                res.send({ status: '201', message: 'User not found' });
+            } else {
+                if (rows[0].Password == password) {
+                    process.env.CURRENT_ID = rows[0].id;
+                    process.env.CURRENT_TYPE = rows[0].Designation;
 
-                res.send({status: '200', type: rows[0].Designation});
+                    res.send({ status: '200', type: rows[0].Designation });
+                } else {
+                    res.send({ status: '202', message: 'Incorrect password' });
+                }
+                
             }
-            
+
         })
         .catch((err) => {
             console.log(err);
-            res.send({status: '500', message: 'Internal Server Error'})
+            res.send({ status: '500', message: 'Internal Server Error' })
         });
 }
