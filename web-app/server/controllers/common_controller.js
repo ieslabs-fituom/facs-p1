@@ -46,7 +46,7 @@ exports.continue_sign_in = async (req, res) => {
                 } else {
                     res.send({ status: '202', message: 'Incorrect password' });
                 }
-                
+
             }
 
         })
@@ -54,4 +54,10 @@ exports.continue_sign_in = async (req, res) => {
             console.log(err);
             res.send({ status: '500', message: 'Internal Server Error' })
         });
+}
+
+exports.continue_sign_out = async (req, res) => {
+    process.env.CURRENT_ID = "";
+    process.env.CURRENT_TYPE = "";
+    res.render('sign-in');
 }
