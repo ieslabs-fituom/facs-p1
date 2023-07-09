@@ -646,7 +646,7 @@ exports.add_group_verifygroup = function _callee7(req, res) {
                     return _context7.abrupt("return", new Promise(function (resolve, reject) {
                       var query = 'SELECT * FROM student_groups WHERE Name = ?';
                       conn.query(query, group_name, function (err, result) {
-                        if (err) reject(err);else resolve(result);
+                        if (err) reject(err); else resolve(result);
                       });
                     }));
 
@@ -666,7 +666,7 @@ exports.add_group_verifygroup = function _callee7(req, res) {
                     return _context8.abrupt("return", new Promise(function (resolve, reject) {
                       var query = 'SELECT id,IndexNo,Name,Degree,Batch FROM students WHERE Batch = ? AND Degree IN (?) ORDER BY IndexNo';
                       conn.query(query, [batch, degrees], function (err, result) {
-                        if (err) reject(err);else resolve(result);
+                        if (err) reject(err); else resolve(result);
                       });
                     }));
 
@@ -885,7 +885,7 @@ exports.add_group_getstudent = function _callee8(req, res) {
           return _context10.stop();
       }
     }
-  }, null, null, [[3, 10], [23, 35, 39, 47], [40,, 42, 46]]);
+  }, null, null, [[3, 10], [23, 35, 39, 47], [40, , 42, 46]]);
 }; // GET EMPLOYEE DETAILS TO ADD TO A GROUP
 
 
@@ -964,7 +964,7 @@ exports.add_group_savegroup = function _callee10(req, res) {
                     return _context12.abrupt("return", new Promise(function (resolve, reject) {
                       var query = 'INSERT INTO student_groups(Name,Batch,Module) VALUES(?,?,?)';
                       conn.query(query, [group_name, batch, module], function (err, result) {
-                        if (err) reject(err);else resolve(result);
+                        if (err) reject(err); else resolve(result);
                       });
                     }));
 
@@ -1030,7 +1030,7 @@ exports.add_group_savegroup = function _callee10(req, res) {
 
                       query = query.substring(0, query.length - 1);
                       conn.query(query, function (err, result) {
-                        if (err) reject(err);else resolve(result);
+                        if (err) reject(err); else resolve(result);
                       });
                     }));
 
@@ -1109,7 +1109,7 @@ exports.add_group_savegroup = function _callee10(req, res) {
 
                       query = query.substring(0, query.length - 1);
                       conn.query(query, function (err, result) {
-                        if (err) reject(err);else resolve(result);
+                        if (err) reject(err); else resolve(result);
                       });
                     }));
 
@@ -1188,7 +1188,7 @@ exports.add_group_savegroup = function _callee10(req, res) {
 
                       query = query.substring(0, query.length - 1);
                       conn.query(query, function (err, result) {
-                        if (err) reject(err);else resolve(result);
+                        if (err) reject(err); else resolve(result);
                       });
                     }));
 
@@ -1242,7 +1242,7 @@ exports.add_group_savegroup = function _callee10(req, res) {
                     return _context16.abrupt("return", new Promise(function (resolve, reject) {
                       var query = 'CREATE TABLE IF NOT EXISTS attendance_' + group_id + ' (`id` int NOT NULL AUTO_INCREMENT PRIMARY KEY, `Student` int NOT NULL)';
                       conn.query(query, function (err, result) {
-                        if (err) reject(err);else resolve(result);
+                        if (err) reject(err); else resolve(result);
                       });
                     }));
 
@@ -1454,7 +1454,7 @@ exports.save_session_timetable_setup = function _callee12(req, res) {
                     return _context19.abrupt("return", new Promise(function (resolve, reject) {
                       var query = 'INSERT INTO timetable(T_group,Day,Start_time,Duration,Type,Method,Session_repeat) VALUES (' + group + ',' + day + ',"' + startTime + '",' + duration + ',' + type + ',' + method + ',' + repeat + ')';
                       conn.query(query, function (err, result) {
-                        if (err) reject(err);else resolve(result);
+                        if (err) reject(err); else resolve(result);
                       });
                     }));
 
@@ -1507,7 +1507,7 @@ exports.save_session_timetable_setup = function _callee12(req, res) {
           return _context20.stop();
       }
     }
-  }, null, null, [[8, 14], [23, 35, 39, 47], [40,, 42, 46], [48, 54]]);
+  }, null, null, [[8, 14], [23, 35, 39, 47], [40, , 42, 46], [48, 54]]);
 };
 
 exports.stu_view = function _callee13(req, res) {
@@ -2177,7 +2177,7 @@ exports.past_get_sessions = function _callee18(req, res) {
           return _context27.stop();
       }
     }
-  }, null, null, [[2, 9], [20, 24, 28, 36], [29,, 31, 35], [37, 43]]);
+  }, null, null, [[2, 9], [20, 24, 28, 36], [29, , 31, 35], [37, 43]]);
 };
 
 exports.past_get_sessionattendance = function _callee19(req, res) {
@@ -2595,7 +2595,7 @@ exports.past_moduleattendance = function _callee21(req, res) {
           return _context31.stop();
       }
     }
-  }, null, null, [[2, 9], [18, 40, 44, 52], [23, 30], [45,, 47, 51], [63, 67, 71, 79], [72,, 74, 78]]);
+  }, null, null, [[2, 9], [18, 40, 44, 52], [23, 30], [45, , 47, 51], [63, 67, 71, 79], [72, , 74, 78]]);
 }; // GET PAGE FOR THE ATTENDANCE REPORT OF A SPECIFIC BATCH AND A DEGREE
 
 
@@ -3106,11 +3106,10 @@ function loadInitialDetails() {
 }
 
 function checkValidTimeStamp(timestamp) {
-  if (timestamp.length != 19) {
+  if (timestamp.length != 8) {
     return false;
   }
-
-  if (timestamp.substring(4, 5) == '-' && timestamp.substring(7, 8) == '-' && timestamp.substring(13, 14) == ':' && timestamp.substring(16, 17) == ':') {
+  if (timestamp.substring(2, 3) == ':' && timestamp.substring(5, 6) == ':') {
     return true;
   } else {
     return false;
