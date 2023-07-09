@@ -89,7 +89,7 @@ block content
 
             $.ajax({
                     type: 'GET',
-                    url: '/nac/moduleattendance/get',
+                    url: '/nac/degreeattendance/get',
                     //headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     data: {
                         batch: selectedBatch,
@@ -101,8 +101,9 @@ block content
                     console.log(response);
                     if(response.status=='200'){
                         console.log('success');
-                        console.log(response.attendance);
-                        showAttendance(selectedModule,selectedBatch,response.attendance);
+                        console.log(response.groups);
+                        console.log(response.students);
+                        showAttendance(response.groups,response.students);
                     }else{
                         console.log('error');
                         window.alert("Error occured while loading attendance")
@@ -111,68 +112,70 @@ block content
 
         }
 
-        function showAttendance(module,batch,attendance){
+        function showAttendance(groups,students){
             var attendance_table_row = document.getElementById("attendance_row");
             var attendance_table = document.getElementById("attendance_table_body");
 
-            clearSelectOptions(attendance_table)
+            clearSelectOptions(attendance_table);
 
-            if(attendance.length != 0){
-                let row,cell,element_p,element_h6,rowCount;
-
-                for(attendance_row of attendance){
+            if(students.length != 0){
+                for(student of students){
+                    let row,cell,element_p,element_h6,rowCount;
                     rowCount = attendance_table.rows.length;
                     row = attendance_table.insertRow(rowCount);
                     row.classList.add("limited-rows-tr");
                     row.classList.add("selection-row");
-                    row.setAttribute("data-id",attendance_row.index);
-                    
+                    row.setAttribute("data-id",student.id);
+            
                     cell = row.insertCell(0);
-                    element_p = document.createElement("p");
-                    element_p.classList.add("text-xs");
-                    element_p.classList.add("font-weight-bold");
-                    element_p.classList.add("mb-0");
-                    element_p.innerHTML = 'Index No :';
+                    element_p = createTable_p_element('Index No :');
                     cell.appendChild(element_p);
-                    element_h6 = document.createElement("h6");
-                    element_h6.classList.add("text-sm");
-                    element_h6.classList.add("mb-0");
-                    element_h6.innerHTML = attendance_row.index;
+                    element_h6 = createTable_h6_element(student.IndexNo);
                     cell.appendChild(element_h6);
 
                     cell = row.insertCell(1);
-                    element_p = document.createElement("p");
-                    element_p.classList.add("text-xs");
-                    element_p.classList.add("font-weight-bold");
-                    element_p.classList.add("mb-0");
-                    element_p.innerHTML = 'Name :';
+                    element_p = createTable_p_element('Name :');
                     cell.appendChild(element_p);
-                    element_h6 = document.createElement("h6");
-                    element_h6.classList.add("text-sm");
-                    element_h6.classList.add("mb-0");
-                    element_h6.innerHTML = attendance_row.name;
+                    element_h6 = createTable_h6_element(student.Name);
                     cell.appendChild(element_h6);
+                    
+                    let cellCount = 2;
+                    for(group of groups){
+                        cell = row.insertCell(cellCount);
+                        element_p = createTable_p_element(group.ModuleCode + ' :');
+                        cell.appendChild(element_p);
+                        element_h6 = createTable_h6_element(student[group.Module] + '%');
+                        cell.appendChild(element_h6);
 
-                    cell = row.insertCell(2);
-                    element_p = document.createElement("p");
-                    element_p.classList.add("text-xs");
-                    element_p.classList.add("font-weight-bold");
-                    element_p.classList.add("mb-0");
-                    element_p.innerHTML = 'Percentage :';
-                    cell.appendChild(element_p);
-                    element_h6 = document.createElement("h6");
-                    element_h6.classList.add("text-sm");
-                    element_h6.classList.add("mb-0");
-                    element_h6.innerHTML = attendance_row.percentage + '%';
-                    cell.appendChild(element_h6);
+                        cellCount++;
+                    }
                 }
-
-                attendance_table_row.classList.remove("invisible");
+                    attendance_table_row.classList.remove("invisible");
             }else{
                 attendance_table_row.classList.add("invisible");
                 attendance_table_row.classList.add("invisible");
                 window.alert('No sessions for this filter');
-            }
+            }                
+
+        }
+
+        // Functions for styling dynamic tables - paragraph element
+        function createTable_p_element(innerHTML){
+            let element_p = document.createElement("p");
+            element_p.classList.add("text-xs");
+            element_p.classList.add("font-weight-bold");
+            element_p.classList.add("mb-0");
+            element_p.innerHTML = innerHTML;
+            return element_p;
+        }
+
+        // Functions for styling dynamic tables - h6 element
+        function createTable_h6_element(innerHTML){
+            let element_h6 = document.createElement("h6");
+            element_h6.classList.add("text-sm");
+            element_h6.classList.add("mb-0");
+            element_h6.innerHTML = innerHTML;
+            return element_h6;
         }
         
         function clearSelectOptions(element){
