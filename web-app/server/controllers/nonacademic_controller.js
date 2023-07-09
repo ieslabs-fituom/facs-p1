@@ -576,6 +576,36 @@ exports.add_group_savegroup = async (req, res) => {
         return;
     }
 
+    const fillAttendanceTable = async (group_id, students) => {
+        return new Promise((resolve, reject) => {
+            let query = 'INSERT INTO attendance_' + group_id + '(Student) VALUES ';
+            for (let student of students) {
+                query += '("' + student + '"),';
+            }
+            query = query.substring(0, query.length - 1);
+
+            conn.query(query, (err, result) => {
+                if (err) reject(err);
+                else resolve(result);
+            });
+        });
+    }
+
+    try{
+        result = await fillAttendanceTable(group_id,students);
+    } catch (e){
+        // Rollback code
+        console.log(e);
+        res.send({ status: '500', error: e });
+        return;
+    }
+
+    if (result.affectedRows == 0) {
+        // Rollback code
+        res.send({ status: '500', error: e });
+        return;
+    }
+
     res.send({ status: '200' });
     
 }
