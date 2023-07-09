@@ -1430,4 +1430,3 @@ function checkValidTimeStamp(timestamp) {
     }
 }
 
-
