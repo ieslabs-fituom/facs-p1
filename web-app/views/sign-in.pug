@@ -77,6 +77,7 @@ script.
       url: '/signin/contdsign',
       data: {
         email: email,
+        password: pword
       },
       dataType: 'json',
       encode: true
@@ -95,6 +96,9 @@ script.
           }else if(response.status=='500'){
             window.alert("Error occured while sign in (500)");   
             console.log('error 500');
+          }else if(response.status=='202'){
+              window.alert("Incorrect Password");
+              document.getElementById("password").value = "";   
           }else{
             window.alert("Error occured while sign in");   
             console.log('error');
