@@ -769,7 +769,7 @@ exports.stu_get_filtered = async (req, res) => {
 exports.stu_get_profile = async (req, res) => {
     console.log('Function starting... stu profile');
 
-    let search_index = req.query.searchoption;
+    let search_index = req.query.index;
     let search_keyword = req.query.keyword;
 
     var employee_details, student, groups, modules, sessions, attendances;
@@ -803,7 +803,7 @@ exports.stu_get_profile = async (req, res) => {
     }
 
     if (student.length == 0) {
-        res.status(201).send({ res: 'No such students' });
+        res.send({ status: '201', message: 'No such students' });
         return;
     } else {
         //RETRIEVING DEGREE OF THE STUDENT
