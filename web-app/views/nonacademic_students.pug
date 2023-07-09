@@ -8,7 +8,7 @@ block content
                     .card-header.pb-0.pt-3.bg-transparent
                         h6.text-capitalize Search Students
                     .card-body.p-3
-                        form#search_form()
+                        form#search_form(action='/nac/stuprofile' method='GET')
                             .row
                                 .col-lg-6.col-xs-0 
                                     .d-flex.align-items-center
@@ -25,7 +25,7 @@ block content
                                             input#keyword.form-control.text-xs.me-8.pe-5.ms-0.mt-1.mb-3.lh-lg(type='text' value='' placeholder='Enter search keyword' name='keyword')
                             .row   
                                 .col-lg-0.text-center
-                                    input(value="Search" onClick="keywordSearch_AJAX()").btn.btn-primary.btn-sm.mt-3.ps-7.pe-7
+                                    input(type="submit" value="Search").btn.btn-primary.btn-sm.mt-3.ps-7.pe-7
                                     
                         .row
                             .d-flex.flex-row.mt-3
@@ -68,7 +68,7 @@ block content
                             table#stu_table.table.align-items-center
                                 tbody#stu_table_body 
                                     
-            //.row   
+            .row   
                 .col-lg-0.text-end
                     button.btn.btn-primary.btn-sm.mt-3.ps-7.pe-7(onclick="onFilteredSearch()") Print
         
@@ -266,15 +266,7 @@ block content
         }
 
         
-        function keywordSearch_AJAX(){
-            console.log("ajax triggered");
-            var index = document.getElementById("searchby").value;
-            var keyword = document.getElementById("keyword").value;
-            if(keyword == ''){
-                alert("Please enter a keyword");
-                return;
-            }
-
+        function keywordSearch_AJAX(index,keyword){
             $.ajax({
                     type: 'GET',
                     url: '/nac/stuprofile',
@@ -289,7 +281,7 @@ block content
                     if(response.status=='200'){
                         console.log('success');
                     }else if(response.status=='201'){
-                        alert("No such student available");   
+                        window.alert("No such student available");   
                     }else {
                         console.log('error');
                     }
