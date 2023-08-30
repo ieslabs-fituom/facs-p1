@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <button onclick="connectSerial()">Connect</button>
+        <div id="serialResults"></div>
+
+        <button id="listPortsButton">List Available Ports</button>
+        <pre id="serialResults"></pre>
+        <script>
+            // Your other JavaScript code here
+
+            const listPortsButton = document.getElementById("listPortsButton");
+            listPortsButton.addEventListener("click", listAvailablePorts);
+            
+            async function listAvailablePorts() {
+                try {
+                    const portList = await navigator.serial.getPorts();
+                    console.log("Available COM ports:");
+                    portList.forEach((port) => {
+                        console.log(port.name);
+                    });
+                } catch (error) {
+                    console.error("Error listing ports:", error);
+                }
+            }
+        </script>
+        <script src="Script.js"></script>
+    </body>
+    
+</html>
