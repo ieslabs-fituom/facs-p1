@@ -13,7 +13,7 @@ require('dotenv').config();
 const app = express();
 
 // RUNTIME PORT - LOAD FROM .ENV FILE OR USE 5000
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 
 /*
 *   PARSING MIDDLEWARES
