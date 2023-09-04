@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AttendanceMarkingSystem", "AttendanceMarkingSystem.csproj", "{3B7421FC-1CBB-4BA2-86CB-23BCC5791E8E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3B7421FC-1CBB-4BA2-86CB-23BCC5791E8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B7421FC-1CBB-4BA2-86CB-23BCC5791E8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B7421FC-1CBB-4BA2-86CB-23BCC5791E8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B7421FC-1CBB-4BA2-86CB-23BCC5791E8E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {96DF8C59-0335-407E-B6F2-3C2DB01A9C05}
+	EndGlobalSection
+EndGlobal
