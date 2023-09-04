@@ -1,0 +1,13 @@
+C:\Users\user\OneDrive\Mora IT\Another Activities\Projects\Attendance Marking System\Web App\facs-p1\ESP32 Conn\AttendanceMarkingSystem\bin\Debug\AttendanceMarkingSystem.exe.config
+C:\Users\user\OneDrive\Mora IT\Another Activities\Projects\Attendance Marking System\Web App\facs-p1\ESP32 Conn\AttendanceMarkingSystem\bin\Debug\AttendanceMarkingSystem.exe
+C:\Users\user\OneDrive\Mora IT\Another Activities\Projects\Attendance Marking System\Web App\facs-p1\ESP32 Conn\AttendanceMarkingSystem\bin\Debug\AttendanceMarkingSystem.pdb
+C:\Users\user\OneDrive\Mora IT\Another Activities\Projects\Attendance Marking System\Web App\facs-p1\ESP32 Conn\AttendanceMarkingSystem\bin\Debug\Guna.UI2.dll
+C:\Users\user\OneDrive\Mora IT\Another Activities\Projects\Attendance Marking System\Web App\facs-p1\ESP32 Conn\AttendanceMarkingSystem\obj\Debug\AttendanceMarkingSystem.csproj.AssemblyReference.cache
+C:\Users\user\OneDrive\Mora IT\Another Activities\Projects\Attendance Marking System\Web App\facs-p1\ESP32 Conn\AttendanceMarkingSystem\obj\Debug\AttendanceMarkingSystem.csproj.SuggestedBindingRedirects.cache
+C:\Users\user\OneDrive\Mora IT\Another Activities\Projects\Attendance Marking System\Web App\facs-p1\ESP32 Conn\AttendanceMarkingSystem\obj\Debug\AttendanceMarkingSystem.Home.resources
+C:\Users\user\OneDrive\Mora IT\Another Activities\Projects\Attendance Marking System\Web App\facs-p1\ESP32 Conn\AttendanceMarkingSystem\obj\Debug\AttendanceMarkingSystem.Properties.Resources.resources
+C:\Users\user\OneDrive\Mora IT\Another Activities\Projects\Attendance Marking System\Web App\facs-p1\ESP32 Conn\AttendanceMarkingSystem\obj\Debug\AttendanceMarkingSystem.csproj.GenerateResource.cache
+C:\Users\user\OneDrive\Mora IT\Another Activities\Projects\Attendance Marking System\Web App\facs-p1\ESP32 Conn\AttendanceMarkingSystem\obj\Debug\AttendanceMarkingSystem.csproj.CoreCompileInputs.cache
+C:\Users\user\OneDrive\Mora IT\Another Activities\Projects\Attendance Marking System\Web App\facs-p1\ESP32 Conn\AttendanceMarkingSystem\obj\Debug\AttendanceMarkingSystem.csproj.CopyComplete
+C:\Users\user\OneDrive\Mora IT\Another Activities\Projects\Attendance Marking System\Web App\facs-p1\ESP32 Conn\AttendanceMarkingSystem\obj\Debug\AttendanceMarkingSystem.exe
+C:\Users\user\OneDrive\Mora IT\Another Activities\Projects\Attendance Marking System\Web App\facs-p1\ESP32 Conn\AttendanceMarkingSystem\obj\Debug\AttendanceMarkingSystem.pdb
