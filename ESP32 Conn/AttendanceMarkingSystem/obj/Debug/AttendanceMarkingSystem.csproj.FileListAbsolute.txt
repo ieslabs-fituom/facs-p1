@@ -11,3 +11,4 @@ C:\Users\user\OneDrive\Mora IT\Another Activities\Projects\Attendance Marking Sy
 C:\Users\user\OneDrive\Mora IT\Another Activities\Projects\Attendance Marking System\Web App\facs-p1\ESP32 Conn\AttendanceMarkingSystem\obj\Debug\AttendanceMarkingSystem.csproj.CopyComplete
 C:\Users\user\OneDrive\Mora IT\Another Activities\Projects\Attendance Marking System\Web App\facs-p1\ESP32 Conn\AttendanceMarkingSystem\obj\Debug\AttendanceMarkingSystem.exe
 C:\Users\user\OneDrive\Mora IT\Another Activities\Projects\Attendance Marking System\Web App\facs-p1\ESP32 Conn\AttendanceMarkingSystem\obj\Debug\AttendanceMarkingSystem.pdb
+C:\Users\user\OneDrive\Mora IT\Another Activities\Projects\Attendance Marking System\Web App\facs-p1\ESP32 Conn\AttendanceMarkingSystem\obj\Debug\AttendanceMarkingSystem.Settings.resources
