@@ -61,6 +61,7 @@ exports.continue_sign_out = async (req, res) => {
     res.render('sign-in');
 }
 
+// This is the API used to gather attendance data from the device
 exports.postattendance = async (req, res) => {
     let api_key = 'tPmAT5Ab3j7F9';
     console.log("Started");
